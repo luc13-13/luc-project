@@ -10,7 +10,7 @@ import com.lc.authorization.server.security.handler.*;
 import com.lc.authorization.server.security.repository.RedisSecurityContextRepository;
 import com.lc.authorization.server.utils.SecurityUtils;
 import com.lc.framework.redis.starter.utils.RedisHelper;
-import com.lc.framework.security.core.ServerAuthenticationDetailsSource;
+import com.lc.framework.security.core.webflux.ServerAuthenticationDetailsSource;
 import com.lc.framework.security.service.LoginUserDetailService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

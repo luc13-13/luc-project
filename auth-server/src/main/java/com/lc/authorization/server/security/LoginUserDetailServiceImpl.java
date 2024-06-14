@@ -29,6 +29,16 @@ public class LoginUserDetailServiceImpl implements LoginUserDetailService, UserD
     }
 
     @Override
+    public UserDetails loadByMobile(String mobile) {
+        return null;
+    }
+
+    @Override
+    public UserDetails loadByMail(String mail) {
+        return null;
+    }
+
+    @Override
     public LoginUserDetail loadByUserId(String userId) {
         // 调用用户服务获取用户详情
         WebResult<String> userDetail = institutionCenterFeignClient.getUserDetail(userId);

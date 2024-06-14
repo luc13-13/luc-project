@@ -3,7 +3,7 @@ package com.lc.authorization.server.security.config;
 import com.lc.authorization.server.property.SysSecurityProperties;
 import com.lc.authorization.server.security.handler.LoginFailureHandler;
 import com.lc.authorization.server.security.handler.LoginSuccessHandler;
-import com.lc.framework.security.core.ServerAuthenticationDetailsSource;
+import com.lc.framework.security.core.webflux.ServerAuthenticationDetailsSource;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 

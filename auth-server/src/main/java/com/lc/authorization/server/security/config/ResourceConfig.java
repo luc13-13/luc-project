@@ -7,7 +7,7 @@ import com.lc.authorization.server.security.handler.LoginSuccessHandler;
 import com.lc.authorization.server.security.handler.LoginTargetAuthenticationEntryPoint;
 import com.lc.authorization.server.security.repository.RedisSecurityContextRepository;
 import com.lc.authorization.server.utils.SecurityUtils;
-import com.lc.framework.security.core.ServerAuthenticationDetailsSource;
+import com.lc.framework.security.core.webflux.ServerAuthenticationDetailsSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
