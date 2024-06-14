@@ -1,0 +1,129 @@
+server:
+  port: 8809
+spring:
+  application:
+    name: auth-gateway
+  profiles:
+    active: dev
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher #swagger3要求
+  devtools:
+    restart:
+      additional-paths: /src/main/java
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: luc123456
+    url: jdbc:mysql://localhost:3306/institution_center?useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC&useSSL=FALSE
+  cloud:
+    gateway:
+      httpclient:
+        wiretap: true
+      httpserver:
+        wiretap: true
+      discovery:
+        locator:
+          enabled: true # 开启配置中心，网关将从配置中心获取服务的地址, 如果开启负载均衡， 则网关中的filter在使用feignclient是要用@Lazy懒加载
+          lowerCaseServiceId: true
+      routes:           # 启用配置中心后， 将从配置中心拉取service-test-luc1服务的地址，用来组装uri
+        - id: institution-server
+          uri: lb://institution-server #http://localhost:18889   # lb://institution-server表示以负载均衡的方式获取对实例institution-server的请求进行路由
+          predicates:
+            - Path=/institution-server/**
+          filters:
+            - StripPrefix=1
+            - TokenRelay
+        - id: authorization-server
+          uri: lb://authorization-server
+          predicates:
+            - Path=/authorization-server/**
+          filters:
+            - StripPrefix=1
+            - TokenRelay
+#        - id: resource-server
+#          uri: lb://resource-server
+#          predicates:
+#            - Path=/resource-server/**
+#          filters:
+#            - StripPrefix=1
+#            - TokenRelay
+    nacos:
+      username: luc
+      password: luc123456
+      discovery:
+        server-addr: localhost:8848
+        namespace: com-lc-dev
+        # 本地测试时需要用本地地址，而非公网ip
+        ip: 127.0.0.1
+      config:
+        server-addr: localhost:8848
+        refresh-enabled: true
+        file-extension: yaml
+        namespace: com-lc-dev
+  #spring boot 2.7.x 之后，如需引入外部配置，则在spring.config.import中声明
+  config:
+    import: nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+
+  data:
+    redis:
+      client-type: lettuce
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      password: luc123456
+#      lettuce:
+#        pool:
+#          enabled: true
+#          max-active: 6
+#          max-idle: 6
+#          max-wait: 1000
+  security:
+    oauth2:
+      resource-server:
+        jwt:
+          issuer-uri: http://127.0.0.1:8889
+        opaquetoken:
+          client-id: gateway-client
+          client-secret: secret
+      client:
+        provider:
+          provider-authorization-server:
+            issuer-uri: http://127.0.0.1:8889
+            authorization-uri: http://127.0.0.1:8889/oauth2/authorize
+            token-uri: http://127.0.0.1:8889/oauth2/token
+        registration:
+          gateway-client:
+            provider: provider-authorization-server
+            client-name: gateway-client
+            client-id: gateway-client
+            client-secret: secret
+            client-authentication-method: client_secret_basic
+            # 授权类型，客户端从授权服务器获取access-token的方式
+            # spring security提供了4中默认的授权类型: authorization_code, refresh_token, client_credentials, urn:ietf:params:oauth:grant-type:jwt-bearer
+            # 可以在授权服务器authorization-server中自定义授权类型, 注意需要将自定义的授权类型注入到OAuth2AuthorizationServerMetadata中
+            authorization-grant-type: authorization_code
+            # 必须与授权服务器中注册的redirect-uri一致
+            redirect-uri: '{baseUrl}/{action}/oauth2/code/{registrationId}'
+            scope:
+              - read
+              - write
+              - openid
+
+mybatis-plus:
+  mapper-locations: classpath:/mapper/**/*.xml
+  global-config:
+    db-config:
+      logic-delete-field: status
+      logic-delete-value: 0
+      logic-not-delete-value: 1
+logging:
+  level:
+    root: info
+    org.springframework.security: debug
+  config: classpath:logback-lc.xml
+  file:
+    path: ./${spring.application.name}/logs
+
+
+
