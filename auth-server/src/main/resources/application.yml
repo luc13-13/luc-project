@@ -1,0 +1,66 @@
+server:
+  port: 8889
+spring:
+  config:
+    import: nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
+  profiles:
+    active: dev
+  application:
+    name: authorization-server
+  messages:
+    basename: messages
+  devtools: # 热部署工具，需要在idea中同时设置auto compiler
+    restart:
+      enabled: true
+      additional-paths: src/main/java, src/main/resources/application*
+
+  cloud:
+    nacos:
+      username: luc
+      password: luc123456
+      discovery:
+        server-addr: localhost:8848
+        namespace: com-lc-dev
+        # 本地测试时需要用本地地址，而非公网ip
+        ip: 127.0.0.1
+      config:
+        server-addr: localhost:8848
+        refresh-enabled: true
+        file-extension: yaml
+        namespace: com-lc-dev
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher #swagger3要求
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/authorization_server?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8
+    username: root
+    password: luc123456
+  data:
+    redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      timeout: 5000
+      username:
+      password: luc123456
+      client-type: lettuce
+      lettuce:
+        pool:
+          min-idle: 8
+          max-idle: 500
+          max-active: 2000
+          max-wait: 10000
+          enabled: true
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+logging:
+  config: classpath:logback-lc.xml
+  level:
+    root: info
+    org.springframework.security: trace
+  file:
+    path: ./${spring.application.name}/logs
