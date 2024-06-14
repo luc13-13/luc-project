@@ -1,0 +1,14 @@
+data-scope:
+  enabled: true
+  handlers:
+    - id: Tenant
+      support-tables:
+        - table-name: tenant
+          database: auth
+          column-name: tenant_id
+        - table-name: instance
+          column-name: tenant_id
+    - id: SysUser
+      support-tables:
+        - table-name: sys_user
+          column-name: user_id
