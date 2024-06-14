@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>auth-gateway</artifactId>
+
     <packaging>jar</packaging>
 
     <dependencies>
