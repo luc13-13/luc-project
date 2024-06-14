@@ -4,6 +4,7 @@
 *.cmd
 mvnw
 *.mvn
+*.flattened-pom.xml
 
 # Compiled class file
 *.class

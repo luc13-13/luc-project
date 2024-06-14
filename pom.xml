@@ -3,12 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!--    <parent>-->
-    <!--        <groupId>org.springframework.boot</groupId>-->
-    <!--        <artifactId>spring-boot-starter-parent</artifactId>-->
-    <!--        <version>2.7.4</version>-->
-    <!--        <relativePath/> &lt;!&ndash; lookup parent from repository &ndash;&gt;-->
-    <!--    </parent>-->
+
     <groupId>com.lc</groupId>
     <artifactId>luc-project</artifactId>
     <version>${luc.version}</version>
@@ -29,8 +24,18 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <modules>
+        <module>luc-framework</module>
+        <module>auth-gateway</module>
+        <module>auth-server</module>
+        <module>luc-framework-dependencies</module>
+    </modules>
+
     <properties>
-        <luc.version>1.0-SNAPSHOT</luc.version>
+        <!-- luc-project项目统一版本变量，
+        更新版本时只需更新luc-project/pom.xml
+        和luc-framework-dependencies/pom.xml文件中的luc.version即可-->
+        <luc.version>1.0.0</luc.version>
         <!--spring cloud2021 + spring cloud alibaba2021 + spring boot2 + jdk8-->
         <!--        <maven.compiler.source>8</maven.compiler.source>-->
         <!--        <maven.compiler.target>8</maven.compiler.target>-->
@@ -56,13 +61,13 @@
         <lombok.version>1.18.24</lombok.version>
         <plumelog-logback.version>3.5.3</plumelog-logback.version>
         <!-- ================ com.lc项目版本管理========================== -->
-        <exception-center.version>1.0-SNAPSHOT</exception-center.version>
-        <framework-common.version>1.0-SNAPSHOT</framework-common.version>
-        <framework-core.version>1.0-SNAPSHOT</framework-core.version>
-        <framework-redis-starter.version>1.0-SNAPSHOT</framework-redis-starter.version>
-        <framework-datascope.version>1.0-SNAPSHOT</framework-datascope.version>
-        <framework-excel.version>1.0-SNAPSHOT</framework-excel.version>
-        <framework-security.version>1.0-SNAPSHOT</framework-security.version>
+        <exception-center.version>${luc.version}</exception-center.version>
+        <framework-common.version>${luc.version}</framework-common.version>
+        <framework-core.version>${luc.version}</framework-core.version>
+        <framework-redis-starter.version>${luc.version}</framework-redis-starter.version>
+        <framework-datascope.version>${luc.version}</framework-datascope.version>
+        <framework-excel.version>${luc.version}</framework-excel.version>
+        <framework-security.version>${luc.version}</framework-security.version>
         <!--常用工具依赖-->
         <fastjson.version>2.0.23</fastjson.version>
         <easyexcel.version>3.3.1</easyexcel.version>
@@ -96,7 +101,17 @@
         </dependency>
     </dependencies>
     <dependencyManagement>
+
         <dependencies>
+
+            <dependency>
+                <groupId>com.lc</groupId>
+                <artifactId>luc-framework-dependencies</artifactId>
+                <version>${luc.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
             <!--spring boot 3.1.4-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
