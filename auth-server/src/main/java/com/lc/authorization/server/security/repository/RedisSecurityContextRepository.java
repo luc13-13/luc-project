@@ -1,9 +1,9 @@
 package com.lc.authorization.server.security.repository;
 
-import com.lc.authorization.server.property.SysSecurityProperties;
 import com.lc.authorization.server.security.SupplierDeferredSecurityContext;
 import com.lc.authorization.server.utils.SecurityUtils;
 import com.lc.framework.redis.starter.utils.RedisHelper;
+import com.lc.framework.security.core.properties.SysSecurityProperties;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

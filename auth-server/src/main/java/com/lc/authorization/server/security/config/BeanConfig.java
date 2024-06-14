@@ -1,11 +1,11 @@
 package com.lc.authorization.server.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lc.authorization.server.property.SysSecurityProperties;
 import com.lc.authorization.server.security.filter.TokenHeaderWriter;
 import com.lc.authorization.server.security.handler.LoginTargetAuthenticationEntryPoint;
 import com.lc.framework.redis.starter.customizer.ObjectMapperCustomizer;
 import com.lc.framework.redis.starter.utils.RedisHelper;
+import com.lc.framework.security.core.properties.SysSecurityProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

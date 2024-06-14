@@ -1,12 +1,12 @@
 package com.lc.authorization.server.security.config;
 
-import com.lc.authorization.server.property.SysSecurityProperties;
 import com.lc.authorization.server.security.filter.TokenHeaderWriter;
 import com.lc.authorization.server.security.handler.LoginFailureHandler;
 import com.lc.authorization.server.security.handler.LoginSuccessHandler;
 import com.lc.authorization.server.security.handler.LoginTargetAuthenticationEntryPoint;
 import com.lc.authorization.server.security.repository.RedisSecurityContextRepository;
 import com.lc.authorization.server.utils.SecurityUtils;
+import com.lc.framework.security.core.properties.SysSecurityProperties;
 import com.lc.framework.security.core.webflux.ServerAuthenticationDetailsSource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
