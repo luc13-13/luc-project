@@ -1,6 +1,6 @@
 #idea
 **/.idea/
-*/*.iml
+**/*.iml
 *.cmd
 mvnw
 *.mvn
@@ -11,7 +11,7 @@ mvnw
 
 # Log file
 *.log
-/logs
+**/logs
 
 # BlueJ files
 *.ctxt
