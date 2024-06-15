@@ -26,6 +26,7 @@
     <build>
         <plugins>
             <plugin>
+                <!-- 所有脚手架均为无启动类的jar包， 需要在打包插件中配置跳过configuration-->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
