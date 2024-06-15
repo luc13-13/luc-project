@@ -7,11 +7,11 @@
     <parent>
         <groupId>com.lc</groupId>
         <artifactId>luc-project</artifactId>
-        <version>${luc.version}</version>
+        <version>${reversion}</version>
     </parent>
 
     <artifactId>luc-framework</artifactId>
-    <version>${luc.version}</version>
+    <version>${reversion}</version>
 
     <packaging>pom</packaging>
 
@@ -19,6 +19,7 @@
         <module>framework-common</module>
         <module>framework-core</module>
         <module>framework-datascope</module>
+        <module>framework-excel</module>
         <module>framework-redis-starter</module>
         <module>framework-security</module>
     </modules>
@@ -32,6 +33,36 @@
                 <configuration>
                     <skip>true</skip>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                    <updatePomFile>true</updatePomFile>
+                    <pomElements>
+                        <parent>expand</parent>
+                        <distributionManagement>remove</distributionManagement>
+                        <repositories>remove</repositories>
+                    </pomElements>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

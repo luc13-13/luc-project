@@ -7,7 +7,7 @@
     <parent>
         <groupId>com.lc</groupId>
         <artifactId>luc-framework</artifactId>
-        <version>${luc.version}</version>
+        <version>${reversion}</version>
     </parent>
 
     <artifactId>framework-common</artifactId>
