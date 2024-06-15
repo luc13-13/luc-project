@@ -26,7 +26,6 @@
         <dependency>
             <groupId>com.lc</groupId>
             <artifactId>framework-security</artifactId>
-            <version>${framework-security.version}</version>
         </dependency>
         <!--gateway-->
         <dependency>
@@ -47,7 +46,6 @@
         <dependency>
             <groupId>com.lc</groupId>
             <artifactId>framework-core</artifactId>
-            <version>${framework-core.version}</version>
             <exclusions>
                 <exclusion>
                     <groupId>com.github.xiaoymin</groupId>
@@ -64,12 +62,10 @@
         <dependency>
             <groupId>com.lc</groupId>
             <artifactId>framework-redis-starter</artifactId>
-            <version>${framework-common.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lc</groupId>
             <artifactId>framework-common</artifactId>
-            <version>${framework-common.version}</version>
         </dependency>
 
         <!--解决macos中netty的域名解析错误-->
@@ -93,14 +89,5 @@
         </dependency>
 
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-<!--                <version>2.6.7</version>-->
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

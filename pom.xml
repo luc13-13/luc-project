@@ -25,10 +25,12 @@
     </distributionManagement>
 
     <modules>
-        <module>luc-framework</module>
-        <module>auth-gateway</module>
-        <module>auth-server</module>
+        <!--开发脚手架-->
         <module>luc-framework-dependencies</module>
+        <module>luc-framework</module>
+        <!--应用服务等上线后再推送到仓库-->
+<!--        <module>auth-gateway</module>-->
+<!--        <module>auth-server</module>-->
     </modules>
 
     <properties>

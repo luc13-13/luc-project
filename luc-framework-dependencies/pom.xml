@@ -16,6 +16,17 @@
         <flatten-maven-plugin.version>1.6.0</flatten-maven-plugin.version>
     </properties>
 
+    <distributionManagement>
+        <repository>
+            <id>rdc-releases</id>
+            <url>https://packages.aliyun.com/maven/repository/2382558-release-6fydW8/</url>
+        </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://packages.aliyun.com/maven/repository/2382558-snapshot-UbQTSr/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
     <!-- 定义全局jar版本-->
     <dependencyManagement>
         <dependencies>
