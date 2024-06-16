@@ -18,10 +18,6 @@
             <version>${easyexcel.version}</version>
         </dependency>
         <dependency>
-            <groupId>com.lc</groupId>
-            <artifactId>framework-common</artifactId>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>

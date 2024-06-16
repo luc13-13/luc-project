@@ -30,10 +30,5 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>com.lc</groupId>
-            <artifactId>framework-common</artifactId>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
 </project>

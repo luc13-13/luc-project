@@ -6,10 +6,11 @@
 
     <parent>
         <groupId>com.lc</groupId>
-        <artifactId>luc-framework</artifactId>
+        <artifactId>luc-system</artifactId>
         <version>${reversion}</version>
     </parent>
 
-    <artifactId>framework-common</artifactId>
+    <artifactId>system-api</artifactId>
+
 
 </project>

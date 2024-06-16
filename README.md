@@ -3,8 +3,12 @@
 #### 介绍
 基于SpringBoot3、Spring Authorization Server 1.1、Java17的企业级后台管理系统、多租户服务框架
 
-#### 软件架构
-软件架构说明
+#### 目录结构
+```text
+luc-project
+
+
+```
 
 
 #### 安装教程
