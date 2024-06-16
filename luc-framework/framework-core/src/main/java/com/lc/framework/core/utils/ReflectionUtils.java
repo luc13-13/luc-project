@@ -1,4 +1,4 @@
-package com.lc.framework.common.utils;
+package com.lc.framework.core.utils;
 
 import org.springframework.lang.Nullable;
 import org.springframework.util.Assert;

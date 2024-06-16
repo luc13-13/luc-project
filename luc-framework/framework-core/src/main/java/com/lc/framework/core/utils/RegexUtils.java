@@ -1,4 +1,4 @@
-package com.lc.framework.common.utils;
+package com.lc.framework.core.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

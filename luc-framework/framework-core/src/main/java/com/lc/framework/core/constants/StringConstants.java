@@ -1,4 +1,4 @@
-package com.lc.framework.common.constants;
+package com.lc.framework.core.constants;
 
 /**
  * <pre>

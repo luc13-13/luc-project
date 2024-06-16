@@ -1,4 +1,4 @@
-package com.lc.framework.core.mvc;
+package com.lc.framework.core.constants;
 
 /**
  * @author : Lu Cheng
