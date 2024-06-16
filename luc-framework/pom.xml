@@ -16,12 +16,13 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>framework-common</module>
+        <module>framework-apidoc</module>
         <module>framework-core</module>
         <module>framework-datascope</module>
         <module>framework-excel</module>
         <module>framework-redis-starter</module>
         <module>framework-security</module>
+        <module>framework-web</module>
     </modules>
 
     <build>
