@@ -26,12 +26,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>com.lc</groupId>
-            <artifactId>framework-common</artifactId>
-            <version>${framework-common.version}</version>
-        </dependency>
     </dependencies>
 
 </project>
