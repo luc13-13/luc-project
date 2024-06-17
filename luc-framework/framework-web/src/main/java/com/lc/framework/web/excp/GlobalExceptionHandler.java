@@ -1,8 +1,7 @@
-package com.lc.framework.core.mvc.handler;
+package com.lc.framework.web.excp;
 
-import com.lc.framework.core.excp.BizException;
-import com.lc.framework.core.mvc.Status;
 import com.lc.framework.core.mvc.WebResult;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,13 +12,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @desc :
  * @date : 2023/5/20 14:34
  */
+@Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BizException.class)
     @ResponseBody
-    public WebResult handlerException(BizException e) {
-        e.printStackTrace();
-        return WebResult.response(Status.generate(e.getCode(), e.getMessage()), e.getMessage());
+    public <T> WebResult<T> handlerException(BizException e) {
+        log.error("BizException:{}", e.getMessage(), e);
+        return WebResult.error(e.getCode(), e.getMessage());
     }
 }

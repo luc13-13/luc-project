@@ -1,4 +1,4 @@
-package com.lc.framework.common.utils;
+package com.lc.framework.web.utils;
 
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;

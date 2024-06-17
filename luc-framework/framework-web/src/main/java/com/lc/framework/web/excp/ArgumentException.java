@@ -1,4 +1,4 @@
-package com.lc.framework.core.excp;
+package com.lc.framework.web.excp;
 
 
 /**

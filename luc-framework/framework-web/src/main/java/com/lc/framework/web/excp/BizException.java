@@ -1,4 +1,5 @@
-package com.lc.framework.core.excp;
+package com.lc.framework.web.excp;
+
 
 import com.lc.framework.core.mvc.StatusConstants;
 

@@ -1,6 +1,6 @@
-package com.lc.framework.core.util;
+package com.lc.framework.web.utils;
 
-import com.lc.framework.core.excp.BizException;
+import com.lc.framework.web.excp.BizException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
