@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.ArrayUtils;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.parser.JsqlParserSupport;
 import com.baomidou.mybatisplus.extension.plugins.inner.InnerInterceptor;
-import com.lc.framework.common.utils.ReflectionUtils;
+import com.lc.framework.core.utils.ReflectionUtils;
 import com.lc.framework.datascope.anno.DataScope;
 import com.lc.framework.datascope.entity.DataScopeEntity;
 import com.lc.framework.datascope.entity.DataScopeWrapper;

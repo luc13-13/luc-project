@@ -9,9 +9,14 @@ package com.lc.framework.core.mvc;
 public interface StatusConstants {
 
     Integer SUCCESS = 200;
+
+    String SUCCESS_MSG = "请求成功";
+
     Integer ERROR = 400;
 
     Integer BIZ_ERROR = 500;
+
+    String BIZ_ERROR_MSG = "系统内部异常！";
 
     Integer PERMISSION_DENIED = 501;
 

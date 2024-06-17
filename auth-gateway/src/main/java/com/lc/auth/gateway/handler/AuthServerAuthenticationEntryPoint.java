@@ -1,7 +1,6 @@
 package com.lc.auth.gateway.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.google.common.base.Charsets;
 import com.lc.framework.core.mvc.WebResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.buffer.DataBuffer;
@@ -16,6 +15,8 @@ import org.springframework.security.web.server.authentication.RedirectServerAuth
 import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * <pre>
@@ -36,7 +37,7 @@ public class AuthServerAuthenticationEntryPoint implements ServerAuthenticationE
         response.getHeaders().set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         response.getHeaders().set("Access-Control-Allow-Origin", "*");
         response.getHeaders().set("Cache-Control", "no-cache");
-        DataBuffer buffer = response.bufferFactory().wrap(JSON.toJSONString(WebResult.error("认证过期", 401, "认证过期")).getBytes(Charsets.UTF_8));
+        DataBuffer buffer = response.bufferFactory().wrap(JSON.toJSONString(WebResult.error("认证过期", 401, "认证过期")).getBytes(UTF_8));
         return response.writeWith(Mono.just(buffer).doFinally(signalType -> {
             log.info("接收到信号: {}, 关闭buffer", signalType);
             DataBufferUtils.release(buffer);

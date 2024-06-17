@@ -10,7 +10,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import static com.lc.framework.core.mvc.RequestHeaderConstants.*;
+import static com.lc.framework.core.constants.RequestHeaderConstants.*;
 
 /**
  * 解决网关调用鉴权服务时，请求cookie被忽略的问题。

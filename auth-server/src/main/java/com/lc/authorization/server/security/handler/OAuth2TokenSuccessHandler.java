@@ -3,8 +3,8 @@ package com.lc.authorization.server.security.handler;
 import com.lc.authorization.server.domain.dto.OAuth2TokenDTO;
 import com.lc.authorization.server.utils.JsonUtils;
 import com.lc.authorization.server.utils.SecurityUtils;
-import com.lc.framework.core.mvc.WebResult;
 import com.lc.framework.redis.starter.utils.RedisHelper;
+import com.lc.framework.core.mvc.WebResult;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,8 +27,8 @@ import java.nio.charset.StandardCharsets;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
-import static com.lc.framework.core.mvc.RequestHeaderConstants.ACCESS_TOKEN;
-import static com.lc.framework.core.mvc.RequestHeaderConstants.REFRESH_TOKEN;
+import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKEN;
+import static com.lc.framework.core.constants.RequestHeaderConstants.REFRESH_TOKEN;
 
 /**
  * <pre>

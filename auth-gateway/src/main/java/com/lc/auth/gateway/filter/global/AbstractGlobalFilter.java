@@ -15,7 +15,7 @@ import reactor.core.publisher.Mono;
 
 import java.util.Objects;
 
-import static com.lc.framework.core.mvc.RequestHeaderConstants.ATTRIBUTE_IGNORE_FILTER;
+import static com.lc.framework.core.constants.RequestHeaderConstants.ATTRIBUTE_IGNORE_FILTER;
 
 
 /**

@@ -12,7 +12,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 
-import static com.lc.framework.core.mvc.RequestHeaderConstants.ACCESS_TOKEN;
+import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKEN;
 
 /**
  * <pre>

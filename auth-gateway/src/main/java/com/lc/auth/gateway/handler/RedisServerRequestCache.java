@@ -16,7 +16,7 @@ import reactor.core.publisher.Mono;
 import java.net.URI;
 import java.util.Collections;
 
-import static com.lc.framework.core.mvc.RequestHeaderConstants.JSESSIONID;
+import static com.lc.framework.core.constants.RequestHeaderConstants.JSESSIONID;
 
 /**
  * <pre>

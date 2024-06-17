@@ -2,7 +2,6 @@ package com.lc.framework.datascope.config;
 
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusLanguageDriverAutoConfiguration;
-import com.lc.framework.common.utils.SpringBeanUtils;
 import com.lc.framework.datascope.entity.DataScopeProperties;
 import com.lc.framework.datascope.entity.HandlerDefinition;
 import com.lc.framework.datascope.entity.SupportTableDefinition;
@@ -30,11 +29,10 @@ import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
-
 import java.util.*;
 import java.util.stream.Collectors;
+import static com.lc.framework.core.constants.StringConstants.DOT;
 
-import static com.lc.framework.common.constants.StringConstants.DOT;
 
 /**
  * <pre>
@@ -45,7 +43,7 @@ import static com.lc.framework.common.constants.StringConstants.DOT;
  * @date 2023-08-04 10:15
  */
 @AutoConfigureBefore(MybatisPlusAutoConfiguration.class)
-@AutoConfigureAfter({DataSourceAutoConfiguration.class, MybatisPlusLanguageDriverAutoConfiguration.class, SpringBeanUtils.class})
+@AutoConfigureAfter({DataSourceAutoConfiguration.class, MybatisPlusLanguageDriverAutoConfiguration.class})
 @EnableConfigurationProperties(DataScopeProperties.class)
 @Import(DataScopeAutoConfiguration.CustomizerBeanPostProcessorRegistry.class)
 public class DataScopeAutoConfiguration {
@@ -104,7 +102,6 @@ public class DataScopeAutoConfiguration {
     /**
      * 注册DataScopeSqlHandlerCustomizerBeanPostProcessor
      */
-    @SuppressWarnings("NullableProblems")
     public static class CustomizerBeanPostProcessorRegistry implements ImportBeanDefinitionRegistrar, BeanFactoryAware {
 
         private ConfigurableListableBeanFactory beanFactory;

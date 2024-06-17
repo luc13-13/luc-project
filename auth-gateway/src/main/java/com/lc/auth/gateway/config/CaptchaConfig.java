@@ -16,7 +16,7 @@ import org.springframework.web.reactive.function.server.RequestPredicates;
 import org.springframework.web.reactive.function.server.RouterFunction;
 import org.springframework.web.reactive.function.server.RouterFunctions;
 import org.springframework.web.reactive.function.server.ServerResponse;
-import static com.lc.framework.core.mvc.RequestHeaderConstants.JSESSIONID;
+import static com.lc.framework.core.constants.RequestHeaderConstants.JSESSIONID;
 
 /**
  * 配置验证码， 增加路由配置，对/captcha路径进行拦截，根据request中请求的验证码类型，从factory中利用指定的验证码生成器返回response

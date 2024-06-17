@@ -20,7 +20,7 @@ import org.springframework.util.StringUtils;
 
 import java.util.Objects;
 
-import static com.lc.framework.core.mvc.RequestHeaderConstants.ACCESS_TOKEN;
+import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKEN;
 
 /**
  * <pre>
@@ -49,7 +49,7 @@ public class SecurityUtils {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers(requestMatchers).permitAll()
                         .anyRequest().authenticated())
-                .apply(authorizationServerConfigurer);
+                .with(authorizationServerConfigurer, Customizer.withDefaults());
         // 在授权服务器信息中注入自定义的授权类型，否则资源服务器和客户端无法通过自定义的类型进行授权
         authorizationServerConfigurer
                 .authorizationServerMetadataEndpoint(meta -> meta

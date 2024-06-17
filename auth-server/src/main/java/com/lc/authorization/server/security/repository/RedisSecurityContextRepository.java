@@ -19,7 +19,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-import static com.lc.framework.core.mvc.RequestHeaderConstants.ACCESS_TOKEN;
+import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKEN;
 
 /**
  * 基于redis存储认证信息

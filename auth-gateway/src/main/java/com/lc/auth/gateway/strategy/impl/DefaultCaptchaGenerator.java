@@ -4,7 +4,7 @@ import static com.lc.auth.gateway.enums.CaptchaTypeEnum.DEFAULT;
 
 import com.lc.auth.gateway.factory.CaptchaGeneratorFactory;
 import com.lc.auth.gateway.strategy.CaptchaGenerator;
-import com.lc.framework.common.constants.StringConstants;
+import com.lc.framework.core.constants.StringConstants;
 import com.lc.framework.redis.starter.utils.RedisHelper;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;

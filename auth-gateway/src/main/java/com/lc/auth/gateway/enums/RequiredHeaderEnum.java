@@ -1,8 +1,8 @@
 package com.lc.auth.gateway.enums;
 
-import com.lc.framework.core.mvc.RequestHeaderConstants;
-import static com.lc.framework.core.mvc.RequestHeaderConstants.JSESSIONID;
-import static com.lc.framework.core.mvc.RequestHeaderConstants.REQUEST_ID;
+import com.lc.framework.core.constants.RequestHeaderConstants;
+import static com.lc.framework.core.constants.RequestHeaderConstants.JSESSIONID;
+import static com.lc.framework.core.constants.RequestHeaderConstants.REQUEST_ID;
 
 /**
  * <pre>

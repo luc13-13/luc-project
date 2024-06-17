@@ -9,7 +9,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.security.web.header.HeaderWriter;
 import org.springframework.util.StringUtils;
 
-import static com.lc.framework.core.mvc.RequestHeaderConstants.JSESSIONID;
+import static com.lc.framework.core.constants.RequestHeaderConstants.JSESSIONID;
 
 /**
  * <pre>

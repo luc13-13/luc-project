@@ -2,8 +2,8 @@ package com.lc.authorization.server.security.handler;
 
 import com.lc.authorization.server.domain.dto.LoginSuccessDTO;
 import com.lc.authorization.server.utils.JsonUtils;
-import com.lc.framework.core.mvc.WebResult;
 import com.lc.framework.security.core.LoginUserDetail;
+import com.lc.framework.core.mvc.WebResult;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
-import static com.lc.framework.core.mvc.RequestHeaderConstants.ACCESS_TOKEN;
+import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKEN;
 
 /**
  * <pre>

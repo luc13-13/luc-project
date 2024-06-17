@@ -7,7 +7,8 @@ import net.sf.jsqlparser.schema.Column;
 
 import java.util.Objects;
 
-import static com.lc.framework.common.constants.StringConstants.DOT;
+import static com.lc.framework.core.constants.StringConstants.DOT;
+
 
 /**
  * <pre>

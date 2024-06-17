@@ -1,6 +1,6 @@
 package com.lc.authorization.server.security.extension;
 
-import com.lc.framework.common.constants.StringConstants;
+import com.lc.framework.core.constants.StringConstants;
 import lombok.Getter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.Authentication;

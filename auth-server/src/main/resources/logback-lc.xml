@@ -65,6 +65,6 @@
         <appender-ref ref="consoleApp"/>
         <appender-ref ref="fileInfoApp"/>
         <appender-ref ref="fileErrorApp"/>
-        <appender-ref ref="plumelog"/>
+<!--        <appender-ref ref="plumelog"/>-->
     </root>
 </configuration>

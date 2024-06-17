@@ -206,6 +206,28 @@
     </dependencyManagement>
 
     <build>
+<!--        <resources>-->
+<!--            <resource>-->
+<!--                <directory>${basedir}/src/main/resources</directory>-->
+<!--                <filtering>true</filtering>-->
+<!--                <includes>-->
+<!--                    <include>**/application*.yml</include>-->
+<!--                    <include>**/application*.yaml</include>-->
+<!--                    <include>**/application*.properties</include>-->
+<!--                    <include>**/*.xml</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
+<!--            <resource>-->
+<!--                <directory>${project.parent.basedir}/src/main/resources</directory>-->
+<!--                <filtering>true</filtering>-->
+<!--                <includes>-->
+<!--                    <include>**/application*.yml</include>-->
+<!--                    <include>**/application*.yaml</include>-->
+<!--                    <include>**/application*.properties</include>-->
+<!--                    <include>**/*.xml</include>-->
+<!--                </includes>-->
+<!--            </resource>-->
+<!--        </resources>-->
         <pluginManagement>
             <plugins>
                 <!--打包插件，配置不打包父项目中的依赖-->

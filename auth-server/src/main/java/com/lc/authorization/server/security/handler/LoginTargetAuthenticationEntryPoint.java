@@ -56,7 +56,7 @@ public class LoginTargetAuthenticationEntryPoint extends LoginUrlAuthenticationE
                 && request.getMethod().equals(HttpMethod.POST.name())
                 && UrlUtils.isAbsoluteUrl(deviceActivateUri)) {
             // 如果是请求验证设备激活码(user_code)时未登录并且设备码验证页面是前后端分离的那种则写回json
-            WebResult<String> success = WebResult.response(Status.generate(HttpStatus.UNAUTHORIZED.value(), ("登录已失效，请重新打开设备提供的验证地址")), "");
+            WebResult<String> success = WebResult.error(HttpStatus.UNAUTHORIZED.value(), "登录已失效，请重新打开设备提供的验证地址");
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(JsonUtils.objectCovertToJson(success));
