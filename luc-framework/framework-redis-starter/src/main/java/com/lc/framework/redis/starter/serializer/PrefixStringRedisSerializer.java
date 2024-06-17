@@ -1,6 +1,6 @@
 package com.lc.framework.redis.starter.serializer;
 
-import com.lc.framework.common.constants.StringConstants;
+import com.lc.framework.core.constants.StringConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
