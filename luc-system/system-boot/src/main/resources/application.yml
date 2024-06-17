@@ -1,0 +1,73 @@
+server:
+  port: 18889
+#  servlet:
+#    session:
+#      cookie:
+#        name: TEST-CLIENT
+spring:
+  application:
+    name:
+      luc-system
+  profiles:
+    active: dev
+  # mysql
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: luc123456
+    url: jdbc:mysql://localhost:3306/institution_center?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE
+  data:
+    # redis
+    redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      timeout: 5000
+      username:
+      password: luc123456
+      client-type: lettuce
+      lettuce:
+        pool:
+          min-idle: 8
+          max-idle: 500
+          max-active: 2000
+          max-wait: 10000
+          enabled: true
+  cloud:
+    # nacos
+    nacos:
+      config:
+        enabled: false
+      discovery:
+        username: luc
+        password: luc123456
+        server-addr: localhost:8848
+        namespace: com-lc-dev
+        # 本地测试时需要用本地地址，而非公网ip
+        ip: 127.0.0.1
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  global-config:
+    db-config:
+      logic-delete-field: status
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+data-scope:
+  enabled: true
+  ## 支持两种方式定义DataScopeSqlHandler
+  handler-definition:
+    ## 1、 配置文件声明bean，且声明属性
+    - id: SysUser
+      support-tables:
+        - database: auth_center
+          table-name: sys_user
+          column-name: user_id
+          column-type: varchar
+        - database: auth_center
+          table-name: sys_role
+          column-name: role_id
+          column-type: varchar
+    ## 2、配置文件只声明bean的创建，使用DataScopeSqlHandlerCustomizer在代码中对bean进行定制化开发
+    - id: Tenant
+

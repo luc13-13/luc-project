@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.system.mapper.SysUserMapper">
+
+    <resultMap type="com.lc.system.domain.entity.SysUserDO" id="SysUserMap">
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="deptId" column="dept_id" jdbcType="INTEGER"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="nickName" column="nick_name" jdbcType="VARCHAR"/>
+        <result property="userType" column="user_type" jdbcType="VARCHAR"/>
+        <result property="email" column="email" jdbcType="VARCHAR"/>
+        <result property="phoneNumber" column="phone_number" jdbcType="VARCHAR"/>
+        <result property="sex" column="sex" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="password" column="password" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="delFlag" column="del_flag" jdbcType="VARCHAR"/>
+        <result property="loginIp" column="login_ip" jdbcType="VARCHAR"/>
+        <result property="loginDate" column="login_date" jdbcType="TIMESTAMP"/>
+        <result property="createBy" column="create_by" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateBy" column="update_by" jdbcType="VARCHAR"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <resultMap id="RealmProfileMap" type="com.lc.system.domain.bo.OAuth2Profile">
+        <id property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="loginName" column="user_name" jdbcType="VARCHAR"/>
+        <collection property="permissionSet" ofType="string">
+            <id column="menu_id"/>
+            <result column="perms"/>
+        </collection>
+        <collection property="roleSet" ofType="string">
+            <id column="role_id"/>
+        </collection>
+    </resultMap>
+
+    <!-- 批量插入 -->
+
+    <select id="queryRolePermission" resultMap="RealmProfileMap">
+        SELECT u.user_id,
+               ro.role_id,
+               smenu.menu_id,
+               smenu.perms
+        FROM institution_center.`sys_user` `u`
+                 LEFT JOIN institution_center.sys_user_role sur ON u.user_id = sur.user_id
+                 LEFT JOIN institution_center.sys_role ro ON ro.role_id = sur.role_id
+                 LEFT JOIN institution_center.sys_role_menu ro_ref_m ON ro.role_id = ro_ref_m.role_id
+                 LEFT JOIN institution_center.sys_menu smenu ON ro_ref_m.menu_id = smenu.menu_id
+        WHERE u.user_id = #{userId,jdbcType=BIGINT}
+          and u.del_flag = 0
+          and u.status = 0
+          and smenu.status = 0
+    </select>
+
+</mapper>
+
