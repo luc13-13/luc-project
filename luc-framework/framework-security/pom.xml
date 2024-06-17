@@ -12,6 +12,10 @@
     <artifactId>framework-security</artifactId>
 
     <dependencies>
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-core</artifactId>
+        </dependency>
 
         <!--oauth2客户端依赖-->
         <dependency>
@@ -41,10 +45,6 @@
             <optional>true</optional>
         </dependency>
 
-        <dependency>
-            <groupId>com.lc</groupId>
-            <artifactId>framework-common</artifactId>
-        </dependency>
     </dependencies>
 
 </project>
