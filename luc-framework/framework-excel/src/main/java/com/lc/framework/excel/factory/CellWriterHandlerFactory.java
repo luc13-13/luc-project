@@ -3,16 +3,16 @@ package com.lc.framework.excel.factory;
 import com.alibaba.excel.write.builder.ExcelWriterBuilder;
 import com.alibaba.excel.write.handler.CellWriteHandler;
 import com.alibaba.excel.write.handler.WriteHandler;
-import com.lc.framework.common.utils.ReflectionUtils;
+import com.lc.framework.core.utils.ReflectionUtils;
 import com.lc.framework.excel.anno.WriteHandlerStrategy;
 import com.lc.framework.excel.anno.WriteHandlerStrategyType;
 import com.lc.framework.excel.anno.DynamicMerged;
 import com.lc.framework.excel.handler.LoopDynamicMergeStrategy;
+import jakarta.annotation.Nullable;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Nullable;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.function.BiFunction;
