@@ -14,6 +14,8 @@ public interface StatusConstants {
 
     Integer ERROR = 400;
 
+    Integer UNAUTHORIZED = 401;
+
     Integer BIZ_ERROR = 500;
 
     String BIZ_ERROR_MSG = "系统内部异常！";
