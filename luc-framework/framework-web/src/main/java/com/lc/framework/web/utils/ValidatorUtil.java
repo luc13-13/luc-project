@@ -10,12 +10,12 @@ import org.springframework.util.CollectionUtils;
 import java.util.Set;
 
 /**
+ * 校验实体的工具类， 主要用于校验请求参数
  * @author : Lu Cheng
  * @version : 1.0
- * @desc : 校验实体的工具类
  * @date : 2023/4/15 13:43
  */
-public class ValidatorUtils {
+public class ValidatorUtil {
     static final Validator validator = Validation.byProvider(HibernateValidator.class).configure().failFast(true).buildValidatorFactory().getValidator();
 
     /**

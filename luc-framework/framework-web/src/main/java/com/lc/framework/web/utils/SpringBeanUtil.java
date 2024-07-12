@@ -16,12 +16,12 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Lazy
-public class SpringBeanUtils implements ApplicationContextAware {
+public class SpringBeanUtil implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        SpringBeanUtils.applicationContext = applicationContext;
+        SpringBeanUtil.applicationContext = applicationContext;
     }
 
     public static ApplicationContext getApplicationContext() {

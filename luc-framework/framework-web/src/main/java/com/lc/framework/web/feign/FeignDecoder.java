@@ -15,9 +15,8 @@ import java.lang.reflect.Type;
 import static com.lc.framework.core.mvc.StatusConstants.BIZ_ERROR;
 
 /**
- * @author haoxr
- * @link https://zhuanlan.zhihu.com/p/545505705
- * @since 2023/8/23
+ * @author Lu Cheng
+ * @since 2024/6/23
  */
 public class FeignDecoder implements Decoder {
 
