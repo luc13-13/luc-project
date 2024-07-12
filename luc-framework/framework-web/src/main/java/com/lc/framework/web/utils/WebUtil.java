@@ -1,0 +1,36 @@
+package com.lc.framework.web.utils;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.experimental.UtilityClass;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.io.IOException;
+
+/**
+ * <pre>
+ *     处理Servlet的工具类
+ * </pre>
+ *
+ * @author Lu Cheng
+ * @date 2024/7/12 9:44
+ */
+@UtilityClass
+public class WebUtil {
+
+    public void makeResponse(HttpServletResponse response, String contentType, int status, Object value) throws IOException {
+        response.setContentType(contentType);
+        response.setStatus(status);
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.writeValue(response.getOutputStream(), value);
+    }
+
+
+    /**
+     * 获取当前线程的ServletRequestAttributes
+     */
+    public ServletRequestAttributes getRequestAttributes() {
+        return (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    }
+}
