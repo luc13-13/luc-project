@@ -4,7 +4,7 @@ import com.lc.authorization.server.constants.OAuth2ParameterConstants;
 import com.lc.authorization.server.security.extension.BasicAuthenticationConverter;
 import com.lc.authorization.server.utils.OAuth2EndpointUtils;
 import com.lc.framework.redis.starter.utils.RedisHelper;
-import com.lc.framework.web.utils.SpringBeanUtils;
+import com.lc.framework.web.utils.SpringBeanUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -45,7 +45,7 @@ public class OAuth2SmsAuthenticationConverter extends BasicAuthenticationConvert
             OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.INVALID_REQUEST, OAuth2ParameterConstants.captcha, OAuth2EndpointUtils.ACCESS_TOKEN_REQUEST_ERROR_URI);
         }
         // 验证码存在性检验
-        SpringBeanUtils.getBean(RedisHelper.class);
+        SpringBeanUtil.getBean(RedisHelper.class);
         //
     }
 
