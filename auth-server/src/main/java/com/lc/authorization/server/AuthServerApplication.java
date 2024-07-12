@@ -17,8 +17,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication(exclude = {SessionAutoConfiguration.class})
 @EnableDiscoveryClient
 @EnableFeignClients
-public class AuthorizationServerApplication {
+public class AuthServerApplication {
     public static void main(String[] args) {
-        SpringApplication.run(AuthorizationServerApplication.class, args);
+        SpringApplication.run(AuthServerApplication.class, args);
     }
 }
