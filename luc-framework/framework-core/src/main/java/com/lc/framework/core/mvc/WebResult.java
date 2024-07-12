@@ -45,6 +45,10 @@ public class WebResult<S> implements Serializable {
         return response(null, code, msg);
     }
 
+    public static <S> WebResult<S> error(Status status) {
+        return response(null, status.getCode(), status.getDesc());
+    }
+
     public static <S> WebResult<S> bizErrorData(S data) {
         return error(data, StatusConstants.BIZ_ERROR, StatusConstants.BIZ_ERROR_MSG);
     }

@@ -14,7 +14,9 @@ public interface StatusConstants {
 
     Integer ERROR = 400;
 
-    Integer UNAUTHORIZED = 401;
+    Status UNAUTHORIZED = new Status(401, "未授权");
+
+    Status FORBIDDEN = new Status(403, "禁止访问");
 
     Integer BIZ_ERROR = 500;
 
