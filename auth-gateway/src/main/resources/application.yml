@@ -48,23 +48,6 @@ spring:
 #          filters:
 #            - StripPrefix=1
 #            - TokenRelay
-    nacos:
-      username: luc
-      password: luc123456
-      discovery:
-        server-addr: localhost:8848
-        namespace: com-lc-dev
-        # 本地测试时需要用本地地址，而非公网ip
-        ip: 127.0.0.1
-      config:
-        server-addr: localhost:8848
-        refresh-enabled: true
-        file-extension: yaml
-        namespace: com-lc-dev
-  #spring boot 2.7.x 之后，如需引入外部配置，则在spring.config.import中声明
-  config:
-    import: nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
-
   data:
     redis:
       client-type: lettuce

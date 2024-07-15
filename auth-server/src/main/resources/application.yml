@@ -1,8 +1,6 @@
 server:
   port: 8889
 spring:
-  config:
-    import: nacos:${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
   profiles:
     active: dev
   application:
@@ -13,21 +11,6 @@ spring:
     restart:
       enabled: true
       additional-paths: src/main/java, src/main/resources/application*
-
-  cloud:
-    nacos:
-      username: luc
-      password: luc123456
-      discovery:
-        server-addr: localhost:8848
-        namespace: com-lc-dev
-        # 本地测试时需要用本地地址，而非公网ip
-        ip: 127.0.0.1
-      config:
-        server-addr: localhost:8848
-        refresh-enabled: true
-        file-extension: yaml
-        namespace: com-lc-dev
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher #swagger3要求
@@ -57,10 +40,10 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-logging:
-  config: classpath:logback-lc.xml
-  level:
-    root: info
-    org.springframework.security: trace
-  file:
-    path: ./${spring.application.name}/logs
+#logging:
+#  config: classpath:logback-spring.xml
+#  level:
+#    root: info
+#    org.springframework.security: trace
+#  file:
+#    path: ./${spring.application.name}/logs
