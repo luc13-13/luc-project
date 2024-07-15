@@ -78,24 +78,24 @@ public class LucRedisAutoConfig {
         return new RedisHelper(redisTemplate, 3600, REDIS_KEY_PREFIX);
     }
 
-    /**
-     * 由于SimpleSession中包含transient字段，导致无法正常完成json序列化，处理该类对象时不
-     *
-     * @author Lu Cheng
-     * @create 2023/9/22
-     */
-    @Bean("sessionRedisTemplate")
-    public RedisTemplate<String, Object> sessionRedisTemplate(RedisConnectionFactory factory) {
-        RedisTemplate<String, Object> template = new RedisTemplate<>();
-        StringRedisSerializer keySerializer = new StringRedisSerializer();
-        template.setConnectionFactory(factory);
-        template.setKeySerializer(keySerializer);
-        template.setHashKeySerializer(keySerializer);
-        return template;
-    }
-
-    @Bean("sessionRedisHelper")
-    public RedisHelper sessionRedisUtils(@Qualifier("sessionRedisTemplate") RedisTemplate<String, Object> redisTemplate) {
-        return new RedisHelper(redisTemplate, 3600, REDIS_KEY_PREFIX);
-    }
+//    /**
+//     * 由于SimpleSession中包含transient字段，导致无法正常完成json序列化，处理该类对象时不
+//     *
+//     * @author Lu Cheng
+//     * @create 2023/9/22
+//     */
+//    @Bean("sessionRedisTemplate")
+//    public RedisTemplate<String, Object> sessionRedisTemplate(RedisConnectionFactory factory) {
+//        RedisTemplate<String, Object> template = new RedisTemplate<>();
+//        StringRedisSerializer keySerializer = new StringRedisSerializer();
+//        template.setConnectionFactory(factory);
+//        template.setKeySerializer(keySerializer);
+//        template.setHashKeySerializer(keySerializer);
+//        return template;
+//    }
+//
+//    @Bean("sessionRedisHelper")
+//    public RedisHelper sessionRedisUtils(@Qualifier("sessionRedisTemplate") RedisTemplate<String, Object> redisTemplate) {
+//        return new RedisHelper(redisTemplate, 3600, REDIS_KEY_PREFIX);
+//    }
 }
