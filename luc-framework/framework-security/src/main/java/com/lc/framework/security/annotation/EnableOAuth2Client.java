@@ -15,6 +15,6 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(ResourceServerConfig.class)
+//@Import(ResourceServerConfig.class)
 public @interface EnableOAuth2Client {
 }

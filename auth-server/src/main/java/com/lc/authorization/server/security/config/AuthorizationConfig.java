@@ -27,10 +27,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.MediaType;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientService;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
@@ -50,8 +52,10 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.web.filter.CorsFilter;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -127,8 +131,12 @@ public class AuthorizationConfig {
         // 自定义放行路径
         SecurityUtils.applyDefaultSecurity(http, new AntPathRequestMatcher[]{
                 AntPathRequestMatcher.antMatcher("/login"),
-                AntPathRequestMatcher.antMatcher("/css/**"), AntPathRequestMatcher.antMatcher("/error"),
-                AntPathRequestMatcher.antMatcher("/*/api-docs/**"), AntPathRequestMatcher.antMatcher("/*/*.html"), AntPathRequestMatcher.antMatcher("/favicon.ico"), AntPathRequestMatcher.antMatcher("/v3/api-docs/default"),
+                AntPathRequestMatcher.antMatcher("/css/**"),
+                AntPathRequestMatcher.antMatcher("/error"),
+                AntPathRequestMatcher.antMatcher("/*/api-docs/**"),
+                AntPathRequestMatcher.antMatcher("/*/*.html"),
+                AntPathRequestMatcher.antMatcher("/favicon.ico"),
+                AntPathRequestMatcher.antMatcher("/v3/api-docs/default"),
                 AntPathRequestMatcher.antMatcher("/user/detail")});
         http
                 .getConfigurer(OAuth2AuthorizationServerConfigurer.class)
@@ -152,7 +160,7 @@ public class AuthorizationConfig {
                 .authorizationConsentService(authorizationConsentService)
                 .authorizationService(authorizationService)
                 .authorizationServerMetadataEndpoint(customizer -> customizer
-                        .authorizationServerMetadataCustomizer(meta -> meta.grantTypes(grantType -> grantType.addAll(List.of("password", "sms")))))
+                        .authorizationServerMetadataCustomizer(meta -> meta.grantTypes(grantType -> grantType.addAll(List.of("password", "sms", "gitee")))))
         ;
         http
                 .rememberMe(rememberMeConfig -> rememberMeConfig
@@ -166,19 +174,27 @@ public class AuthorizationConfig {
                 .oauth2ResourceServer((resourceServer) -> resourceServer
                         .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder)))
                 // 提供表单登录
-                .formLogin(formLoginConfig -> formLoginConfig
-                        // 避免在Authentication序列化时引入HttpServlet, 导致网关反序列化失败问题
-                        .authenticationDetailsSource(new ServerAuthenticationDetailsSource())
-                        .loginPage(sysSecurityProperties.getLoginPage())
-                        .loginProcessingUrl(sysSecurityProperties.getLoginApi())
-                        .failureHandler(loginFailureHandler)
-                        .successHandler(loginSuccessHandler))
+//                .formLogin(formLoginConfig -> formLoginConfig
+//                        // 避免在Authentication序列化时引入HttpServlet, 导致网关反序列化失败问题
+//                        .authenticationDetailsSource(new ServerAuthenticationDetailsSource())
+//                        .loginPage(sysSecurityProperties.getLoginPage())
+//                        .loginProcessingUrl(sysSecurityProperties.getLoginApi())
+//                        .failureHandler(loginFailureHandler)
+//                        .successHandler(loginSuccessHandler))
                 // 提供oauth2登录
-                .oauth2Login(Customizer.withDefaults())
+//                .oauth2Login(Customizer.withDefaults())
         ;
-        SecurityUtils.applyDefault(http,
-                loginTargetAuthenticationEntryPoint,
-                redisSecurityContextRepository);
+
+        http
+                .csrf(AbstractHttpConfigurer::disable)
+                // Redirect to the login page when not authenticated from the authorization endpoint
+                .exceptionHandling(exceptions -> exceptions
+                        .defaultAuthenticationEntryPointFor(
+                                loginTargetAuthenticationEntryPoint,
+                                new MediaTypeRequestMatcher(MediaType.TEXT_HTML, MediaType.APPLICATION_JSON)))
+                // 注入redis存储SecurityContext, 防止分布式情境下不同node之间数据不同步的问题
+                .securityContext(contextConfig -> contextConfig.securityContextRepository(redisSecurityContextRepository))
+        ;
         DefaultSecurityFilterChain filterChain = http.build();
         // 注入自定义的Provider, 为了获取http中的属性，需要在进行http.build()之后进行
         new AuthenticationProviderCustomizer().customize(http);

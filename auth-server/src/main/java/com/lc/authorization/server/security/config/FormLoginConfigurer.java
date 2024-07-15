@@ -4,11 +4,13 @@ import com.lc.authorization.server.security.handler.LoginFailureHandler;
 import com.lc.authorization.server.security.handler.LoginSuccessHandler;
 import com.lc.framework.security.core.properties.SysSecurityProperties;
 import com.lc.framework.security.core.webflux.ServerAuthenticationDetailsSource;
+import io.jsonwebtoken.lang.Assert;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 
 /**
  * <pre>
+ *     处理FormLogin登录失败
  * </pre>
  *
  * @author Lu Cheng
@@ -22,6 +24,8 @@ public class FormLoginConfigurer extends AbstractHttpConfigurer<FormLoginConfigu
     private final LoginFailureHandler loginFailureHandler;
 
     public FormLoginConfigurer(SysSecurityProperties sysSecurityProperties, LoginSuccessHandler loginSuccessHandler, LoginFailureHandler loginFailureHandler) {
+        Assert.notNull(sysSecurityProperties, "error: SysSecurityProperties required when use FormLogin");
+        Assert.hasText(sysSecurityProperties.getLoginPage(), "error: Login page uri required when use FormLogin! ");
         this.sysSecurityProperties = sysSecurityProperties;
         this.loginSuccessHandler = loginSuccessHandler;
         this.loginFailureHandler = loginFailureHandler;
@@ -30,8 +34,9 @@ public class FormLoginConfigurer extends AbstractHttpConfigurer<FormLoginConfigu
     @Override
     public void init(HttpSecurity http) throws Exception {
         http.formLogin(formLoginConfig -> formLoginConfig
+                        // 为了兼容webflux作为资源服务器，自定义AuthenticationDetailsSource
                         .authenticationDetailsSource(new ServerAuthenticationDetailsSource())
-//                // 暂时不指定登陆页面地址， 使用spring提供的默认地址
+                        // 要求配置登录页地址
                         .loginPage(sysSecurityProperties.getLoginPage())
                         .successHandler(loginSuccessHandler)
                         .failureHandler(loginFailureHandler)

@@ -1,10 +1,7 @@
 package com.lc.authorization.server.domain.dto;
 
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.Data;
-
 import java.util.List;
 
 /**
@@ -15,11 +12,18 @@ import java.util.List;
  * @date 2023/12/20 15:20
  */
 @Data
-@Tag(name = "LoginUserInfoDTO", description = "登录用户信息")
+@Schema(name = "LoginUserInfoDTO", description = "登录用户信息")
 public class LoginUserInfoDTO {
-    @ApiModelProperty(name = "username",  example = "用户名，手机号、邮箱、用户名")
+
+    @Schema(name = "username",  description = "用户名，手机号、邮箱、用户名", example = "admin")
     private String username;
+
+    @Schema(name = "roles",  description = "角色列表", example = "{1,2,3}")
     private List<String> roles;
+
+    @Schema(name = "permissions",  description = "权限列表", example = "{read,write}")
     private List<String> permissions;
+
+    @Schema(name = "redirectUrl",  description = "重定向地址", example = "https://www.baidu.com")
     private String redirectUrl;
 }

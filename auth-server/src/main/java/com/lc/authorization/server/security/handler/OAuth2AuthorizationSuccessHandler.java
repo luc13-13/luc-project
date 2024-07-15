@@ -22,7 +22,7 @@ import java.nio.charset.StandardCharsets;
 
 /**
  * <pre>
- *
+ * 访问/oauth2/authorize接口成功后，返回authorization_code时，将code与当前请求的jsessionid绑定
  * </pre>
  *
  * @author Lu Cheng
@@ -36,7 +36,6 @@ public class OAuth2AuthorizationSuccessHandler implements AuthenticationSuccessH
     @Autowired
     private RedisHelper redisHelper;
 
-    // 访问/oauth2/authorize接口成功后，返回authorization_code时，将code与当前请求的jsessionid绑定
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         OAuth2AuthorizationCodeRequestAuthenticationToken authorizationCodeRequestAuthentication =

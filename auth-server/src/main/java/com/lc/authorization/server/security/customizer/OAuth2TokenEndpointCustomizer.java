@@ -42,11 +42,14 @@ public class OAuth2TokenEndpointCustomizer implements Customizer<OAuth2TokenEndp
                         new OAuth2AuthorizationCodeAuthenticationConverter(),
                         // 内置的授权码请求Converter
                         new OAuth2AuthorizationCodeRequestAuthenticationConverter(),
-                        // 自定义的用户名密码获取token方式
+                        // 自定义的用户名密码获取token的Converter
                         new OAuth2PasswordAuthenticationConverter(),
+                        // 自定义的短信获取token的Converter
                         new OAuth2SmsAuthenticationConverter()
                 )))
+                // 获取token成功处理器
                 .accessTokenResponseHandler(authenticationSuccessHandler)
+                // 获取token失败处理器
                 .errorResponseHandler(authenticationFailureHandler);
     }
 }
