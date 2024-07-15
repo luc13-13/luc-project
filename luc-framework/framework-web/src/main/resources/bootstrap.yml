@@ -1,7 +1,0 @@
-logging:
-  level:
-    root: info
-    org.springframework.security: debug
-  config: classpath:logback-lc.xml
-  file:
-    path: ./${spring.application.name}/logs
