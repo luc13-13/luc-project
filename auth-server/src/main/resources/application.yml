@@ -4,7 +4,7 @@ spring:
   profiles:
     active: dev
   application:
-    name: authorization-server
+    name: auth-server
   messages:
     basename: messages
   devtools: # 热部署工具，需要在idea中同时设置auto compiler
@@ -40,10 +40,6 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
-#logging:
-#  config: classpath:logback-spring.xml
-#  level:
-#    root: info
-#    org.springframework.security: trace
-#  file:
-#    path: ./${spring.application.name}/logs
+logging:
+  level:
+    org.springframework.security: trace
