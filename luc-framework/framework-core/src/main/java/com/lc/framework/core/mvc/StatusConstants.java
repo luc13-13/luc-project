@@ -12,28 +12,27 @@ public interface StatusConstants {
 
     String SUCCESS_MSG = "请求成功";
 
-    Integer ERROR = 400;
+    Integer CODE_UNAUTHORIZED = 401;
 
-    Status UNAUTHORIZED = new Status(401, "未授权");
+    String MSG_UNAUTHORIZED = "未授权！";
 
-    Status FORBIDDEN = new Status(403, "禁止访问");
+    Integer CODE_LOGIN_FAILURE = 40101;
 
-    Integer BIZ_ERROR = 500;
+    String MSG_LOGIN_FAILURE = "登录失败！";
 
-    String BIZ_ERROR_MSG = "系统内部异常！";
+    Integer CODE_FORBIDDEN = 403;
 
-    Integer PERMISSION_DENIED = 501;
+    String MSG_FORBIDDEN = "禁止访问！";
 
-    Integer AUTH_OUT_OF_DATE = 502;
-    Integer ILLEGAL = 5001;
+    Integer CODE_BIZ_ERROR = 500;
 
-    Integer OUT_OF_RANGE = 5002;
+    String MSG_BIZ_ERROR = "系统内部异常！";
 
-    Integer NOT_LESS_THAN_ZERO = 5003;
+    Status LOGIN_FAILURE = Status.of(CODE_LOGIN_FAILURE, MSG_LOGIN_FAILURE);
 
-    Integer NOT_GREATER_THAN_ZERO = 5004;
-    Integer NOT_FOUND_PATH = 404;
+    Status UNAUTHORIZED = Status.of(CODE_UNAUTHORIZED, MSG_UNAUTHORIZED);
 
-    Integer FORBIDDEN_ARGS = 4001;
-    Integer NOT_NULL = 4002;
+    Status FORBIDDEN = Status.of(CODE_FORBIDDEN, MSG_FORBIDDEN);
+
+    Status BIZ_ERROR = Status.of(CODE_BIZ_ERROR, MSG_BIZ_ERROR);
 }

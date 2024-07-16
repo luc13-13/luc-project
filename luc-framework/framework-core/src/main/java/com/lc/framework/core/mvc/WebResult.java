@@ -49,12 +49,12 @@ public class WebResult<S> implements Serializable {
         return response(null, status.getCode(), status.getDesc());
     }
 
-    public static <S> WebResult<S> bizErrorData(S data) {
-        return error(data, StatusConstants.BIZ_ERROR, StatusConstants.BIZ_ERROR_MSG);
+    public static <S> WebResult<S> error(S data,  Status status) {
+        return response(data, status.getCode(), status.getDesc());
     }
 
-    public static <S> WebResult<S> sysErrorData(S data) {
-        return error(data, StatusConstants.ERROR, StatusConstants.BIZ_ERROR_MSG);
+    public static <S> WebResult<S> bizErrorData(S data) {
+        return error(data, StatusConstants.BIZ_ERROR);
     }
 
     public static <S> boolean isSuccess(WebResult<S> result) {
