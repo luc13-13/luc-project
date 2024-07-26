@@ -58,12 +58,15 @@ public class OAuth2TokenSuccessHandler implements AuthenticationSuccessHandler {
         OAuth2TokenDTO tokenDTO = OAuth2TokenDTO.builder()
                 .tokenType(Objects.nonNull(accessToken.getTokenType()) ? accessToken.getTokenType().getValue() : "Bearer")
                 .accessToken(accessToken.getTokenValue())
-                .accessTokenExpiredAt(accessToken.getExpiresAt().toEpochMilli())
                 .build();
+        if (accessToken.getExpiresAt() != null) {
+            tokenDTO.setAccessTokenExpiredAt(accessToken.getExpiresAt().toEpochMilli());
+        }
         if (Objects.nonNull(refreshToken)) {
             tokenDTO.setRefreshToken(refreshToken.getTokenValue());
-            tokenDTO.setRefreshTokenExpiredAt(refreshToken.getExpiresAt().toEpochMilli());
-
+            if (refreshToken.getExpiresAt() != null) {
+                tokenDTO.setRefreshTokenExpiredAt(refreshToken.getExpiresAt().toEpochMilli());
+            }
         }
         String tokenKey = SecurityUtils.getTokenKey(request);
         String code;
@@ -71,7 +74,7 @@ public class OAuth2TokenSuccessHandler implements AuthenticationSuccessHandler {
             // tokenKey 为空时， 如果是/oauth2/authorize接口， 则去redis中查找颁发的code对应的jsessionid
             // 授权码模式， 不做类型转换
             tokenKey = redisHelper.get(code);
-            log.info("jsessionid为空，尝试为请求:{} 从redis获取jsessionid：{}", request.getRequestURI(), tokenKey);
+            log.info("tokenKey为空，尝试为请求:{} 从redis获取tokenKey：{}", request.getRequestURI(), tokenKey);
             OAuth2AccessTokenResponse.Builder builder =
                     OAuth2AccessTokenResponse.withToken(accessToken.getTokenValue())
                             .tokenType(accessToken.getTokenType())

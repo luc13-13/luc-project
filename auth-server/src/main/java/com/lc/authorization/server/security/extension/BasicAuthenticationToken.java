@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.util.Assert;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -28,16 +30,20 @@ public abstract class BasicAuthenticationToken extends AbstractAuthenticationTok
     @Getter
     private final Set<String> scopes;
 
+    @Getter
+    private final Map<String, Object> additionalParameters;
+
 
     public BasicAuthenticationToken(AuthorizationGrantType authorizationGrantType,
                                     Authentication clientPrincipal,
-                                    Set<String> scopes) {
+                                    Set<String> scopes, Map<String, Object> additionalParameters) {
         super(null);
         Assert.notNull(authorizationGrantType, "authorizationGrantType cannot be null");
         Assert.notNull(clientPrincipal, "clientPrincipal cannot be null");
         this.authorizationGrantType = authorizationGrantType;
         this.clientPrincipal = clientPrincipal;
         this.scopes = scopes;
+        this.additionalParameters = Collections.unmodifiableMap(additionalParameters != null ? additionalParameters : Collections.emptyMap());
     }
 
     @Override

@@ -22,7 +22,7 @@ import java.util.HashSet;
 @Service
 public class LoginUserDetailServiceImpl implements LoginUserDetailService, UserDetailsPasswordService {
 
-    private InstitutionCenterFeignClient institutionCenterFeignClient;
+    private final InstitutionCenterFeignClient institutionCenterFeignClient;
 
     public LoginUserDetailServiceImpl(InstitutionCenterFeignClient institutionCenterFeignClient) {
         this.institutionCenterFeignClient = institutionCenterFeignClient;

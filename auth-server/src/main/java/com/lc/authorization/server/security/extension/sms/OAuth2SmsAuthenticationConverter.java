@@ -1,9 +1,9 @@
 package com.lc.authorization.server.security.extension.sms;
 
-import com.lc.authorization.server.constants.OAuth2ParameterConstants;
 import com.lc.authorization.server.security.extension.BasicAuthenticationConverter;
 import com.lc.authorization.server.utils.OAuth2EndpointUtils;
 import com.lc.framework.redis.starter.utils.RedisHelper;
+import com.lc.framework.security.constants.OAuth2ParameterConstants;
 import com.lc.framework.web.utils.SpringBeanUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
@@ -23,8 +23,6 @@ import java.util.Set;
  * @date 2024/3/11 11:02
  */
 public class OAuth2SmsAuthenticationConverter extends BasicAuthenticationConverter<OAuth2SmsAuthenticationToken> {
-
-    public RedisHelper redisHelper;
 
     public static final AuthorizationGrantType SMS = new AuthorizationGrantType("sms");
 

@@ -26,8 +26,9 @@ import org.springframework.util.CollectionUtils;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.security.Principal;
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
+
+import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKEN;
 
 /**
  * <pre>
@@ -170,8 +171,11 @@ public abstract class BasicAuthenticationProvider<T extends BasicAuthenticationT
             OAuth2Authorization authorization = authorizationBuilder.build();
             authorizationService.save(authorization);
 
+            // 封装与token相关的额外参数
+            Map<String, Object> additionalParameters = Collections.singletonMap(ACCESS_TOKEN, "");
+
             // 返回认证成功的token
-            return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken, refreshToken);
+            return new OAuth2AccessTokenAuthenticationToken(registeredClient, clientPrincipal, accessToken, refreshToken, additionalParameters);
         } catch (Exception ex) {
 //            OAuth2EndpointUtils.throwError(OAuth2ErrorCodes.SERVER_ERROR, OAuth2ErrorCodes.INVALID_TOKEN, DEFAULT_ERROR_URI);
             throw new OAuth2AuthenticationException(OAuth2ErrorCodes.SERVER_ERROR);

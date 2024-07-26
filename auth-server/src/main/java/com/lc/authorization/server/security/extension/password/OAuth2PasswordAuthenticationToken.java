@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -22,9 +23,13 @@ public class OAuth2PasswordAuthenticationToken extends BasicAuthenticationToken 
     @Getter
     private final String password;
 
-    public OAuth2PasswordAuthenticationToken(AuthorizationGrantType authorizationGrantType, Authentication clientPrincipal, Set<String> scopes, String username, String password) {
-        super(authorizationGrantType, clientPrincipal, scopes);
+    public OAuth2PasswordAuthenticationToken(AuthorizationGrantType authorizationGrantType, Authentication clientPrincipal, Set<String> scopes, String username, String password, Map<String, Object> additionalParameters) {
+        super(authorizationGrantType, clientPrincipal, scopes, additionalParameters);
         this.username = username;
         this.password = password;
+    }
+
+    public OAuth2PasswordAuthenticationToken(AuthorizationGrantType authorizationGrantType, Authentication clientPrincipal, Set<String> scopes, String username, String password) {
+        this(authorizationGrantType, clientPrincipal, scopes,  username, password, null);
     }
 }

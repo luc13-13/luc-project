@@ -1,11 +1,9 @@
 package com.lc.framework.security.core.handler;
 
-import com.lc.framework.core.mvc.StatusConstants;
+import com.lc.framework.core.mvc.Status;
 import com.lc.framework.core.mvc.WebResult;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -15,6 +13,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.util.StringUtils;
 import java.io.IOException;
+import static com.lc.framework.core.mvc.StatusConstants.CODE_FORBIDDEN;
 
 /**
  * <pre>
@@ -37,7 +36,7 @@ public class LucAuthenticationFailureHandler implements AuthenticationFailureHan
         } else {
             errorMessage = exception.getLocalizedMessage();
         }
-        WebResult<String> errorResult = WebResult.error(StatusConstants.BIZ_ERROR, errorMessage);
+        WebResult<String> errorResult = WebResult.error(Status.of(CODE_FORBIDDEN, errorMessage));
         accessTokenResponseConverter.write(errorResult, MediaType.APPLICATION_JSON, httpResponse);
     }
 }

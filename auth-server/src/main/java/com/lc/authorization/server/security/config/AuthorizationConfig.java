@@ -11,7 +11,6 @@ import com.lc.authorization.server.security.repository.RedisSecurityContextRepos
 import com.lc.authorization.server.utils.SecurityUtils;
 import com.lc.framework.redis.starter.utils.RedisHelper;
 import com.lc.framework.security.core.properties.SysSecurityProperties;
-import com.lc.framework.security.core.webflux.ServerAuthenticationDetailsSource;
 import com.lc.framework.security.service.LoginUserDetailService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -91,12 +90,6 @@ public class AuthorizationConfig {
     @Autowired
     private CorsFilter corsFilter;
 
-    @Autowired
-    private SysSecurityProperties sysSecurityProperties;
-
-    @Autowired
-    private SysTokenProperties sysTokenProperties;
-
     @Lazy
     @Autowired
     private LoginUserDetailService userDetailsService;
@@ -105,16 +98,7 @@ public class AuthorizationConfig {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private LoginSuccessHandler loginSuccessHandler;
-
-    @Autowired
-    private LoginFailureHandler loginFailureHandler;
-
-    @Autowired
     private OAuth2TokenSuccessHandler oAuth2TokenSuccessHandler;
-
-    @Autowired
-    private OAuth2AuthorizationSuccessHandler oAuth2AuthorizationSuccessHandler;
 
 
     @Bean
