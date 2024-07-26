@@ -1,4 +1,4 @@
-package com.lc.framework.security.client.config;
+package com.lc.framework.security.client;
 
 /**
  * <pre>

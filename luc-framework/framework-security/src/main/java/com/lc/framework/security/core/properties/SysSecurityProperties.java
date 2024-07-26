@@ -2,8 +2,10 @@ package com.lc.framework.security.core.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
 
 import java.time.Duration;
+import java.util.List;
 
 /**
  * <pre>
@@ -58,4 +60,11 @@ public class SysSecurityProperties {
     private String authenticationCacheName;
 
     private boolean enableFeignInterceptor = false;
+
+    /**
+     * 开启OAuth2登录，例如引入微信、gitee登录
+     */
+    private boolean enableOAuth2Client = false;
+
+    private List<ClientRegistration> oauth2Clients;
 }
