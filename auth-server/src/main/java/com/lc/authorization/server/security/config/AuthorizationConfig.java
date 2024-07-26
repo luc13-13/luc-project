@@ -145,22 +145,23 @@ public class AuthorizationConfig {
                         Customizer.withDefaults()
 //                        clientAuthentication -> clientAuthentication.authenticationConverter(new OAuth2PasswordAuthenticationConverter())
                 )
-                // 设置自定义的授权码确认页面地址, 拦截/oauth2/authorize, 对应OAuth2AuthorizationEndpointFilter
-                .authorizationEndpoint(
-                        authorizationEndpoint -> authorizationEndpoint
-                                // 注入自定义的授权成功handler，保存code与jsessionid的关系
-                                .authorizationResponseHandler(oAuth2AuthorizationSuccessHandler)
-                )
-                // Enable OpenID Connect 1.0
-                .oidc(Customizer.withDefaults())
                 // 注入自定义的授权方式Converter, 所有经过/oauth2/token接口的请求都经过OAuth2TokenEndpointFilter过滤器
                 // 该过滤器要求provider提供OAuth2AccessTokenAuthenticationToken
                 // 获取token必须在登陆之后， 因为OAuth2TokenEndPointFilter在鉴权过滤器之后，获取不到权限则直接报错
                 .tokenEndpoint(new OAuth2TokenEndpointCustomizer(oAuth2TokenSuccessHandler, null))
-                .authorizationConsentService(authorizationConsentService)
+                // 设置自定义的授权码确认页面地址, 拦截/oauth2/authorize, 对应OAuth2AuthorizationEndpointFilter
+//                .authorizationEndpoint(
+//                        authorizationEndpoint -> authorizationEndpoint
+//                                // 注入自定义的授权成功handler，保存code与jsessionid的关系
+//                                .authorizationResponseHandler(oAuth2AuthorizationSuccessHandler)
+//                )
+//                .authorizationConsentService(authorizationConsentService)
+                // Enable OpenID Connect 1.0
+                .oidc(Customizer.withDefaults())
                 .authorizationService(authorizationService)
                 .authorizationServerMetadataEndpoint(customizer -> customizer
-                        .authorizationServerMetadataCustomizer(meta -> meta.grantTypes(grantType -> grantType.addAll(List.of("password", "sms", "gitee")))))
+                        .authorizationServerMetadataCustomizer(meta -> meta.grantTypes(grantType -> grantType.addAll(List.of("password", "sms", "gitee"))))
+                )
         ;
         http
                 .rememberMe(rememberMeConfig -> rememberMeConfig

@@ -84,7 +84,6 @@ public class ResourceConfig {
         http
                 // 添加默认请求头
                 .headers(conf -> conf.addHeaderWriter(tokenHeaderWriter))
-
                 .addFilter(corsFilter)
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers(whiteRequests).permitAll()
