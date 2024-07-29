@@ -27,38 +27,19 @@ public class SysSecurityProperties {
       */
     private String loginApi;
 
+    /**
+     * 设备吗登录url
+     */
     private String deviceActiveUrl;
 
     /**
-     * 系统session前缀
+     * 资源服务器的白名单路径
      */
-    private String sessionPrefix;
+    private List<String> whitePaths;
 
     /**
-     * 系统session过期时间
+     * 是否开启feign拦截器
      */
-    private Duration sessionTimeout;
-
-    /**
-     * 系统创建的cookie生命周期
-     */
-    private Duration cookieMaxAge;
-
-    /**
-     * token前缀
-     */
-    private String cachePrefix;
-
-    /**
-     * 权限缓存名称
-     */
-    private String authorizationCacheName;
-
-    /**
-     * 认证缓存名称
-     */
-    private String authenticationCacheName;
-
     private boolean enableFeignInterceptor = false;
 
     /**
@@ -66,5 +47,8 @@ public class SysSecurityProperties {
      */
     private boolean enableOAuth2Client = false;
 
+    /**
+     * OAuth2客户端设置
+     */
     private List<ClientRegistration> oauth2Clients;
 }
