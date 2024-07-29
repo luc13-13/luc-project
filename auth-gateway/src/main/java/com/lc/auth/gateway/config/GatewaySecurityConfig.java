@@ -54,7 +54,6 @@ public class GatewaySecurityConfig {
     private RedisServerSecurityContextRepository serverSecurityContextRepository;
 
     @Bean
-    @RefreshScope
     public SecurityWebFilterChain defaultSecurityFilterChain(ServerHttpSecurity http,
                                                              RedirectServerAuthenticationSuccessHandler authenticationSuccessHandler,
                                                              RedirectServerAuthenticationFailureHandler authenticationFailureHandler) {
@@ -84,12 +83,6 @@ public class GatewaySecurityConfig {
                 )
                 // 配置请求缓存，保存在cookie中
                 .requestCache(requestCache -> requestCache.requestCache(new CookieServerRequestCache()))
-                .oauth2Login(
-//                        Customizer.withDefaults()
-                        oAuth2LoginSpec -> oAuth2LoginSpec
-                        .authenticationSuccessHandler(authenticationSuccessHandler)
-                        .authenticationFailureHandler(authenticationFailureHandler)
-                )
                 .oauth2ResourceServer(resourceServer -> resourceServer
 //                        .authenticationEntryPoint(authenticationEntryPoint)
                         .jwt(Customizer.withDefaults())

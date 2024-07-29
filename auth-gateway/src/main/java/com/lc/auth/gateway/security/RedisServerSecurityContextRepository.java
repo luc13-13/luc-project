@@ -24,6 +24,8 @@ import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKE
 @Slf4j
 @Component
 public class RedisServerSecurityContextRepository implements ServerSecurityContextRepository {
+
+
     @Autowired
     private RedisHelper redisHelper;
 
@@ -31,7 +33,7 @@ public class RedisServerSecurityContextRepository implements ServerSecurityConte
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
         ServerHttpRequest request = exchange.getRequest();
         String tokenKey = WebFluxUtils.getHeaderValue(request, ACCESS_TOKEN);
-        log.info("网关保存jsessionid: {} 的认证信息", tokenKey);
+        log.info("网关保存认证信息：{}, context: {}", tokenKey,context);
         return Mono.<Void>defer(() -> {
                     log.info("写入SecurityContext");
                     redisHelper.set(tokenKey, context);
