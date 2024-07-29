@@ -13,6 +13,7 @@ import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
 import static com.lc.framework.core.mvc.StatusConstants.BIZ_ERROR;
+import static com.lc.framework.core.mvc.StatusConstants.CODE_BIZ_ERROR;
 
 /**
  * @author Lu Cheng
@@ -51,7 +52,7 @@ public class FeignDecoder implements Decoder {
             if (WebResult.isSuccess(result)) {
                 return result.getData();
             } else {
-                throw new DecodeException(BIZ_ERROR, result.getMsg(), response.request());
+                throw new DecodeException(CODE_BIZ_ERROR, result.getMsg(), response.request());
             }
         }
         return this.decoder.decode(response, type);
