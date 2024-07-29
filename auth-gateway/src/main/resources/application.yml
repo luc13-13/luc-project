@@ -92,21 +92,11 @@ spring:
 #              - read
 #              - write
 #              - openid
-
-mybatis-plus:
-  mapper-locations: classpath:/mapper/**/*.xml
-  global-config:
-    db-config:
-      logic-delete-field: status
-      logic-delete-value: 0
-      logic-not-delete-value: 1
 logging:
   level:
     root: info
     org.springframework.security: debug
   config: classpath:logback-lc.xml
-  file:
-    path: ./${spring.application.name}/logs
 
 
 
