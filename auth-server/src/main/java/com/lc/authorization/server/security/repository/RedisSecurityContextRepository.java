@@ -67,6 +67,7 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
             redisHelper.expired(tokenKey, SECURITY_CONTEXT_CACHE_PREFIX);
         } else {
             // 保存认证信息
+            request.setAttribute(ACCESS_TOKEN, tokenKey);
             redisHelper.set(tokenKey, context, SECURITY_CONTEXT_CACHE_PREFIX);
         }
         // 向request中加入tokenKey
@@ -75,12 +76,12 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
 
     @Override
     public boolean containsContext(HttpServletRequest request) {
-        String jsessionid = SecurityUtils.getTokenKey(request);
-        if (ObjectUtils.isEmpty(jsessionid)) {
+        String tokenKey = SecurityUtils.getTokenKey(request);
+        if (ObjectUtils.isEmpty(tokenKey)) {
             return false;
         }
-        boolean res = redisHelper.hasKey(jsessionid, SECURITY_CONTEXT_CACHE_PREFIX);
-        log.info("检查当前请求是否已经认证{}: {}", jsessionid, res);
+        boolean res = redisHelper.hasKey(tokenKey, SECURITY_CONTEXT_CACHE_PREFIX);
+        log.info("检查当前请求是否已经认证{}: {}", tokenKey, res);
         // 检验当前请求是否有认证信息
         return res;
     }

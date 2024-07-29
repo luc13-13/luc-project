@@ -1,15 +1,13 @@
 package com.lc.authorization.server.security.config;
 
 
-import com.lc.authorization.server.property.SysTokenProperties;
 import com.lc.authorization.server.security.customizer.AuthenticationProviderCustomizer;
 import com.lc.authorization.server.security.customizer.OAuth2TokenEndpointCustomizer;
-import com.lc.authorization.server.security.extension.DaoAuthenticationProvider;
-import com.lc.authorization.server.security.filter.TokenHeaderWriter;
+import com.lc.authorization.server.security.extension.LucDaoAuthenticationProvider;
 import com.lc.authorization.server.security.handler.*;
 import com.lc.authorization.server.security.repository.RedisSecurityContextRepository;
-import com.lc.authorization.server.utils.SecurityUtils;
 import com.lc.framework.redis.starter.utils.RedisHelper;
+import com.lc.framework.security.core.properties.SysCorsProperties;
 import com.lc.framework.security.core.properties.SysSecurityProperties;
 import com.lc.framework.security.service.LoginUserDetailService;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -33,9 +31,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.JdbcOAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
 import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
@@ -51,11 +46,10 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.web.DefaultSecurityFilterChain;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
-import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
+
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPrivateKey;
@@ -81,16 +75,15 @@ import static org.springframework.security.oauth2.core.ClientAuthenticationMetho
 @Slf4j
 @Configuration
 @AutoConfigureAfter(BeanConfig.class)
-@EnableConfigurationProperties({SysSecurityProperties.class, SysTokenProperties.class})
+@EnableConfigurationProperties({SysSecurityProperties.class, SysCorsProperties.class})
 public class AuthorizationConfig {
 
     @Autowired
     private RedisHelper redisHelper;
 
     @Autowired
-    private CorsFilter corsFilter;
+    private CorsConfigurationSource configurationSource;
 
-    @Lazy
     @Autowired
     private LoginUserDetailService userDetailsService;
 
@@ -111,24 +104,10 @@ public class AuthorizationConfig {
                                                                       JwtDecoder jwtDecoder)
             throws Exception {
 
+        // 初始化默认配置
+        OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
-        // 自定义放行路径
-        SecurityUtils.applyDefaultSecurity(http, new AntPathRequestMatcher[]{
-                AntPathRequestMatcher.antMatcher("/login"),
-                AntPathRequestMatcher.antMatcher("/css/**"),
-                AntPathRequestMatcher.antMatcher("/error"),
-                AntPathRequestMatcher.antMatcher("/*/api-docs/**"),
-                AntPathRequestMatcher.antMatcher("/*/*.html"),
-                AntPathRequestMatcher.antMatcher("/favicon.ico"),
-                AntPathRequestMatcher.antMatcher("/v3/api-docs/default"),
-                AntPathRequestMatcher.antMatcher("/user/detail")});
-        http
-                .getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                // 自定义的客户端认证方法, 默认对/oauth2/token(获取token), /oauth2/revoke(注销token), /oauth2/introspect(校验token有效性), /oauth2/device_authorization接口进行拦截， 均为POST方法
-                .clientAuthentication(
-                        Customizer.withDefaults()
-//                        clientAuthentication -> clientAuthentication.authenticationConverter(new OAuth2PasswordAuthenticationConverter())
-                )
+        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 // 注入自定义的授权方式Converter, 所有经过/oauth2/token接口的请求都经过OAuth2TokenEndpointFilter过滤器
                 // 该过滤器要求provider提供OAuth2AccessTokenAuthenticationToken
                 // 获取token必须在登陆之后， 因为OAuth2TokenEndPointFilter在鉴权过滤器之后，获取不到权限则直接报错
@@ -146,15 +125,18 @@ public class AuthorizationConfig {
                 .authorizationServerMetadataEndpoint(customizer -> customizer
                         .authorizationServerMetadataCustomizer(meta -> meta.grantTypes(grantType -> grantType.addAll(List.of("password", "sms", "gitee"))))
                 )
+        // 自定义的客户端认证方法, 默认对/oauth2/token(获取token), /oauth2/revoke(注销token), /oauth2/introspect(校验token有效性), /oauth2/device_authorization接口进行拦截， 均为POST方法
+//                .clientAuthentication(
+//                        Customizer.withDefaults()
+//                        clientAuthentication -> clientAuthentication.authenticationConverter(new OAuth2PasswordAuthenticationConverter())
+//                )
         ;
         http
                 .rememberMe(rememberMeConfig -> rememberMeConfig
                         .tokenRepository(new JdbcTokenRepositoryImpl())
                         .alwaysRemember(false))
-                // 添加默认请求头
-                .headers(conf -> conf.addHeaderWriter(new TokenHeaderWriter()))
                 // 配置跨域
-                .addFilter(corsFilter)
+                .cors(corsConfig -> corsConfig.configurationSource(configurationSource))
                 // Accept access tokens for User Info and/or Client Registration
                 .oauth2ResourceServer((resourceServer) -> resourceServer
                         .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder)))
@@ -191,8 +173,8 @@ public class AuthorizationConfig {
     @Autowired
     public void authenticationManager(AuthenticationManagerBuilder builder) throws Exception {
         // 注入自定义的UserDetailService
-        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider(userDetailsService, passwordEncoder);
-        builder.authenticationProvider(daoAuthenticationProvider);
+        LucDaoAuthenticationProvider lucDaoAuthenticationProvider = new LucDaoAuthenticationProvider(userDetailsService, passwordEncoder);
+        builder.authenticationProvider(lucDaoAuthenticationProvider);
     }
 
     /**
@@ -257,11 +239,11 @@ public class AuthorizationConfig {
         return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
     }
 
-    @Bean
-    public OAuth2AuthorizedClientService auth2AuthorizedClientService(JdbcTemplate jdbcTemplate,
-                                                                      ClientRegistrationRepository clientRegistrationRepository) {
-        return new JdbcOAuth2AuthorizedClientService(jdbcTemplate, clientRegistrationRepository);
-    }
+//    @Bean
+//    public OAuth2AuthorizedClientService auth2AuthorizedClientService(JdbcTemplate jdbcTemplate,
+//                                                                      ClientRegistrationRepository clientRegistrationRepository) {
+//        return new JdbcOAuth2AuthorizedClientService(jdbcTemplate, clientRegistrationRepository);
+//    }
 
     /**
      * for signing access tokens.

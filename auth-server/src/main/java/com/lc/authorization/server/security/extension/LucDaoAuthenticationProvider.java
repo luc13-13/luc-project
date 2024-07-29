@@ -21,7 +21,7 @@ import org.springframework.util.Assert;
  * @date 2023/12/28 10:49
  */
 @Slf4j
-public class DaoAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
+public class LucDaoAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider {
 
     /**
      * The plaintext password used to perform
@@ -38,7 +38,7 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
 
     private PasswordEncoder passwordEncoder;
 
-    public DaoAuthenticationProvider(LoginUserDetailService loginUserDetailService) {
+    public LucDaoAuthenticationProvider(LoginUserDetailService loginUserDetailService) {
         this(loginUserDetailService, PasswordEncoderFactories.createDelegatingPasswordEncoder());
     }
 
@@ -47,7 +47,7 @@ public class DaoAuthenticationProvider extends AbstractUserDetailsAuthentication
      * @param passwordEncoder the {@link PasswordEncoder} to use. Cannot be null.
      * @since 6.0.3
      */
-    public DaoAuthenticationProvider(LoginUserDetailService loginUserDetailService, PasswordEncoder passwordEncoder) {
+    public LucDaoAuthenticationProvider(LoginUserDetailService loginUserDetailService, PasswordEncoder passwordEncoder) {
         super();
         this.loginUserDetailService = loginUserDetailService;
         setPasswordEncoder(passwordEncoder);

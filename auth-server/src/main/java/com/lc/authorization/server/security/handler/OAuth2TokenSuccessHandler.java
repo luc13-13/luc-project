@@ -91,6 +91,7 @@ public class OAuth2TokenSuccessHandler implements AuthenticationSuccessHandler {
             redisHelper.hPut(REFRESH_TOKEN, tokenKey, refreshToken);
             this.accessTokenHttpResponseConverter.write(accessTokenResponse, null, httpResponse);
         } else {
+            log.info("tokenKey为：{}, 缓存accessToken", tokenKey);
             redisHelper.hPut(ACCESS_TOKEN, tokenKey, accessToken);
             redisHelper.hPut(REFRESH_TOKEN, tokenKey, refreshToken);
             WebResult<OAuth2TokenDTO> result = WebResult.successData(tokenDTO);

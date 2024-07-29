@@ -78,10 +78,7 @@ public class SecurityUtils {
     }
 
     /**
-     * 优先从cookie中取，因为登陆成功后cookie中的jsessionid会被更新，导致与request中的不一致
-     * 找不到去请求参数中找，找不到获取当前session的id
-     *  2023-07-11新增逻辑：获取当前session的sessionId
-     *
+     * tokenKey获取顺序：1、
      * @param request 当前请求
      * @return 随机字符串(sessionId)，这个字符串本来是前端生成，现在改为后端获取的sessionId
      */

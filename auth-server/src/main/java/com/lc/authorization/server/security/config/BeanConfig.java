@@ -1,17 +1,20 @@
 package com.lc.authorization.server.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lc.authorization.server.security.filter.TokenHeaderWriter;
 import com.lc.authorization.server.security.handler.LoginTargetAuthenticationEntryPoint;
 import com.lc.framework.redis.starter.customizer.ObjectMapperCustomizer;
 import com.lc.framework.redis.starter.utils.RedisHelper;
+import com.lc.framework.security.core.properties.SysCorsProperties;
 import com.lc.framework.security.core.properties.SysSecurityProperties;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
  * <pre>
@@ -23,20 +26,10 @@ import org.springframework.security.jackson2.SecurityJackson2Modules;
 @Configuration
 public class BeanConfig {
 
-    @Value(value = "${spring.application.name}")
-    private String REDIS_KEY_PREFIX;
-
-
     private final SysSecurityProperties sysSecurityProperties;
 
     public BeanConfig(SysSecurityProperties sysSecurityProperties) {
         this.sysSecurityProperties = sysSecurityProperties;
-    }
-
-
-    @Bean
-    public TokenHeaderWriter tokenHeaderWriter() {
-        return new TokenHeaderWriter();
     }
 
     @Bean
@@ -55,6 +48,42 @@ public class BeanConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
+    @Bean
+    @ConditionalOnProperty(value = "sys.cors.enabled")
+    public CorsConfigurationSource configurationSource(SysCorsProperties corsProperties) {
+        // 初始化cors配置对象
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        // 设置允许跨域的域名, 如果允许携带cookie的话,路径就不能写*号, *表示所有的域名都可以跨域访问
+//        if (!CollectionUtils.isEmpty(corsProperties.getAllowedOrigins())) {
+//            for (String allowedOrigin : corsProperties.getAllowedOrigins()) {
+//                configuration.addAllowedOrigin(allowedOrigin);
+//                configuration.addAllowedOrigin("http://127.0.0.1:8809");
+//                configuration.addAllowedOrigin("http://127.0.0.1");
+//                configuration.addAllowedOrigin("http://localhost");
+//                configuration.addAllowedOrigin("http://192.168.1.102:5173");
+//                configuration.addAllowedOrigin("http://192.168.119.1:5173");
+//            }
+//        }
+        configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        // 设置跨域访问可以携带cookie
+        configuration.setAllowCredentials(corsProperties.isAllowCredentials());
+        // 允许所有的请求方法 ==> GET POST PUT Delete
+        configuration.setAllowedMethods(corsProperties.getAllowedMethods());
+        // 允许携带任何头信息
+        configuration.setAllowedHeaders(corsProperties.getAllowedHeaders());
+
+        // 初始化cors配置源对象
+        UrlBasedCorsConfigurationSource configurationSource = new UrlBasedCorsConfigurationSource();
+        // 给配置源对象设置过滤的参数
+        // 参数一: 过滤的路径 == > 所有的路径都要求校验是否跨域
+        // 参数二: 配置类
+        configurationSource.registerCorsConfiguration("/**", configuration);
+        return configurationSource;
+    }
+
+
 
 //    @Bean
 //    public UserDetailsService userDetailsService(PasswordEncoder encoder) {

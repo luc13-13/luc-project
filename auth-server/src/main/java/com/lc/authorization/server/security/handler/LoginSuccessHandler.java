@@ -4,6 +4,7 @@ import com.lc.authorization.server.domain.dto.LoginSuccessDTO;
 import com.lc.authorization.server.utils.JsonUtils;
 import com.lc.framework.security.core.LoginUserDetail;
 import com.lc.framework.core.mvc.WebResult;
+import com.lc.framework.web.utils.WebUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
 import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKEN;
+import static com.lc.framework.core.mvc.StatusConstants.SUCCESS;
 
 /**
  * <pre>
@@ -38,22 +40,20 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        // 返回用户信息
-        log.info("登陆成功");
         // 转为UserDetail
         UserDetails userDetails = null;
         if (authentication.getPrincipal() instanceof LoginUserDetail) {
             userDetails = (UserDetails) authentication.getPrincipal();
         };
-        String tokenKey = Objects.isNull(request.getAttribute(ACCESS_TOKEN)) ? null : request.getAttribute(ACCESS_TOKEN).toString();
+        // 创建tokenKey,
+        String tokenKey = "this_is_a_temporary_token_key_in_LoginSuccessHandler";
+        log.info("登陆成功, tokenKey为：{}", tokenKey);
         WebResult<LoginSuccessDTO> result = WebResult.successData(LoginSuccessDTO.builder()
                         .username(Objects.nonNull(userDetails) ? userDetails.getUsername() : "undefined")
                         .token(tokenKey)
                 .build());
         response.addCookie(new Cookie(ACCESS_TOKEN, tokenKey));
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        response.getWriter().write(JsonUtils.objectCovertToJson(result));
-        response.getWriter().flush();
+        WebUtil.makeResponse(response, MediaType.APPLICATION_JSON_VALUE, SUCCESS, result);
     }
 }
