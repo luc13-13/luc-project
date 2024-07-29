@@ -1,0 +1,17 @@
+luc:
+  gateway:
+    white-url:
+      - /doc.html
+      - /*/login
+      - /*/*.html
+      - /v3/api-docs
+      - /v3/api-docs/swagger-config
+      - /*/v3/api-docs/**
+      - /swagger-ui/index.html
+      - /captcha
+    captcha:
+      url: /captcha
+      enabled-types:
+       - default
+       - mixed
+       - math
