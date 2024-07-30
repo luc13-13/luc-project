@@ -8,6 +8,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
@@ -48,7 +49,10 @@ public class RedisServerSecurityContextRepository implements ServerSecurityConte
     public Mono<SecurityContext> load(ServerWebExchange exchange) {
         ServerHttpRequest request = exchange.getRequest();
         String tokenKey = WebFluxUtils.getHeaderValue(request, ACCESS_TOKEN);
-        SecurityContext context = redisHelper.getAndExpire(tokenKey, "security_context", 3600);
+        SecurityContext context = null;
+        if (StringUtils.hasText(tokenKey)) {
+            context = redisHelper.expired(tokenKey, "security_context", 3600);
+        }
         log.info("网关获取tokenKey: {} 的认证信息, {}", tokenKey, context);
         return Mono.justOrEmpty(context);
     }

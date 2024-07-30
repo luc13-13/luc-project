@@ -28,7 +28,7 @@ public class WebFluxUtils {
             return "";
         }
         String headerValue = headers.getFirst(headerName);
-        log.info("获取header{}:{}",headerName,headerValue);
+        log.info("获取header, {}:{}",headerName,headerValue);
         HttpCookie cookie;
         if (!StringUtils.hasLength(headerValue) && (cookie = request.getCookies().getFirst(headerName)) != null) {
             headerValue = cookie.getValue();
