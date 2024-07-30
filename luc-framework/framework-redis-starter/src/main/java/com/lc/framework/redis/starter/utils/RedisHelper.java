@@ -71,7 +71,8 @@ public final class RedisHelper {
      * get and expire the key by apply timeout
      *
      * @author Lu Cheng
-     * @create 2024/03/20
+     * @date 2024/03/20
+     * @since redis 6.2.0
      */
     public <T> T getAndExpire(String key, long timeout) {
         return getAndExpire(key, EMPTY_STRING, timeout, TimeUnit.SECONDS);
@@ -188,6 +189,21 @@ public final class RedisHelper {
      */
     public void expired(String key, String prefix) {
         redisTemplate.delete(generateKey(prefix, key));
+    }
+
+
+    /**
+     *
+     * @param key
+     * @param prefix
+     * @param timeout
+     */
+    public <T> T expired(String key, String prefix, long timeout) {
+        ValueOperations<String, T> operations = redisTemplate.opsForValue();
+        String gkey = generateKey(prefix, key);
+        T result = operations.get(gkey);
+        redisTemplate.expire(generateKey(prefix, key), timeout, TimeUnit.SECONDS);
+        return result;
     }
 
     /**
