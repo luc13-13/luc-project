@@ -30,7 +30,7 @@ public class UserFeignServer {
     }
 
     @GetMapping("/info")
-    public WebResult<UserDTO> getUserInfo(String username) {
+    public WebResult<UserDTO> getUserInfo(@RequestParam("username") String username) {
         log.info("获取user信息, {}", username);
         return WebResult.successData(UserDTO.builder()
                 .username(username)
@@ -39,7 +39,7 @@ public class UserFeignServer {
     }
 
     @GetMapping("/permissions")
-    public WebResult<List<String>> getUserPermissions(String username) {
+    public WebResult<List<String>> getUserPermissions(@RequestParam("username") String username) {
         log.info("获取用户权限：{}", username);
         return WebResult.successData(Arrays.asList("system:user:query", "system:menu:query", "system:menu:add", "system:menu:edit"));
     }
