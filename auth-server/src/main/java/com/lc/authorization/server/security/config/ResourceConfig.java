@@ -118,7 +118,13 @@ public class ResourceConfig {
     @Order(0)
     public SecurityFilterChain resources(HttpSecurity http) throws Exception {
         http.securityMatchers(matchers ->
-            matchers.requestMatchers("/assets/**", "/webjars/**", "/actuator/**", "/css/**", "/error")
+            matchers.requestMatchers(
+                    AntPathRequestMatcher.antMatcher("/assets/**"),
+                    AntPathRequestMatcher.antMatcher("/webjars/**"),
+                    AntPathRequestMatcher.antMatcher("/actuator/**"),
+                    AntPathRequestMatcher.antMatcher("/css/**"),
+                    AntPathRequestMatcher.antMatcher("/error")
+            )
         )
                 .authorizeHttpRequests(request -> request.anyRequest().permitAll())
                 .requestCache(RequestCacheConfigurer::disable)

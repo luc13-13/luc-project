@@ -15,6 +15,7 @@ import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -56,7 +57,12 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
 
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {
-        String tokenKey = UUID.randomUUID().toString();
+        // TODO: 采用基于用户、时间、机器的UID生成方法
+        String tokenKey = SecurityUtils.getTokenKey(request);
+        if (!StringUtils.hasText(tokenKey)) {
+            tokenKey = "tokenKey_from_RedisSecurityContextRepository:" +
+                    UUID.randomUUID();
+        }
         if (ObjectUtils.isEmpty(tokenKey)) {
             return;
         }

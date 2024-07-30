@@ -2,6 +2,7 @@ package com.lc.authorization.server.security.handler;
 
 import com.lc.authorization.server.domain.dto.LoginSuccessDTO;
 import com.lc.authorization.server.utils.JsonUtils;
+import com.lc.authorization.server.utils.SecurityUtils;
 import com.lc.framework.security.core.LoginUserDetail;
 import com.lc.framework.core.mvc.WebResult;
 import com.lc.framework.web.utils.WebUtil;
@@ -46,7 +47,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             userDetails = (UserDetails) authentication.getPrincipal();
         };
         // 创建tokenKey,
-        String tokenKey = "this_is_a_temporary_token_key_in_LoginSuccessHandler";
+        String tokenKey = SecurityUtils.getTokenKey(request);
         log.info("登陆成功, tokenKey为：{}", tokenKey);
         WebResult<LoginSuccessDTO> result = WebResult.successData(LoginSuccessDTO.builder()
                         .username(Objects.nonNull(userDetails) ? userDetails.getUsername() : "undefined")

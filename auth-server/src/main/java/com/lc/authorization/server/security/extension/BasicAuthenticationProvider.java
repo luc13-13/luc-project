@@ -76,9 +76,7 @@ public abstract class BasicAuthenticationProvider<T extends BasicAuthenticationT
 
         T resourceOwnerToken = (T) authentication;
 
-        // 获取客户端信息, 确保发起认证请求的客户端是已经注册的客户端。
-        // 发起/oauth2/token的请求，都会经过OAuth2ClientAuthenticationFilter
-        // 要确保请求头中Authorization属性为符合
+        // 获取认证信息，要求用户登录后才可以获取token：登录可分为客户端认证、表单登录
         OAuth2ClientAuthenticationToken clientPrincipal = getAuthenticatedClientElseThrowInvalidClient(resourceOwnerToken);
 
         // 校验客户端信息
@@ -216,6 +214,7 @@ public abstract class BasicAuthenticationProvider<T extends BasicAuthenticationT
 
         OAuth2ClientAuthenticationToken clientPrincipal = null;
 
+        // 客户端发来的认证请求
         if (OAuth2ClientAuthenticationToken.class.isAssignableFrom(authentication.getPrincipal().getClass())) {
             clientPrincipal = (OAuth2ClientAuthenticationToken) authentication.getPrincipal();
         }
