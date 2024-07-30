@@ -194,9 +194,9 @@ public final class RedisHelper {
 
     /**
      *
-     * @param key
-     * @param prefix
-     * @param timeout
+     * @param key key
+     * @param prefix key前缀
+     * @param timeout 过期时间，单位秒
      */
     public <T> T expired(String key, String prefix, long timeout) {
         ValueOperations<String, T> operations = redisTemplate.opsForValue();
