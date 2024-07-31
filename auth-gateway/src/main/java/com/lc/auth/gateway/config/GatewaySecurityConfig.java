@@ -5,6 +5,7 @@ import com.lc.auth.gateway.handler.AuthServerAccessDeniedHandler;
 import com.lc.auth.gateway.handler.AuthServerAuthenticationEntryPoint;
 import com.lc.auth.gateway.security.LucAuthorizationManager;
 import com.lc.auth.gateway.security.RedisServerSecurityContextRepository;
+import com.lc.framework.security.core.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -48,7 +49,10 @@ public class GatewaySecurityConfig {
     private AuthServerAccessDeniedHandler accessDeniedHandler;
 
     @Autowired
-    private LucGatewayProperties gatewayProperties;
+    private SysSecurityProperties sysSecurityProperties;
+
+//    @Autowired
+//    private LucGatewayProperties gatewayProperties;
 
     @Autowired
     private RedisServerSecurityContextRepository serverSecurityContextRepository;
@@ -57,11 +61,11 @@ public class GatewaySecurityConfig {
     public SecurityWebFilterChain defaultSecurityFilterChain(ServerHttpSecurity http,
                                                              RedirectServerAuthenticationSuccessHandler authenticationSuccessHandler,
                                                              RedirectServerAuthenticationFailureHandler authenticationFailureHandler) {
-        String[] whiteUrl = new String[CollectionUtils.isEmpty(gatewayProperties.getWhiteUrl()) ? 0: gatewayProperties.getWhiteUrl().size()];
-        if (!CollectionUtils.isEmpty(gatewayProperties.getWhiteUrl())){
-            whiteUrl = gatewayProperties.getWhiteUrl().toArray(whiteUrl);
+        String[] whiteUrl = new String[CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths()) ? 0: sysSecurityProperties.getWhitePaths().size()];
+        if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())){
+            whiteUrl = sysSecurityProperties.getWhitePaths().toArray(whiteUrl);
             log.info("white url: {}", Arrays.asList(whiteUrl));
-            log.info("white url: {}", gatewayProperties.getWhiteUrl());
+            log.info("white url: {}", sysSecurityProperties.getWhitePaths());
         }
 
         String[] finalWhiteUrl = whiteUrl;

@@ -1,6 +1,7 @@
 package com.lc.auth.gateway.filter.global;
 
 import com.lc.auth.gateway.config.properties.LucGatewayProperties;
+import com.lc.framework.security.core.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -29,8 +30,8 @@ import static com.lc.framework.core.constants.RequestHeaderConstants.ATTRIBUTE_I
 @Slf4j
 public abstract class AbstractGlobalFilter implements GlobalFilter, Ordered {
 
-    @Autowired
-    protected LucGatewayProperties lucGatewayProperties;
+//    @Autowired
+    protected SysSecurityProperties sysSecurityProperties;
 
     protected final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
@@ -100,8 +101,8 @@ public abstract class AbstractGlobalFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         String url = AbstractGlobalFilter.getRequestUrl(request);
         log.info("判断是否要跳过: {}", url);
-        if (!CollectionUtils.isEmpty(lucGatewayProperties.getWhiteUrl())) {
-            for(String whiteUrl : lucGatewayProperties.getWhiteUrl()) {
+        if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())) {
+            for(String whiteUrl : sysSecurityProperties.getWhitePaths()) {
                 if (whiteUrl.equals(url) || antPathMatcher.match(whiteUrl, url)) {
                     // 在exchange中设置属性， 防止每个后续filter都进行路径解析判断是否跳过
                     exchange.getAttributes().put(ATTRIBUTE_IGNORE_FILTER, true);

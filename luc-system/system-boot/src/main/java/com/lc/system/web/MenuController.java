@@ -5,6 +5,8 @@ import com.lc.system.domain.dto.MenuDTO;
 import com.lc.system.domain.dto.MenuMeta;
 import com.lc.system.domain.entity.SysMenuDO;
 import com.lc.system.mapper.SysMenuMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
  * @author Lu Cheng
  * @date 2023/12/27 17:03
  */
+@Tag(name = "菜单相关接口")
 @RestController
 @RequestMapping("/menu")
 public class MenuController {
@@ -30,7 +33,9 @@ public class MenuController {
     @Autowired
     private SysMenuMapper sysMenuMapper;
 
+
     @GetMapping("/getRouters")
+    @Operation(summary = "获取用户菜单")
     public WebResult<List<MenuDTO>> getRoutes() {
 //        List<SysMenuDO> menuDOList = sysMenuMapper.selectMenuTreeByUserId(2L);
 //        List<MenuDTO> menuDTOList= buildMenuTree(menuDOList);

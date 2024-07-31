@@ -11,6 +11,7 @@ import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,7 +28,7 @@ import java.util.Objects;
  * @date : 2024/6/15 20:05
  * @version : 1.0
  */
-@Configuration
+@AutoConfiguration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(ApiDocInfoProperties.class)
 public class OpenApiConfig {
