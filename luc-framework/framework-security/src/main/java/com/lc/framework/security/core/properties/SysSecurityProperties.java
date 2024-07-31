@@ -2,9 +2,6 @@ package com.lc.framework.security.core.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-
-import java.time.Duration;
 import java.util.List;
 
 /**
@@ -47,8 +44,8 @@ public class SysSecurityProperties {
      */
     private boolean enableOAuth2Client = false;
 
-    /**
-     * OAuth2客户端设置
-     */
-    private List<ClientRegistration> oauth2Clients;
+//    /**
+//     * OAuth2客户端设置
+//     */
+//    private List<ClientRegistration> oauth2Clients;
 }
