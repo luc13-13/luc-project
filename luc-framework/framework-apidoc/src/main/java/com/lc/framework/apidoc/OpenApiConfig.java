@@ -10,8 +10,11 @@ import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,15 +31,18 @@ import java.util.Objects;
  * @date : 2024/6/15 20:05
  * @version : 1.0
  */
+//@ConditionalOnProperty(prefix = "spring.profiles.active", value = {"dev", "test"}, matchIfMissing = false)
+@ConditionalOnExpression("!'${spring.profiles.active}'.equals('pro')")
 @AutoConfiguration
 @RequiredArgsConstructor
 @EnableConfigurationProperties(ApiDocInfoProperties.class)
+@Slf4j
 public class OpenApiConfig {
     /**
      * OAuth2 认证 endpoint
      */
-    @Value("${spring.security.oauth2.authorizationserver.token-uri:#{null}}")
-    private String tokenUrl;
+//    @Value("${spring.security.oauth2.authorizationserver.token-uri:#{'http://127.0.0.1:8889/oauth2/token'}}")
+    private String tokenUrl = "http://127.0.0.1:8889/oauth2/token";
 
     /**
      * API 文档信息属性
@@ -49,6 +55,7 @@ public class OpenApiConfig {
      */
     @Bean
     public OpenAPI apiInfo() {
+        log.info("apidoc自动装配");
         OpenAPI openAPI = new OpenAPI();
         Info info = new Info().title(apiDocInfoProperties.getTitle())
                 .version(apiDocInfoProperties.getVersion())
@@ -66,6 +73,7 @@ public class OpenApiConfig {
         }
         Components components = null;
         if (StringUtils.hasText(tokenUrl)) {
+            log.info("framework-apidoc开启Authorization");
             openAPI = openAPI// 接口全局添加 Authorization 参数
                     .addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION));
             components = new Components()
@@ -75,10 +83,16 @@ public class OpenApiConfig {
                                     .type(SecurityScheme.Type.OAUTH2)
                                     .name(HttpHeaders.AUTHORIZATION)
                                     .flows(new OAuthFlows()
-                                            .password(
+//                                            .password(
+//                                                    new OAuthFlow()
+//                                                            .tokenUrl(tokenUrl)
+//                                                            .refreshUrl(tokenUrl)
+//                                            )
+                                            .clientCredentials(
                                                     new OAuthFlow()
                                                             .tokenUrl(tokenUrl)
-                                                            .refreshUrl(tokenUrl))
+                                                            .refreshUrl(tokenUrl)
+                                            )
                                     )
                                     // 安全模式使用Bearer令牌（即JWT）
                                     .in(SecurityScheme.In.HEADER)

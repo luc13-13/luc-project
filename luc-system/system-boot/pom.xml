@@ -22,6 +22,12 @@
         <dependency>
             <groupId>com.lc</groupId>
             <artifactId>framework-web</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-devtools</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--datascope-->
         <dependency>

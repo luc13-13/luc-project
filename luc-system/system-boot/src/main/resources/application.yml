@@ -70,6 +70,3 @@ data-scope:
           column-type: varchar
     ## 2、配置文件只声明bean的创建，使用DataScopeSqlHandlerCustomizer在代码中对bean进行定制化开发
     - id: Tenant
-logging:
-  file:
-    path:

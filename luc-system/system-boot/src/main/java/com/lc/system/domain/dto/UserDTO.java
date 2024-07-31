@@ -1,6 +1,7 @@
 package com.lc.system.domain.dto;
 
 import com.lc.framework.datascope.entity.DataScopeEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,6 +21,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Schema(name = "UserDTO", description = "用户信息DTO")
 public class UserDTO implements DataScopeEntity {
 
     private String username;
