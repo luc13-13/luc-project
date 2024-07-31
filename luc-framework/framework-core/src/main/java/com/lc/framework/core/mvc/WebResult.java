@@ -1,6 +1,8 @@
 package com.lc.framework.core.mvc;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.media.SchemaProperty;
+import lombok.Data;
 
 import java.io.Serializable;
 
@@ -11,12 +13,18 @@ import java.io.Serializable;
  * @desc :
  * @date : 2023/4/15 13:38
  */
-@Schema(name = "WebResult", title = "rest统一返回格式", description = "封装返回对象")
+@Data
+//@Schema(name = "WebResult", title = "rest统一返回格式", description = "封装返回对象")
 public class WebResult<S> implements Serializable {
+    @Schema(name = "timestamp", description = "时间戳")
     private Long timestamp = System.currentTimeMillis();
+    @Schema(name = "code", description = "状态码", example = "200")
     private Integer code;
+    @Schema(name = "data", description = "接口响应数据")
     private S data;
+    @Schema(name = "msg", description = "接口响应数据")
     private String msg;
+
     public static<S> WebResult<S> response(S data, Integer code,  String msg) {
         WebResult<S> webResp = new WebResult<>();
         webResp.setCode(code);
