@@ -40,6 +40,7 @@
             <groupId>com.lc</groupId>
             <artifactId>framework-core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>com.lc</groupId>
             <artifactId>framework-web</artifactId>
@@ -66,17 +67,11 @@
             <artifactId>spring-session-data-redis</artifactId>
         </dependency>
 
-        <!--shiro + jwt + redis-->
-        <!--redis-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.springframework.boot</groupId>-->
-        <!--            <artifactId>spring-boot-starter-data-redis</artifactId>-->
-        <!--        </dependency>-->
-        <!--ehCache + commons-pool2(父依赖中已包含)-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-cache</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-pool2</artifactId>
@@ -101,11 +96,9 @@
             <artifactId>hutool-all</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/io.swagger/swagger-annotations -->
         <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations-jakarta</artifactId>
-<!--            <version>1.6.8</version>-->
+            <groupId>com.lc</groupId>
+            <artifactId>framework-apidoc</artifactId>
         </dependency>
     </dependencies>
 
