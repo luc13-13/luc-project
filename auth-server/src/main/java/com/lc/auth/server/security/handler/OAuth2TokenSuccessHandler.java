@@ -22,10 +22,12 @@ import org.springframework.security.oauth2.server.authorization.authentication.O
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.temporal.ChronoUnit;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.lc.framework.core.constants.RequestHeaderConstants.*;
@@ -55,6 +57,7 @@ public class OAuth2TokenSuccessHandler implements AuthenticationSuccessHandler {
         OAuth2AccessToken accessToken = accessTokenAuthentication.getAccessToken();
         OAuth2RefreshToken refreshToken = accessTokenAuthentication.getRefreshToken();
         RegisteredClient registeredClient = accessTokenAuthentication.getRegisteredClient();
+        Map<String, Object> additionalParameters = accessTokenAuthentication.getAdditionalParameters();
 
         OAuth2TokenDTO tokenDTO = OAuth2TokenDTO.builder()
                 .tokenType(Objects.nonNull(accessToken.getTokenType()) ? accessToken.getTokenType().getValue() : "Bearer")
@@ -71,7 +74,7 @@ public class OAuth2TokenSuccessHandler implements AuthenticationSuccessHandler {
         }
         String tokenKey = SecurityUtils.getTokenKey(request);
         String code;
-        // 针对knife4j的认证请求特殊处理
+
         if(registeredClient != null && registeredClient.getClientId().equals("knife4j-client")) {
             tokenKey = KNIFE4J_TOKEN_KEY;
         }
@@ -81,31 +84,41 @@ public class OAuth2TokenSuccessHandler implements AuthenticationSuccessHandler {
             // 授权码模式， 不做类型转换
             tokenKey = redisHelper.get(code);
             log.info("tokenKey为空，尝试为请求:{} 从redis获取tokenKey：{}", request.getRequestURI(), tokenKey);
-            OAuth2AccessTokenResponse.Builder builder =
-                    OAuth2AccessTokenResponse.withToken(accessToken.getTokenValue())
-                            .tokenType(accessToken.getTokenType())
-                            .scopes(accessToken.getScopes());
-            if (accessToken.getIssuedAt() != null && accessToken.getExpiresAt() != null) {
-                builder.expiresIn(ChronoUnit.SECONDS.between(accessToken.getIssuedAt(), accessToken.getExpiresAt()));
-            }
-            if (refreshToken != null) {
-                builder.refreshToken(refreshToken.getTokenValue());
-            }
-            OAuth2AccessTokenResponse accessTokenResponse = builder.build();
-            ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
-            redisHelper.hPut(ACCESS_TOKEN, tokenKey, accessToken);
-            redisHelper.hPut(REFRESH_TOKEN, tokenKey, refreshToken);
-            this.accessTokenHttpResponseConverter.write(accessTokenResponse, null, httpResponse);
         } else {
             log.info("tokenKey为：{}, 缓存accessToken", tokenKey);
-            redisHelper.hPut(ACCESS_TOKEN, tokenKey, accessToken);
-            redisHelper.hPut(REFRESH_TOKEN, tokenKey, refreshToken);
+        }
+        // 缓存token
+        redisHelper.hPut(ACCESS_TOKEN, tokenKey, accessToken);
+        redisHelper.hPut(REFRESH_TOKEN, tokenKey, refreshToken);
+        // 返回结果
+        if ((registeredClient != null && registeredClient.getClientId().equals("knife4j-client")) || code != null) {
+            this.sendOriginalResult(response, accessToken, refreshToken, additionalParameters);
+        } else {
             WebResult<OAuth2TokenDTO> result = WebResult.successData(tokenDTO);
-
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             response.setContentType(MediaType.APPLICATION_JSON_VALUE);
             response.getWriter().write(JsonUtils.objectCovertToJson(result));
             response.getWriter().flush();
         }
+    }
+
+    private void sendOriginalResult(HttpServletResponse response, OAuth2AccessToken accessToken, OAuth2RefreshToken refreshToken, Map<String, Object>additionalParameters) throws IOException {
+        // 针对knife4j的认证请求特殊处理, 返回原生的结果
+        OAuth2AccessTokenResponse.Builder builder = OAuth2AccessTokenResponse.withToken(accessToken.getTokenValue())
+                .tokenType(accessToken.getTokenType())
+                .scopes(accessToken.getScopes());
+
+        if (accessToken.getIssuedAt() != null && accessToken.getExpiresAt() != null) {
+            builder.expiresIn(ChronoUnit.SECONDS.between(accessToken.getIssuedAt(), accessToken.getExpiresAt()));
+        }
+        if (refreshToken != null) {
+            builder.refreshToken(refreshToken.getTokenValue());
+        }
+        if (!CollectionUtils.isEmpty(additionalParameters)) {
+            builder.additionalParameters(additionalParameters);
+        }
+        OAuth2AccessTokenResponse accessTokenResponse = builder.build();
+        ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
+        this.accessTokenHttpResponseConverter.write(accessTokenResponse, null, httpResponse);
     }
 }
