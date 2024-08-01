@@ -2,15 +2,23 @@ package com.lc.framework.apidoc;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.headers.Header;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.media.Schema;
+import io.swagger.v3.oas.models.media.StringSchema;
+import io.swagger.v3.oas.models.parameters.HeaderParameter;
 import io.swagger.v3.oas.models.security.OAuthFlow;
 import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
+import org.springdoc.core.customizers.GlobalOperationCustomizer;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
@@ -22,7 +30,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+
+import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKEN;
+import static com.lc.framework.core.constants.RequestHeaderConstants.KNIFE4J_TOKEN_KEY;
 
 /**
  * <pre>
@@ -31,7 +44,6 @@ import java.util.Objects;
  * @date : 2024/6/15 20:05
  * @version : 1.0
  */
-//@ConditionalOnProperty(prefix = "spring.profiles.active", value = {"dev", "test"}, matchIfMissing = false)
 @ConditionalOnExpression("!'${spring.profiles.active}'.equals('pro')")
 @AutoConfiguration
 @RequiredArgsConstructor
@@ -48,6 +60,30 @@ public class OpenApiConfig {
      * API 文档信息属性
      */
     private final ApiDocInfoProperties apiDocInfoProperties;
+
+
+    /**
+     * 1、增加请求头X-Access-Token
+     * 2、为每个请求增加Authorization
+     */
+    @Bean
+    public GlobalOperationCustomizer globalOperationCustomizer() {
+        return (operation, handlerMethod) -> operation
+                .addParametersItem(new HeaderParameter().required(true).name(ACCESS_TOKEN).schema(new StringSchema()._default(KNIFE4J_TOKEN_KEY)));
+    }
+
+    @Bean
+    public GlobalOpenApiCustomizer globalOpenApiCustomizer() {
+        return openApi -> {
+            if (openApi.getPaths() != null) {
+                openApi.getPaths().forEach((s, pathItem) -> pathItem
+                        .readOperations()
+                        .forEach(operation -> operation
+                                .security(openApi.getSecurity()))
+                );
+            }
+        };
+    }
 
 
     /**
@@ -77,17 +113,13 @@ public class OpenApiConfig {
             openAPI = openAPI// 接口全局添加 Authorization 参数
                     .addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION));
             components = new Components()
+                    // 设置获取Authorization方式
                     .addSecuritySchemes(HttpHeaders.AUTHORIZATION,
                             new SecurityScheme()
                                     // OAuth2 授权模式
                                     .type(SecurityScheme.Type.OAUTH2)
                                     .name(HttpHeaders.AUTHORIZATION)
                                     .flows(new OAuthFlows()
-//                                            .password(
-//                                                    new OAuthFlow()
-//                                                            .tokenUrl(tokenUrl)
-//                                                            .refreshUrl(tokenUrl)
-//                                            )
                                             .clientCredentials(
                                                     new OAuthFlow()
                                                             .tokenUrl(tokenUrl)

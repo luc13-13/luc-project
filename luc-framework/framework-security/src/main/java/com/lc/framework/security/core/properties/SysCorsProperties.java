@@ -18,6 +18,8 @@ public class SysCorsProperties {
 
     private boolean enabled = false;
 
+    private List<String> allowedOriginPatterns;
+
     private List<String> allowedOrigins;
 
     private List<String> allowedMethods;
