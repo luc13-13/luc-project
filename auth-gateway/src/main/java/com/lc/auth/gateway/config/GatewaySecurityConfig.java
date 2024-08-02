@@ -14,6 +14,8 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
@@ -21,10 +23,12 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationFailureHandler;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 import org.springframework.security.web.server.savedrequest.CookieServerRequestCache;
+import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.CollectionUtils;
@@ -65,6 +69,22 @@ public class GatewaySecurityConfig {
 
     @Autowired
     private LucBearerServerAuthenticationConverter bearerServerAuthenticationConverter;
+
+    @Order(Ordered.HIGHEST_PRECEDENCE)
+    @Bean
+    public SecurityWebFilterChain apiSecurity(ServerHttpSecurity http) {
+        String[] whiteUrl = new String[CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths()) ? 0: sysSecurityProperties.getWhitePaths().size()];
+        if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())){
+            whiteUrl = sysSecurityProperties.getWhitePaths().toArray(whiteUrl);
+            log.info("white url: {}", Arrays.asList(whiteUrl));
+            log.info("white url: {}", sysSecurityProperties.getWhitePaths());
+        }
+
+        String[] finalWhiteUrl = whiteUrl;
+        http.securityMatcher(ServerWebExchangeMatchers.pathMatchers(finalWhiteUrl))
+                .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll());
+        return http.build();
+    }
 
     @Bean
     public SecurityWebFilterChain defaultSecurityFilterChain(ServerHttpSecurity http,
