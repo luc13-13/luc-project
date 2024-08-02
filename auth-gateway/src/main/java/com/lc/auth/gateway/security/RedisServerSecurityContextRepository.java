@@ -5,7 +5,10 @@ import com.lc.framework.redis.starter.utils.RedisHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -52,6 +55,11 @@ public class RedisServerSecurityContextRepository implements ServerSecurityConte
         SecurityContext context = null;
         if (StringUtils.hasText(tokenKey)) {
             context = redisHelper.expired(tokenKey, "security_context", 3600);
+        }
+        if (context == null) {
+            context = new SecurityContextImpl();
+            AnonymousAuthenticationToken anonymous = new AnonymousAuthenticationToken("key", "anonymous", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
+            context.setAuthentication(anonymous);
         }
         log.info("网关获取tokenKey: {} 的认证信息, {}", tokenKey, context);
         return Mono.justOrEmpty(context);

@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.server.ServletServerHttpResponse;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.core.AbstractOAuth2Token;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.OAuth2RefreshToken;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AccessTokenResponse;
@@ -46,6 +47,20 @@ public class OAuth2TokenSuccessHandler implements AuthenticationSuccessHandler {
     @Autowired
     private RedisHelper redisHelper;
 
+    /**
+     * 将Authentication转换为json
+     * <pre>
+     *     {
+     *         access_token: "",
+     *         refresh_token: "",
+     *         token_type: "",
+     *         scopes: "read write info",
+     *         expires_in: 3600L（单位秒）,
+     *         additional_parameter1: value,
+     *         additional_parameter2: value,
+     *     }
+     * </pre>
+     */
     private final HttpMessageConverter<OAuth2AccessTokenResponse> accessTokenHttpResponseConverter =
             new OAuth2AccessTokenResponseHttpMessageConverter();
 
@@ -115,10 +130,19 @@ public class OAuth2TokenSuccessHandler implements AuthenticationSuccessHandler {
             builder.refreshToken(refreshToken.getTokenValue());
         }
         if (!CollectionUtils.isEmpty(additionalParameters)) {
+            additionalParameters.put("access_token_expires_at", getExpiresAt(accessToken));
+            additionalParameters.put("refresh_token_expires_at", getExpiresAt(refreshToken));
             builder.additionalParameters(additionalParameters);
         }
         OAuth2AccessTokenResponse accessTokenResponse = builder.build();
         ServletServerHttpResponse httpResponse = new ServletServerHttpResponse(response);
         this.accessTokenHttpResponseConverter.write(accessTokenResponse, null, httpResponse);
+    }
+
+    private long getExpiresAt(AbstractOAuth2Token token) {
+        if (token != null && token.getExpiresAt() != null) {
+            return token.getExpiresAt().toEpochMilli();
+        }
+        return -1;
     }
 }

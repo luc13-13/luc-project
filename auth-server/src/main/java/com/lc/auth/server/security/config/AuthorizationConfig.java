@@ -4,6 +4,8 @@ package com.lc.auth.server.security.config;
 import com.lc.auth.server.security.customizer.AuthenticationProviderCustomizer;
 import com.lc.auth.server.security.customizer.OAuth2TokenEndpointCustomizer;
 import com.lc.auth.server.security.extension.LucDaoAuthenticationProvider;
+import com.lc.auth.server.security.extension.password.OAuth2PasswordAuthenticationConverter;
+import com.lc.auth.server.security.handler.ClientAuthenticationSuccessHandler;
 import com.lc.auth.server.security.handler.LoginTargetAuthenticationEntryPoint;
 import com.lc.auth.server.security.handler.OAuth2TokenSuccessHandler;
 import com.lc.auth.server.security.repository.RedisSecurityContextRepository;
@@ -124,11 +126,13 @@ public class AuthorizationConfig {
                 .authorizationServerMetadataEndpoint(customizer -> customizer
                         .authorizationServerMetadataCustomizer(meta -> meta.grantTypes(grantType -> grantType.addAll(List.of("password", "sms", "gitee"))))
                 )
-        // 自定义的客户端认证方法, 默认对/oauth2/token(获取token), /oauth2/revoke(注销token), /oauth2/introspect(校验token有效性), /oauth2/device_authorization接口进行拦截， 均为POST方法
-//                .clientAuthentication(
+//         自定义的客户端认证方法, 默认对/oauth2/token(获取token), /oauth2/revoke(注销token), /oauth2/introspect(校验token有效性), /oauth2/device_authorization接口进行拦截， 均为POST方法
+                .clientAuthentication(
 //                        Customizer.withDefaults()
-//                        clientAuthentication -> clientAuthentication.authenticationConverter(new OAuth2PasswordAuthenticationConverter())
-//                )
+                        clientAuthentication -> clientAuthentication
+                                // 重写OAuth2ClientAuthenticationFilter方法，认证成功后将SecurityContext保存到redis
+                                .authenticationSuccessHandler(new ClientAuthenticationSuccessHandler(redisSecurityContextRepository))
+                )
         ;
         http
                 .rememberMe(rememberMeConfig -> rememberMeConfig

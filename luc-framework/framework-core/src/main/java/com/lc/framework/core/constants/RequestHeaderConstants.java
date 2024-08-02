@@ -17,6 +17,8 @@ public interface RequestHeaderConstants {
 
     String Authentication = "Authentication";
 
+    String KNIFE4J_CLIENT_ID = "knife4j-client";
+
     String KNIFE4J_TOKEN_KEY = "knife4j-token-key";
 
     /**

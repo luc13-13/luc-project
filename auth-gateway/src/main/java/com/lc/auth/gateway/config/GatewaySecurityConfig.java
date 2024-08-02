@@ -1,9 +1,11 @@
 package com.lc.auth.gateway.config;
 
+import com.alibaba.nacos.common.utils.ArrayUtils;
 import com.lc.auth.gateway.config.properties.LucGatewayProperties;
 import com.lc.auth.gateway.handler.AuthServerAccessDeniedHandler;
 import com.lc.auth.gateway.handler.AuthServerAuthenticationEntryPoint;
 import com.lc.auth.gateway.security.LucAuthorizationManager;
+import com.lc.auth.gateway.security.LucBearerServerAuthenticationConverter;
 import com.lc.auth.gateway.security.RedisServerSecurityContextRepository;
 import com.lc.framework.security.core.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
@@ -12,17 +14,24 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationFailureHandler;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 import org.springframework.security.web.server.savedrequest.CookieServerRequestCache;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.CollectionUtils;
+import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * <pre>
@@ -51,11 +60,11 @@ public class GatewaySecurityConfig {
     @Autowired
     private SysSecurityProperties sysSecurityProperties;
 
-//    @Autowired
-//    private LucGatewayProperties gatewayProperties;
-
     @Autowired
     private RedisServerSecurityContextRepository serverSecurityContextRepository;
+
+    @Autowired
+    private LucBearerServerAuthenticationConverter bearerServerAuthenticationConverter;
 
     @Bean
     public SecurityWebFilterChain defaultSecurityFilterChain(ServerHttpSecurity http,
@@ -88,8 +97,8 @@ public class GatewaySecurityConfig {
                 // 配置请求缓存，保存在cookie中
                 .requestCache(requestCache -> requestCache.requestCache(new CookieServerRequestCache()))
                 .oauth2ResourceServer(resourceServer -> resourceServer
-//                        .authenticationEntryPoint(authenticationEntryPoint)
-                        .jwt(Customizer.withDefaults())
+                                .jwt(Customizer.withDefaults())
+                                .bearerTokenConverter(bearerServerAuthenticationConverter)
                 )
                 .securityContextRepository(serverSecurityContextRepository)
         ;
@@ -98,9 +107,8 @@ public class GatewaySecurityConfig {
         return filterChain;
     }
 
-//    @Bean
-//    public ReactiveJwtDecoder jwtDecoder() {
-//        return
+//    public Converter<Jwt, Mono<AbstractAuthenticationToken>> converter() {
+//
 //    }
 
     @Bean

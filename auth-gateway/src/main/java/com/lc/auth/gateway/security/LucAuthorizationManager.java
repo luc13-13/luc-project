@@ -42,7 +42,6 @@ public class LucAuthorizationManager implements ReactiveAuthorizationManager<Aut
         log.info("校验是否认证:{}", uri);
         return authentication
                 .map(obj -> {
-
                     log.info("开始认证——是否认证：{}, credentials: {}", obj.isAuthenticated(), obj.getCredentials());
                     return new AuthorizationDecision(true);
                 });
