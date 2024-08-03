@@ -2,14 +2,14 @@ package com.lc.auth.gateway.security;
 
 import com.lc.framework.redis.starter.utils.RedisHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
-import org.springframework.stereotype.Component;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import reactor.core.publisher.Mono;
 
 /**
@@ -20,11 +20,14 @@ import reactor.core.publisher.Mono;
  * @date 2024/1/8 16:47
  */
 @Slf4j
-@Component
 public class LucAuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
+    private final ServerWebExchangeMatcher whitePathMatcher;
+    private final RedisHelper redisHelper;
 
-    @Autowired
-    private RedisHelper redisHelper;
+    public LucAuthorizationManager(ServerWebExchangeMatcher whitePathMatcher, RedisHelper redisHelper) {
+        this.whitePathMatcher = whitePathMatcher;
+        this.redisHelper = redisHelper;
+    }
 
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext context) {

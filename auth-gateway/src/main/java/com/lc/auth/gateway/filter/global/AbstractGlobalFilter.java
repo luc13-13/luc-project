@@ -1,9 +1,7 @@
 package com.lc.auth.gateway.filter.global;
 
-import com.lc.auth.gateway.config.properties.LucGatewayProperties;
 import com.lc.framework.security.core.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;

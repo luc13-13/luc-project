@@ -95,7 +95,7 @@ spring:
 logging:
   level:
     root: info
-    org.springframework.security: debug
+    org.springframework.security: trace
   config: classpath:logback-lc.xml
 
 

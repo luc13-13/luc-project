@@ -1,40 +1,33 @@
 package com.lc.auth.gateway.config;
 
-import com.alibaba.nacos.common.utils.ArrayUtils;
-import com.lc.auth.gateway.config.properties.LucGatewayProperties;
 import com.lc.auth.gateway.handler.AuthServerAccessDeniedHandler;
 import com.lc.auth.gateway.handler.AuthServerAuthenticationEntryPoint;
 import com.lc.auth.gateway.security.LucAuthorizationManager;
 import com.lc.auth.gateway.security.LucBearerServerAuthenticationConverter;
 import com.lc.auth.gateway.security.RedisServerSecurityContextRepository;
+import com.lc.framework.redis.starter.utils.RedisHelper;
 import com.lc.framework.security.core.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
-import org.springframework.core.convert.converter.Converter;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationFailureHandler;
 import org.springframework.security.web.server.authentication.RedirectServerAuthenticationSuccessHandler;
 import org.springframework.security.web.server.savedrequest.CookieServerRequestCache;
-import org.springframework.security.web.server.util.matcher.PathPatternParserServerWebExchangeMatcher;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.CollectionUtils;
-import reactor.core.publisher.Mono;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 /**
@@ -48,12 +41,11 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-@EnableConfigurationProperties({LucGatewayProperties.class})
-@RefreshScope
+//@RefreshScope
 public class GatewaySecurityConfig {
 
     @Autowired
-    private LucAuthorizationManager lucAuthorizationManager;
+    private RedisHelper redisHelper;
 
     @Autowired
     private AuthServerAuthenticationEntryPoint authenticationEntryPoint;
@@ -70,21 +62,22 @@ public class GatewaySecurityConfig {
     @Autowired
     private LucBearerServerAuthenticationConverter bearerServerAuthenticationConverter;
 
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    @Bean
-    public SecurityWebFilterChain apiSecurity(ServerHttpSecurity http) {
-        String[] whiteUrl = new String[CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths()) ? 0: sysSecurityProperties.getWhitePaths().size()];
-        if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())){
-            whiteUrl = sysSecurityProperties.getWhitePaths().toArray(whiteUrl);
-            log.info("white url: {}", Arrays.asList(whiteUrl));
-            log.info("white url: {}", sysSecurityProperties.getWhitePaths());
-        }
-
-        String[] finalWhiteUrl = whiteUrl;
-        http.securityMatcher(ServerWebExchangeMatchers.pathMatchers(finalWhiteUrl))
-                .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll());
-        return http.build();
-    }
+//    @Order(Ordered.HIGHEST_PRECEDENCE)
+//    @Bean
+//    @ConditionalOnProperty(name = "sys.security.white-paths", matchIfMissing = false)
+//    public SecurityWebFilterChain apiSecurity(ServerHttpSecurity http) {
+//        String[] whiteUrl = new String[CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths()) ? 0: sysSecurityProperties.getWhitePaths().size()];
+//        if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())){
+//            whiteUrl = sysSecurityProperties.getWhitePaths().toArray(whiteUrl);
+//            log.info("white url: {}", Arrays.asList(whiteUrl));
+//            log.info("white url: {}", sysSecurityProperties.getWhitePaths());
+//        }
+//
+//        String[] finalWhiteUrl = whiteUrl;
+//        http.securityMatcher(ServerWebExchangeMatchers.pathMatchers(finalWhiteUrl))
+//                .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll());
+//        return http.build();
+//    }
 
     @Bean
     public SecurityWebFilterChain defaultSecurityFilterChain(ServerHttpSecurity http,
@@ -101,14 +94,8 @@ public class GatewaySecurityConfig {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .cors(ServerHttpSecurity.CorsSpec::disable)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
-                // 路径拦截设置
-                .authorizeExchange(authorize -> authorize
-                        // 白名单放行
-                        .pathMatchers(finalWhiteUrl).permitAll()
-                        // 其他所有路径都要认证
-                        .anyExchange().access(lucAuthorizationManager)
-                )
                 // 处理AuthenticationException与AccessDeniedException
                 .exceptionHandling(exceptionConfig -> exceptionConfig
                         .authenticationEntryPoint(authenticationEntryPoint)
@@ -121,6 +108,13 @@ public class GatewaySecurityConfig {
                                 .bearerTokenConverter(bearerServerAuthenticationConverter)
                 )
                 .securityContextRepository(serverSecurityContextRepository)
+                // 路径拦截设置
+                .authorizeExchange(authorize -> authorize
+                        // 白名单放行
+                        .pathMatchers(finalWhiteUrl).permitAll()
+                        // 其他所有路径都要认证
+                        .anyExchange().access(new LucAuthorizationManager(ServerWebExchangeMatchers.pathMatchers(finalWhiteUrl), redisHelper))
+                )
         ;
         SecurityWebFilterChain filterChain = http.build();
         filterChain.getWebFilters().subscribe(filter -> log.info("网关安全链路：{}", filter));

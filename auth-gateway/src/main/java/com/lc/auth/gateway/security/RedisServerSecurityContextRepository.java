@@ -56,11 +56,11 @@ public class RedisServerSecurityContextRepository implements ServerSecurityConte
         if (StringUtils.hasText(tokenKey)) {
             context = redisHelper.expired(tokenKey, "security_context", 3600);
         }
-        if (context == null) {
-            context = new SecurityContextImpl();
-            AnonymousAuthenticationToken anonymous = new AnonymousAuthenticationToken("key", "anonymous", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
-            context.setAuthentication(anonymous);
-        }
+//        if (context == null) {
+//            context = new SecurityContextImpl();
+//            AnonymousAuthenticationToken anonymous = new AnonymousAuthenticationToken("key", "anonymous", AuthorityUtils.createAuthorityList("ROLE_ANONYMOUS"));
+//            context.setAuthentication(anonymous);
+//        }
         log.info("网关获取tokenKey: {} 的认证信息, {}", tokenKey, context);
         return Mono.justOrEmpty(context);
     }
