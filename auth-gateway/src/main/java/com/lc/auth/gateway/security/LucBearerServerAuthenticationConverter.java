@@ -52,12 +52,11 @@ public class LucBearerServerAuthenticationConverter implements ServerAuthenticat
     }
 
     private String token(ServerHttpRequest request) {
-        log.info("开始获取token:{}", request.getURI());
         // 从请求头获取key
         String authorizationHeaderToken = resolveFromAuthorizationHeader(request.getHeaders());
         // 从请求参数获取key
         String parameterToken = resolveAccessTokenFromRequest(request);
-
+        log.info("开始获取token:{}, 请求头中tokenKey:{}, 请求参数中tokenKey:{}", request.getURI(), authorizationHeaderToken, parameterToken);
         OAuth2AccessToken auth2AccessToken = null;
 
         if (authorizationHeaderToken != null) {
@@ -77,7 +76,7 @@ public class LucBearerServerAuthenticationConverter implements ServerAuthenticat
             log.info("未找到token, tokenKey: {}, requestId: {}", authorizationHeaderToken, request.getURI());
             return null;
         }
-
+        log.info("token获取结果: type{}, value:{}, expiredAt:{}",auth2AccessToken.getTokenType(), auth2AccessToken.getTokenValue(), auth2AccessToken.getExpiresAt());
         return auth2AccessToken.getTokenValue();
     }
 

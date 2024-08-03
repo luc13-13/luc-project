@@ -54,7 +54,11 @@ public class RedisServerSecurityContextRepository implements ServerSecurityConte
         String tokenKey = WebFluxUtils.getHeaderValue(request, ACCESS_TOKEN);
         SecurityContext context = null;
         if (StringUtils.hasText(tokenKey)) {
-            context = redisHelper.expired(tokenKey, "security_context", 3600);
+            try {
+                context = redisHelper.expired(tokenKey, "security_context", 3600);
+            } catch (Exception e) {
+                log.error("获取SecurityContext失败, key:{}", tokenKey);
+            }
         }
 //        if (context == null) {
 //            context = new SecurityContextImpl();

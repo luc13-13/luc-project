@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-//@RefreshScope
+@RefreshScope
 public class GatewaySecurityConfig {
 
     @Autowired
@@ -62,7 +62,11 @@ public class GatewaySecurityConfig {
     @Autowired
     private LucBearerServerAuthenticationConverter bearerServerAuthenticationConverter;
 
+    /**
+     * 监听到Nacos配置文件刷新后，在创建Bean的位置使用@RefreshScope注解，可以重新创建Bean
+     */
     @Bean
+    @RefreshScope
     public SecurityWebFilterChain defaultSecurityFilterChain(ServerHttpSecurity http,
                                                              RedirectServerAuthenticationSuccessHandler authenticationSuccessHandler,
                                                              RedirectServerAuthenticationFailureHandler authenticationFailureHandler) {
@@ -88,6 +92,7 @@ public class GatewaySecurityConfig {
                 .requestCache(requestCache -> requestCache.requestCache(new CookieServerRequestCache()))
                 .oauth2ResourceServer(resourceServer -> resourceServer
                                 .jwt(Customizer.withDefaults())
+                                .authenticationFailureHandler(authenticationFailureHandler)
                                 .bearerTokenConverter(bearerServerAuthenticationConverter)
                 )
                 .securityContextRepository(serverSecurityContextRepository)
