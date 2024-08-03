@@ -62,23 +62,6 @@ public class GatewaySecurityConfig {
     @Autowired
     private LucBearerServerAuthenticationConverter bearerServerAuthenticationConverter;
 
-//    @Order(Ordered.HIGHEST_PRECEDENCE)
-//    @Bean
-//    @ConditionalOnProperty(name = "sys.security.white-paths", matchIfMissing = false)
-//    public SecurityWebFilterChain apiSecurity(ServerHttpSecurity http) {
-//        String[] whiteUrl = new String[CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths()) ? 0: sysSecurityProperties.getWhitePaths().size()];
-//        if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())){
-//            whiteUrl = sysSecurityProperties.getWhitePaths().toArray(whiteUrl);
-//            log.info("white url: {}", Arrays.asList(whiteUrl));
-//            log.info("white url: {}", sysSecurityProperties.getWhitePaths());
-//        }
-//
-//        String[] finalWhiteUrl = whiteUrl;
-//        http.securityMatcher(ServerWebExchangeMatchers.pathMatchers(finalWhiteUrl))
-//                .authorizeExchange(exchanges -> exchanges.anyExchange().permitAll());
-//        return http.build();
-//    }
-
     @Bean
     public SecurityWebFilterChain defaultSecurityFilterChain(ServerHttpSecurity http,
                                                              RedirectServerAuthenticationSuccessHandler authenticationSuccessHandler,
@@ -120,10 +103,6 @@ public class GatewaySecurityConfig {
         filterChain.getWebFilters().subscribe(filter -> log.info("网关安全链路：{}", filter));
         return filterChain;
     }
-
-//    public Converter<Jwt, Mono<AbstractAuthenticationToken>> converter() {
-//
-//    }
 
     @Bean
     public RedirectServerAuthenticationSuccessHandler authenticationSuccessHandler() {
