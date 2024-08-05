@@ -4,21 +4,28 @@ import com.lc.auth.server.security.extension.LucDaoAuthenticationProvider;
 import com.lc.auth.server.security.handler.LoginFailureHandler;
 import com.lc.auth.server.security.handler.LoginSuccessHandler;
 import com.lc.auth.server.security.handler.LoginTargetAuthenticationEntryPoint;
+import com.lc.auth.server.security.jwt.RedisBearerTokenResolver;
 import com.lc.auth.server.security.repository.RedisSecurityContextRepository;
+import com.lc.framework.redis.starter.utils.RedisHelper;
 import com.lc.framework.security.core.properties.SysSecurityProperties;
 import com.lc.framework.security.core.webflux.ServerAuthenticationDetailsSource;
 import com.lc.framework.security.service.LoginUserDetailService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.RequestCacheConfigurer;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.CollectionUtils;
@@ -59,9 +66,13 @@ public class ResourceConfig {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private RedisHelper redisHelper;
+
     @Bean
-    @Order(BASIC_AUTH_ORDER)
+    @Order(0)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http,
+                                                          JwtDecoder jwtDecoder,
                                                           RedisSecurityContextRepository redisSecurityContextRepository,
                                                           LoginTargetAuthenticationEntryPoint loginTargetAuthenticationEntryPoint)
             throws Exception {
@@ -79,9 +90,14 @@ public class ResourceConfig {
                 .securityContext(securityContextConfig -> securityContextConfig.securityContextRepository(redisSecurityContextRepository))
                 // 用自定义的认证信息获取方法
                 .authenticationProvider(new LucDaoAuthenticationProvider(userDetailsService, passwordEncoder))
-//                .oauth2ResourceServer(oauth2 -> oauth2
-//                        .authenticationEntryPoint(loginTargetAuthenticationEntryPoint)
-//                )
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        // 配置jwt解密方法
+                        .jwt(jwtConfigurer -> jwtConfigurer
+                                .decoder(jwtDecoder)
+                        )
+                        .bearerTokenResolver(new RedisBearerTokenResolver(redisHelper))
+                        .authenticationEntryPoint(loginTargetAuthenticationEntryPoint)
+                )
                 // 表单登录设置
                 .formLogin(formLoginConfig -> formLoginConfig
                         .authenticationDetailsSource(new ServerAuthenticationDetailsSource())
@@ -102,7 +118,6 @@ public class ResourceConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(AbstractHttpConfigurer::disable)
         ;
-        http.authenticationProvider(new LucDaoAuthenticationProvider(userDetailsService, passwordEncoder));
         SecurityFilterChain filterChain = http.build();
         log.info("资源服务器过滤链路配置：{}", filterChain.getFilters());
         return filterChain;
@@ -113,22 +128,14 @@ public class ResourceConfig {
      *
      */
     @Bean
-    @Order(0)
-    public SecurityFilterChain resources(HttpSecurity http) throws Exception {
-        http.securityMatchers(matchers ->
-            matchers.requestMatchers(
-                    AntPathRequestMatcher.antMatcher("/assets/**"),
-                    AntPathRequestMatcher.antMatcher("/webjars/**"),
-                    AntPathRequestMatcher.antMatcher("/actuator/**"),
-                    AntPathRequestMatcher.antMatcher("/css/**"),
-                    AntPathRequestMatcher.antMatcher("/error")
-            )
-        )
-                .authorizeHttpRequests(request -> request.anyRequest().permitAll())
-                .requestCache(RequestCacheConfigurer::disable)
-                .securityContext(AbstractHttpConfigurer::disable)
-                .sessionManagement(AbstractHttpConfigurer::disable);
-        return http.build();
+    public WebSecurityCustomizer securityCustomizer(){
+        return web -> web.ignoring().requestMatchers(
+                AntPathRequestMatcher.antMatcher("/assets/**"),
+                AntPathRequestMatcher.antMatcher("/webjars/**"),
+                AntPathRequestMatcher.antMatcher("/actuator/**"),
+                AntPathRequestMatcher.antMatcher("/css/**"),
+                AntPathRequestMatcher.antMatcher("/error")
+        );
     }
 
 //    /**

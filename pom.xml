@@ -77,6 +77,14 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
         </dependency>
+        <!-- 将配所有ConfigurationProperties的属性映射自动打包为json-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <scope>compile</scope>
+            <optional>true</optional>
+        </dependency>
+
         <!--plumelog-logback-->
 <!--        <dependency>-->
 <!--            <groupId>com.plumelog</groupId>-->

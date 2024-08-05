@@ -40,6 +40,6 @@ public class ClientAuthenticationSuccessHandler implements AuthenticationSuccess
         if (authentication.getPrincipal().equals(KNIFE4J_CLIENT_ID)) {
             request.setAttribute(ACCESS_TOKEN, KNIFE4J_TOKEN_KEY);
         }
-        securityContextRepository.saveContext(securityContext, request, response);
+//        securityContextRepository.saveContext(securityContext, request, response);
     }
 }

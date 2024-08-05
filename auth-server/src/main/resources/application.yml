@@ -1,12 +1,12 @@
-server:
-  port: 8889
+#server:
+#  port: 8889
 spring:
-  profiles:
-    active: dev
-  application:
-    name: auth-server
-  messages:
-    basename: messages
+#  profiles:
+#    active: dev
+#  application:
+#    name: auth-server
+#  messages:
+#    basename: messages
   devtools: # 热部署工具，需要在idea中同时设置auto compiler
     restart:
       enabled: true

@@ -84,23 +84,24 @@ public class SecurityUtils {
      */
     public static String getTokenKey(HttpServletRequest request) {
         String tokenKey = Objects.isNull(request.getAttribute(ACCESS_TOKEN)) ? null : String.valueOf(request.getAttribute(ACCESS_TOKEN));
-        if (StringUtils.hasText(tokenKey)) {
-            return tokenKey;
-        }
-        if (ArrayUtils.isNotEmpty(request.getCookies())) {
-            for (Cookie cookie : request.getCookies()) {
-                if (cookie.getName().equalsIgnoreCase(ACCESS_TOKEN)) {
-                    tokenKey = cookie.getValue();
+        if (!StringUtils.hasText(tokenKey)) {
+            // 从cookie中获取
+            if (ArrayUtils.isNotEmpty(request.getCookies())) {
+                for (Cookie cookie : request.getCookies()) {
+                    if (cookie.getName().equalsIgnoreCase(ACCESS_TOKEN)) {
+                        tokenKey = cookie.getValue();
+                    }
+                }
+            }
+            // 从请求头中获取
+            if (!StringUtils.hasText(tokenKey)) {
+                tokenKey = request.getHeader(ACCESS_TOKEN);
+                if (!StringUtils.hasText(tokenKey)) {
+                    tokenKey = request.getParameter(ACCESS_TOKEN);
                 }
             }
         }
-        if (!StringUtils.hasText(tokenKey)) {
-            tokenKey = request.getHeader(ACCESS_TOKEN);
-            if (!StringUtils.hasText(tokenKey)) {
-                tokenKey = request.getParameter(ACCESS_TOKEN);
-            }
-        }
-        log.info("获取jsessionid: {}", tokenKey);
+        log.info("获取tokenKey: {}", tokenKey);
         return tokenKey;
     }
 

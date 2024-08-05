@@ -1,15 +1,15 @@
-server:
-  port: 18889
+#server:
+#  port: 18889
 #  servlet:
 #    session:
 #      cookie:
 #        name: TEST-CLIENT
 spring:
-  application:
-    name:
-      luc-system
-  profiles:
-    active: dev
+#  application:
+#    name:
+#      luc-system
+#  profiles:
+#    active: dev
   # mysql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -33,18 +33,18 @@ spring:
           max-active: 2000
           max-wait: 10000
           enabled: true
-  cloud:
-    # nacos
-    nacos:
-      config:
-        enabled: false
-      discovery:
-        username: luc
-        password: luc123456
-        server-addr: localhost:8848
-        namespace: com-lc-dev
-        # 本地测试时需要用本地地址，而非公网ip
-        ip: 127.0.0.1
+#  cloud:
+#    # nacos
+#    nacos:
+#      config:
+#        enabled: false
+#      discovery:
+#        username: luc
+#        password: luc123456
+#        server-addr: localhost:8848
+#        namespace: com-lc-dev
+#        # 本地测试时需要用本地地址，而非公网ip
+#        ip: 127.0.0.1
 mybatis-plus:
   mapper-locations: classpath*:mapper/**/*.xml
   global-config:

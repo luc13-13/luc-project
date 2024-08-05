@@ -108,7 +108,8 @@ public class AuthorizationConfig {
         // 初始化默认配置
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
 
-        http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+        http
+                .getConfigurer(OAuth2AuthorizationServerConfigurer.class)
                 // 注入自定义的授权方式Converter, 所有经过/oauth2/token接口的请求都经过OAuth2TokenEndpointFilter过滤器
                 // 该过滤器要求provider提供OAuth2AccessTokenAuthenticationToken
                 // 获取token必须在登陆之后， 因为OAuth2TokenEndPointFilter在鉴权过滤器之后，获取不到权限则直接报错

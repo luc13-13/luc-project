@@ -1,5 +1,6 @@
 spring:
   cloud:
+    # 暂时使用application.yml中的配置，部署时将配置全部迁移到nacos
     nacos:
       username: 'luc'
       password: 'luc123456'
@@ -8,6 +9,7 @@ spring:
         namespace: com-lc-dev
         # 本地测试时需要用本地地址，而非公网ip
         ip: 127.0.0.1
+        enabled: true
       config:
         namespace: com-lc-dev
         file-extension: yaml

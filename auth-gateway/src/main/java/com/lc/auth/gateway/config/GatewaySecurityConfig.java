@@ -27,8 +27,6 @@ import org.springframework.security.web.server.util.matcher.ServerWebExchangeMat
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.stream.Collectors;
 
 /**
  * <pre>
@@ -41,7 +39,6 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableWebFluxSecurity
 @EnableReactiveMethodSecurity
-@RefreshScope
 public class GatewaySecurityConfig {
 
     @Autowired
@@ -52,9 +49,6 @@ public class GatewaySecurityConfig {
 
     @Autowired
     private AuthServerAccessDeniedHandler accessDeniedHandler;
-
-    @Autowired
-    private SysSecurityProperties sysSecurityProperties;
 
     @Autowired
     private RedisServerSecurityContextRepository serverSecurityContextRepository;
@@ -68,6 +62,7 @@ public class GatewaySecurityConfig {
     @Bean
     @RefreshScope
     public SecurityWebFilterChain defaultSecurityFilterChain(ServerHttpSecurity http,
+                                                             SysSecurityProperties sysSecurityProperties,
                                                              RedirectServerAuthenticationSuccessHandler authenticationSuccessHandler,
                                                              RedirectServerAuthenticationFailureHandler authenticationFailureHandler) {
         String[] whiteUrl = new String[CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths()) ? 0: sysSecurityProperties.getWhitePaths().size()];
