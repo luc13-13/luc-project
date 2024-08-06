@@ -90,6 +90,7 @@ public class ResourceConfig {
                 .securityContext(securityContextConfig -> securityContextConfig.securityContextRepository(redisSecurityContextRepository))
                 // 用自定义的认证信息获取方法
                 .authenticationProvider(new LucDaoAuthenticationProvider(userDetailsService, passwordEncoder))
+                // 资源服务器token获取和校验方式
                 .oauth2ResourceServer(oauth2 -> oauth2
                         // 配置jwt解密方法
                         .jwt(jwtConfigurer -> jwtConfigurer
