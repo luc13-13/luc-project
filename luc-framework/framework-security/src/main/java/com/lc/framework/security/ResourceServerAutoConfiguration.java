@@ -2,10 +2,16 @@ package com.lc.framework.security;
 
 import com.lc.framework.security.core.properties.SysCorsProperties;
 import com.lc.framework.security.core.properties.SysSecurityProperties;
+import feign.RequestInterceptor;
+import feign.RequestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnNotWebApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.context.request.WebRequestInterceptor;
 
 /**
  * <pre>
@@ -19,4 +25,33 @@ public class ResourceServerAutoConfiguration {
 
     @Autowired
     private SysSecurityProperties sysSecurityProperties;
+
+    @Bean
+    @ConditionalOnWebApplication
+    public ServletFeignInterceptor servletFeignInterceptor() {
+        return new ServletFeignInterceptor();
+    }
+
+    @Bean
+    @ConditionalOnNotWebApplication
+    public WebFluxFeignInterceptor webFluxFeignInterceptor() {
+        return new WebFluxFeignInterceptor();
+    }
+
+    public static class ServletFeignInterceptor implements RequestInterceptor {
+
+        @Override
+        public void apply(RequestTemplate template) {
+
+        }
+    }
+
+    public static class WebFluxFeignInterceptor implements RequestInterceptor {
+
+        @Override
+        public void apply(RequestTemplate template) {
+
+        }
+    }
 }
+
