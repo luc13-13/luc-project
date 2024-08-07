@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>framework-web</artifactId>
-
+    <packaging>jar</packaging>
 
     <dependencies>
         <!--spring cloud openfeign-->

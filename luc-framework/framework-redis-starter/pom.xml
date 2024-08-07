@@ -10,6 +10,7 @@
     </parent>
 
     <artifactId>framework-redis-starter</artifactId>
+    <packaging>jar</packaging>
 
     <dependencies>
 
