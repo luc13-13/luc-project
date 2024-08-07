@@ -23,6 +23,8 @@ public class OAuth2PasswordAuthenticationToken extends BasicAuthenticationToken 
     @Getter
     private final String password;
 
+    public static final AuthorizationGrantType PASSWORD_GRANT_TYPE = AuthorizationGrantType.PASSWORD;
+
     public OAuth2PasswordAuthenticationToken(AuthorizationGrantType authorizationGrantType, Authentication clientPrincipal, Set<String> scopes, String username, String password, Map<String, Object> additionalParameters) {
         super(authorizationGrantType, clientPrincipal, scopes, additionalParameters);
         this.username = username;

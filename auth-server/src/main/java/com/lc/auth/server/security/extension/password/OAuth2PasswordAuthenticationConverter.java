@@ -21,11 +21,11 @@ public class OAuth2PasswordAuthenticationConverter extends BasicAuthenticationCo
 
     @Override
     public boolean support(String grantType) {
-        return AuthorizationGrantType.PASSWORD.getValue().equals(grantType);
+        return OAuth2PasswordAuthenticationToken.PASSWORD_GRANT_TYPE.getValue().equals(grantType);
     }
 
     @Override
     public OAuth2PasswordAuthenticationToken unauthenticatedToken(Authentication clientPrincipal, Set<String> requestedScopes, MultiValueMap<String, String> requestParameters) {
-        return new OAuth2PasswordAuthenticationToken(AuthorizationGrantType.PASSWORD, clientPrincipal, requestedScopes, requestParameters.getFirst(OAuth2ParameterNames.USERNAME), requestParameters.getFirst(OAuth2ParameterNames.PASSWORD));
+        return new OAuth2PasswordAuthenticationToken(OAuth2PasswordAuthenticationToken.PASSWORD_GRANT_TYPE, clientPrincipal, requestedScopes, requestParameters.getFirst(OAuth2ParameterNames.USERNAME), requestParameters.getFirst(OAuth2ParameterNames.PASSWORD));
     }
 }

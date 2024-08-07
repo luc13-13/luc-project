@@ -7,7 +7,6 @@ import com.lc.framework.security.constants.OAuth2ParameterConstants;
 import com.lc.framework.web.utils.SpringBeanUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
@@ -24,11 +23,11 @@ import java.util.Set;
  */
 public class OAuth2SmsAuthenticationConverter extends BasicAuthenticationConverter<OAuth2SmsAuthenticationToken> {
 
-    public static final AuthorizationGrantType SMS = new AuthorizationGrantType("sms");
+
 
     @Override
     public boolean support(String grantType) {
-        return SMS.getValue().equals(grantType);
+        return OAuth2SmsAuthenticationToken.SMS.getValue().equals(grantType);
     }
 
     @Override
@@ -50,6 +49,6 @@ public class OAuth2SmsAuthenticationConverter extends BasicAuthenticationConvert
     @Override
     public OAuth2SmsAuthenticationToken unauthenticatedToken(Authentication clientPrincipal, Set<String> requestedScopes, MultiValueMap<String, String> requestParameters) {
 
-        return new OAuth2SmsAuthenticationToken(SMS, clientPrincipal, requestedScopes, requestParameters.getFirst(OAuth2ParameterConstants.mobile), requestParameters.getFirst(OAuth2ParameterConstants.captcha));
+        return new OAuth2SmsAuthenticationToken(OAuth2SmsAuthenticationToken.SMS, clientPrincipal, requestedScopes, requestParameters.getFirst(OAuth2ParameterConstants.mobile), requestParameters.getFirst(OAuth2ParameterConstants.captcha));
     }
 }

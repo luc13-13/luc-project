@@ -7,7 +7,7 @@ import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 
 /**
  * <pre>
- *     授权结果存入redis中
+ *     授权结果存入redis中, 用于保存AccessToken、RefreshToken
  * </pre>
  *
  * @author Lu Cheng
@@ -17,7 +17,7 @@ import org.springframework.security.oauth2.server.authorization.OAuth2TokenType;
 public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationService {
     @Override
     public void save(OAuth2Authorization authorization) {
-
+        String authorizationId = authorization.getId();
     }
 
     @Override

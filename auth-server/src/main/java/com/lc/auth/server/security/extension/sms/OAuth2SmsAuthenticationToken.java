@@ -24,6 +24,8 @@ public class OAuth2SmsAuthenticationToken extends BasicAuthenticationToken {
     @Getter
     private final String captcha;
 
+    public static final AuthorizationGrantType SMS = new AuthorizationGrantType("sms");
+
     public OAuth2SmsAuthenticationToken(AuthorizationGrantType authorizationGrantType, Authentication clientPrincipal, Set<String> scopes, String mobile, String captcha) {
         this(authorizationGrantType, clientPrincipal, scopes, mobile, captcha, Collections.emptyMap());
     }

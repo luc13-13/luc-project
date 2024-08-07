@@ -6,3 +6,6 @@ spring:
       luc-system
   profiles:
     active: dev
+
+#  config:
+#    additional-location: classpath:application-framework-apidoc.yml

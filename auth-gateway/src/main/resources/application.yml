@@ -17,28 +17,21 @@ spring:
         locator:
           enabled: true # 开启配置中心，网关将从配置中心获取服务的地址, 如果开启负载均衡， 则网关中的filter在使用feignclient是要用@Lazy懒加载
           lowerCaseServiceId: true
-      default-filters:
-        - StripPrefix=1
       routes:           # 启用配置中心后， 将从配置中心拉取service-test-luc1服务的地址，用来组装uri
+        # 系统服务
         - id: luc-system
-          uri: lb://luc-system #http://localhost:18889   # lb://institution-server表示以负载均衡的方式获取对实例institution-server的请求进行路由
+          uri: lb://luc-system   # lb://institution-server表示以负载均衡的方式获取对实例luc-system的请求进行路由
           predicates:
             - Path=/luc-system/**
-        #          filters:
-        #            - StripPrefix=1
+          filters:
+            - StripPrefix=1
+        # 认证服务
         - id: auth-server
           uri: lb://auth-server
           predicates:
             - Path=/auth-server/**
-  #          filters:
-  #            - StripPrefix=1
-  #        - id: resource-server
-  #          uri: lb://resource-server
-  #          predicates:
-  #            - Path=/resource-server/**
-  #          filters:
-  #            - StripPrefix=1
-  #            - TokenRelay
+          filters:
+            - StripPrefix=1
   data:
     redis:
       client-type: lettuce
@@ -46,20 +39,25 @@ spring:
       host: 127.0.0.1
       port: 6379
       password: luc123456
-  #      lettuce:
-  #        pool:
+      lettuce:
+        pool:
+          enabled: true
+          min-idle: 1
   #          enabled: true
   #          max-active: 6
   #          max-idle: 6
   #          max-wait: 1000
   security:
     oauth2:
-      resource-server:
+      authorizationserver:
+        issuer: ${gateway.endpoint}:${server.port}/auth-server
+      resourceserver:
         jwt:
-          issuer-uri: http://127.0.0.1:8889
+          issuer-uri: ${gateway.endpoint}:${server.port}/auth-server
         opaquetoken:
           client-id: gateway-client
           client-secret: secret
+          introspection-uri:
 #      client:
 #        provider:
 #          provider-authorization-server:

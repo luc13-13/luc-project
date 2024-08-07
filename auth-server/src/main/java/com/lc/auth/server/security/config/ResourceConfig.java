@@ -96,7 +96,9 @@ public class ResourceConfig {
                         .jwt(jwtConfigurer -> jwtConfigurer
                                 .decoder(jwtDecoder)
                         )
+                        // 定制化token解析
                         .bearerTokenResolver(new RedisBearerTokenResolver(redisHelper))
+                        // 处理未认证401错误
                         .authenticationEntryPoint(loginTargetAuthenticationEntryPoint)
                 )
                 // 表单登录设置
@@ -138,33 +140,4 @@ public class ResourceConfig {
                 AntPathRequestMatcher.antMatcher("/error")
         );
     }
-
-//    /**
-//     * 增加oauth2
-//     *
-//     * @author Lu Cheng
-//     * @date 2023/10/19
-//     */
-//    @Bean
-//    public ClientRegistrationRepository clientRegistrationRepository() {
-//        return new InMemoryClientRegistrationRepository(this.googleClientRegistration());
-//    }
-//
-//    private ClientRegistration googleClientRegistration() {
-//        return ClientRegistration.withRegistrationId("gitee")
-//                .clientId("5f2347d5f004f353527c9f96ed162b97f461da0afc5589332172d5f2b78b71db")
-//                .clientSecret("8bf85746f31139726b4bead33cedc8b7c63dae8068c025b8563c58c7990e3774")
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-//                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
-//                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-//                .redirectUri("{baseUrl}/login/oauth2/code/{registrationId}")
-//                .scope("openid", "profile", "email", "address", "phone")
-//                .authorizationUri("https://gitee.com/oauth/authorize")
-//                .tokenUri("https://gitee.com/oauth2/token")
-//                .userInfoUri("https://gitee.com/v5/user")
-//                .userNameAttributeName(IdTokenClaimNames.SUB)
-////                .jwkSetUri("https://www.googleapis.com/oauth2/v3/certs")
-//                .clientName("gitee")
-//                .build();
-//    }
 }

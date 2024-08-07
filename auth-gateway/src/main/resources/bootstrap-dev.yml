@@ -1,3 +1,7 @@
+# 网关地址
+gateway:
+  endpoint: http://localhost
+
 spring:
   cloud:
     # 暂时使用application.yml中的配置，部署时将配置全部迁移到nacos

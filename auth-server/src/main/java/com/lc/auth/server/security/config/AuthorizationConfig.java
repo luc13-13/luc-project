@@ -63,12 +63,17 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+
+import static com.lc.auth.server.security.extension.gitee.OAuth2GiteeAuthenticationToken.GITEE;
+import static com.lc.auth.server.security.extension.sms.OAuth2SmsAuthenticationToken.SMS;
 import static org.springframework.security.oauth2.core.AuthorizationGrantType.*;
 import static org.springframework.security.oauth2.core.ClientAuthenticationMethod.*;
 
 /**
  * <pre>
- *
+ *  授权服务器配置
+ *  /.well-known/openid-configuration
+ *  /.well-known/oauth-authorization-server
  * </pre>
  *
  * @author Lu Cheng
@@ -125,14 +130,16 @@ public class AuthorizationConfig {
                 .oidc(Customizer.withDefaults())
                 .authorizationService(authorizationService)
                 .authorizationServerMetadataEndpoint(customizer -> customizer
-                        .authorizationServerMetadataCustomizer(meta -> meta.grantTypes(grantType -> grantType.addAll(List.of("password", "sms", "gitee"))))
+                        .authorizationServerMetadataCustomizer(meta -> meta
+                                .grantType(SMS.getValue())
+                                .grantTypes(grantType -> grantType.addAll(List.of(PASSWORD.getValue(), SMS.getValue(), GITEE.getValue()))))
                 )
 //         自定义的客户端认证方法, 默认对/oauth2/token(获取token), /oauth2/revoke(注销token), /oauth2/introspect(校验token有效性), /oauth2/device_authorization接口进行拦截， 均为POST方法
                 .clientAuthentication(
-//                        Customizer.withDefaults()
-                        clientAuthentication -> clientAuthentication
-                                // 重写OAuth2ClientAuthenticationFilter方法，认证成功后将SecurityContext保存到redis
-                                .authenticationSuccessHandler(new ClientAuthenticationSuccessHandler(redisSecurityContextRepository))
+                        Customizer.withDefaults()
+//                        clientAuthentication -> clientAuthentication
+//                                // 重写OAuth2ClientAuthenticationFilter方法，认证成功后将SecurityContext保存到redis
+//                                .authenticationSuccessHandler(new ClientAuthenticationSuccessHandler(redisSecurityContextRepository))
                 )
         ;
         http
@@ -144,16 +151,6 @@ public class AuthorizationConfig {
                 // Accept access tokens for User Info and/or Client Registration
                 .oauth2ResourceServer((resourceServer) -> resourceServer
                         .jwt(jwtConfigurer -> jwtConfigurer.decoder(jwtDecoder)))
-                // 提供表单登录
-//                .formLogin(formLoginConfig -> formLoginConfig
-//                        // 避免在Authentication序列化时引入HttpServlet, 导致网关反序列化失败问题
-//                        .authenticationDetailsSource(new ServerAuthenticationDetailsSource())
-//                        .loginPage(sysSecurityProperties.getLoginPage())
-//                        .loginProcessingUrl(sysSecurityProperties.getLoginApi())
-//                        .failureHandler(loginFailureHandler)
-//                        .successHandler(loginSuccessHandler))
-                // 提供oauth2登录
-//                .oauth2Login(Customizer.withDefaults())
         ;
 
         http
@@ -200,7 +197,7 @@ public class AuthorizationConfig {
                 .clientName("gateway-client")
                 .clientIdIssuedAt(Instant.now())
                 .scopes(scope -> scope.addAll(List.of("read", "write", "openid", "profile", "all")))
-                .authorizationGrantTypes(types -> types.addAll((List.of(AUTHORIZATION_CODE, REFRESH_TOKEN, CLIENT_CREDENTIALS, PASSWORD, JWT_BEARER))))
+                .authorizationGrantTypes(types -> types.addAll((List.of(AUTHORIZATION_CODE, REFRESH_TOKEN, CLIENT_CREDENTIALS, PASSWORD, JWT_BEARER, SMS, GITEE))))
                 .clientAuthenticationMethods(method -> method.addAll(List.of(CLIENT_SECRET_BASIC, CLIENT_SECRET_POST, CLIENT_SECRET_JWT, PRIVATE_KEY_JWT)))
                 .redirectUris(url -> url.addAll(List.of("http://127.0.0.1:8809/login/oauth2/code/gateway-client", "http://localhost:8809/login/oauth2/code/gateway-client")))
                 .clientSecret(passwordEncoder.encode("secret"))
@@ -219,7 +216,7 @@ public class AuthorizationConfig {
                 .clientName("knife4j-client")
                 .clientIdIssuedAt(Instant.now())
                 .scopes(scope -> scope.addAll(List.of("read", "write", "openid", "profile", "all")))
-                .authorizationGrantTypes(types -> types.addAll((List.of(AUTHORIZATION_CODE, REFRESH_TOKEN, CLIENT_CREDENTIALS, PASSWORD, JWT_BEARER))))
+                .authorizationGrantTypes(types -> types.addAll((List.of(AUTHORIZATION_CODE, REFRESH_TOKEN, CLIENT_CREDENTIALS, PASSWORD, JWT_BEARER, SMS, GITEE))))
                 .clientAuthenticationMethods(method -> method.addAll(List.of(CLIENT_SECRET_BASIC, CLIENT_SECRET_POST, CLIENT_SECRET_JWT, PRIVATE_KEY_JWT)))
                 .redirectUris(url -> url.addAll(List.of("http://127.0.0.1:8809/login/oauth2/code/knife4j-client", "http://localhost:8809/login/oauth2/code/knife4j-client")))
                 .clientSecret(passwordEncoder.encode("secret"))
@@ -265,12 +262,6 @@ public class AuthorizationConfig {
                                                            RegisteredClientRepository registeredClientRepository) {
         return new JdbcOAuth2AuthorizationService(jdbcTemplate, registeredClientRepository);
     }
-
-//    @Bean
-//    public OAuth2AuthorizedClientService auth2AuthorizedClientService(JdbcTemplate jdbcTemplate,
-//                                                                      ClientRegistrationRepository clientRegistrationRepository) {
-//        return new JdbcOAuth2AuthorizedClientService(jdbcTemplate, clientRegistrationRepository);
-//    }
 
     /**
      * for signing access tokens.
@@ -335,8 +326,6 @@ public class AuthorizationConfig {
     @Bean
     public AuthorizationServerSettings authorizationServerSettings() {
         return AuthorizationServerSettings.builder()
-                .authorizationEndpoint("/oauth2/authorize")
-                .tokenEndpoint("/oauth2/token")
                 .issuer("http://127.0.0.1:8889")
                 .build();
     }

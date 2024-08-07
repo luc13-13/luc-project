@@ -2,37 +2,28 @@ package com.lc.framework.apidoc;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.headers.Header;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
-import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.HeaderParameter;
 import io.swagger.v3.oas.models.security.OAuthFlow;
 import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springdoc.core.customizers.GlobalOperationCustomizer;
-import org.springdoc.core.models.GroupedOpenApi;
-import org.springframework.beans.factory.annotation.Value;
+import org.springdoc.core.properties.SpringDocConfigProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
-import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
-
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKEN;
 import static com.lc.framework.core.constants.RequestHeaderConstants.KNIFE4J_TOKEN_KEY;
@@ -44,12 +35,14 @@ import static com.lc.framework.core.constants.RequestHeaderConstants.KNIFE4J_TOK
  * @date : 2024/6/15 20:05
  * @version : 1.0
  */
-@ConditionalOnExpression("!'${spring.profiles.active}'.equals('pro')")
-@AutoConfiguration
+@Slf4j
+//@AutoConfiguration
+//@ConditionalOnExpression("${springdoc.api-docs.enabled:true} and !'${spring.profiles.active}'.equals('pro')")
 @RequiredArgsConstructor
 @EnableConfigurationProperties(ApiDocInfoProperties.class)
-@Slf4j
 public class OpenApiConfig {
+
+
     /**
      * OAuth2 认证 endpoint
      */
@@ -90,8 +83,8 @@ public class OpenApiConfig {
      * OpenAPI 配置（元信息、安全协议）
      */
     @Bean
-    public OpenAPI apiInfo() {
-        log.info("apidoc自动装配");
+    public OpenAPI apiInfo(SpringDocConfigProperties properties) {
+        log.info("apidoc自动装配, 扫描路径：{}", properties.getGroupConfigs().stream().map(SpringDocConfigProperties.GroupConfig::getPackagesToScan).collect(Collectors.toList()));
         OpenAPI openAPI = new OpenAPI();
         Info info = new Info().title(apiDocInfoProperties.getTitle())
                 .version(apiDocInfoProperties.getVersion())

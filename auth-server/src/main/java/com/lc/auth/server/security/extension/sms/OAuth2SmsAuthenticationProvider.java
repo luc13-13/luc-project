@@ -24,7 +24,7 @@ public class OAuth2SmsAuthenticationProvider extends BasicAuthenticationProvider
     @Override
     public UsernamePasswordAuthenticationToken buildToken(OAuth2SmsAuthenticationToken resourceOwnerToken) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(resourceOwnerToken.getMobile(), null);;
-        token.setDetails(OAuth2SmsAuthenticationConverter.SMS.getValue());
+        token.setDetails(OAuth2SmsAuthenticationToken.SMS.getValue());
         return token;
     }
 }

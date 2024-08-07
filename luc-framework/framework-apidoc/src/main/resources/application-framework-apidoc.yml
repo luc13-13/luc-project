@@ -1,15 +1,19 @@
+# TODO: 将该配置文件放在nacos中，所有服务在share-configs中引入
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
     tags-sorter: alpha
     operations-sorter: alpha
     show-extensions: true
+#    enabled: false
   api-docs:
     path: /v3/api-docs
+#    enabled: false
   group-configs:
     - group: "default"
       paths-to-match: '/**'
-      packages-to-scan: com.lc.*
+      packages-to-scan: com.lc.*.web
   default-flat-param-object: true
 knife4j:
   enable: true
