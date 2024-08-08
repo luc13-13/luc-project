@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springdoc.core.customizers.GlobalOperationCustomizer;
 import org.springdoc.core.properties.SpringDocConfigProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -44,8 +45,8 @@ public class OpenApiConfig {
     /**
      * OAuth2 认证 endpoint
      */
-//    @Value("${spring.security.oauth2.authorizationserver.token-uri:#{'http://127.0.0.1:8889/oauth2/token'}}")
-    private String tokenUrl = "http://127.0.0.1:8889/oauth2/token";
+    @Value("${spring.security.oauth2.authorizationserver.token-uri:http://127.0.0.1:8889/oauth2/token}")
+    private String tokenUrl;
 
     /**
      * API 文档信息属性
@@ -85,7 +86,7 @@ public class OpenApiConfig {
      */
     @Bean
     public OpenAPI apiInfo(SpringDocConfigProperties properties) {
-        log.info("apidoc自动装配, 扫描路径：{}", properties.getGroupConfigs().stream().map(SpringDocConfigProperties.GroupConfig::getPackagesToScan).collect(Collectors.toList()));
+        log.info("apidoc自动装配, 扫描路径：{}, tokenUrl: {}", properties.getGroupConfigs().stream().map(SpringDocConfigProperties.GroupConfig::getPackagesToScan).collect(Collectors.toList()), tokenUrl);
 
         OpenAPI openAPI = new OpenAPI();
         Info info = new Info().title(apiDocInfoProperties.getTitle())
