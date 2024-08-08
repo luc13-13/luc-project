@@ -32,7 +32,6 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
-
 # framework-datascope数据权限配置
 data-scope:
   enabled: true
@@ -51,3 +50,25 @@ data-scope:
           column-type: varchar
     ## 2、配置文件只声明bean的创建，使用DataScopeSqlHandlerCustomizer在代码中对bean进行定制化开发
     - id: Tenant
+
+# framework-apidoc 日志设置，后续迁移到nacos中，各服务使用share-configs引入springdoc:
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    show-extensions: true
+#    default-model-expand-depth:
+  #    enabled: false
+  api-docs:
+    path: /v3/api-docs
+#    enabled: false
+  group-configs:
+    - group: "default"
+      paths-to-match: '/**'
+      packages-to-scan: com.lc
+  default-flat-param-object: true
+knife4j:
+  enable: true
+  setting:
+    enable-response-code: false

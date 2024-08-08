@@ -16,8 +16,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
 import org.springdoc.core.customizers.GlobalOperationCustomizer;
 import org.springdoc.core.properties.SpringDocConfigProperties;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +36,6 @@ import static com.lc.framework.core.constants.RequestHeaderConstants.KNIFE4J_TOK
  * @version : 1.0
  */
 @Slf4j
-//@AutoConfiguration
 //@ConditionalOnExpression("${springdoc.api-docs.enabled:true} and !'${spring.profiles.active}'.equals('pro')")
 @RequiredArgsConstructor
 @EnableConfigurationProperties(ApiDocInfoProperties.class)
@@ -65,6 +64,9 @@ public class OpenApiConfig {
                 .addParametersItem(new HeaderParameter().required(true).name(ACCESS_TOKEN).schema(new StringSchema()._default(KNIFE4J_TOKEN_KEY)));
     }
 
+    /**
+     * debug时自动填充Authorization
+     */
     @Bean
     public GlobalOpenApiCustomizer globalOpenApiCustomizer() {
         return openApi -> {
@@ -83,8 +85,10 @@ public class OpenApiConfig {
      * OpenAPI 配置（元信息、安全协议）
      */
     @Bean
-    public OpenAPI apiInfo(SpringDocConfigProperties properties) {
-        log.info("apidoc自动装配, 扫描路径：{}", properties.getGroupConfigs().stream().map(SpringDocConfigProperties.GroupConfig::getPackagesToScan).collect(Collectors.toList()));
+    @ConditionalOnMissingBean(OpenAPI.class)
+    public OpenAPI apiInfo() {
+//        log.info("apidoc自动装配, 扫描路径：{}", properties.getGroupConfigs().stream().map(SpringDocConfigProperties.GroupConfig::getPackagesToScan).collect(Collectors.toList()));
+        log.info("apidoc自动装配, 扫描路径：{}", "");
         OpenAPI openAPI = new OpenAPI();
         Info info = new Info().title(apiDocInfoProperties.getTitle())
                 .version(apiDocInfoProperties.getVersion())

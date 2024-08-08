@@ -57,6 +57,7 @@
 
         <!--api文档-->
         <knife4j.version>4.5.0</knife4j.version>
+        <springdoc-openapi.version>2.5.0</springdoc-openapi.version>
 
         <!--日志相关-->
         <lombok.version>1.18.24</lombok.version>

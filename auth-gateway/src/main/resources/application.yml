@@ -82,6 +82,7 @@ spring:
 #              - write
 #              - openid
 
+# 聚合api文档
 knife4j:
   gateway:
     enabled: true

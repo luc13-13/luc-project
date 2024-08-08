@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Data
 @Builder
-@Schema(name = "MenuDTO", description = "封装用户菜单数据")
+@Schema(name = "MenuDTO", description = "封装用户菜单数据", $id = "MenuDTO")
 @AllArgsConstructor
 @NoArgsConstructor
 public class MenuDTO {
