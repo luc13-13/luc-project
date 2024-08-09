@@ -14,6 +14,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "springdoc.info")
 public class ApiDocInfoProperties {
     /**
+     * 鉴权地址
+     */
+    private String tokenUri = "http://127.0.0.1:8889/oauth2/token";
+
+    /**
      * API文档标题
      */
     private String title;

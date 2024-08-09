@@ -41,13 +41,6 @@ import static com.lc.framework.core.constants.RequestHeaderConstants.KNIFE4J_TOK
 @EnableConfigurationProperties(ApiDocInfoProperties.class)
 public class OpenApiConfig {
 
-
-    /**
-     * OAuth2 认证 endpoint
-     */
-    @Value("${spring.security.oauth2.authorizationserver.token-uri:http://127.0.0.1:8889/oauth2/token}")
-    private String tokenUrl;
-
     /**
      * API 文档信息属性
      */
@@ -86,7 +79,7 @@ public class OpenApiConfig {
      */
     @Bean
     public OpenAPI apiInfo(SpringDocConfigProperties properties) {
-        log.info("apidoc自动装配, 扫描路径：{}, tokenUrl: {}", properties.getGroupConfigs().stream().map(SpringDocConfigProperties.GroupConfig::getPackagesToScan).collect(Collectors.toList()), tokenUrl);
+        log.info("apidoc自动装配, 扫描路径：{}, tokenUrl: {}", properties.getGroupConfigs().stream().map(SpringDocConfigProperties.GroupConfig::getPackagesToScan).collect(Collectors.toList()), apiDocInfoProperties.getTokenUri());
 
         OpenAPI openAPI = new OpenAPI();
         Info info = new Info().title(apiDocInfoProperties.getTitle())
@@ -104,7 +97,7 @@ public class OpenApiConfig {
                     .url(apiDocInfoProperties.getLicense().getUrl()));
         }
         Components components = null;
-        if (StringUtils.hasText(tokenUrl)) {
+        if (StringUtils.hasText(apiDocInfoProperties.getTokenUri())) {
             log.info("framework-apidoc开启Authorization");
             openAPI = openAPI// 接口全局添加 Authorization 参数
                     .addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION));
@@ -118,8 +111,8 @@ public class OpenApiConfig {
                                     .flows(new OAuthFlows()
                                             .clientCredentials(
                                                     new OAuthFlow()
-                                                            .tokenUrl(tokenUrl)
-                                                            .refreshUrl(tokenUrl)
+                                                            .tokenUrl(apiDocInfoProperties.getTokenUri())
+                                                            .refreshUrl(apiDocInfoProperties.getTokenUri())
                                             )
                                     )
                                     // 安全模式使用Bearer令牌（即JWT）
