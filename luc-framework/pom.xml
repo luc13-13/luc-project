@@ -19,6 +19,7 @@
         <module>framework-apidoc</module>
         <module>framework-core</module>
         <module>framework-datascope</module>
+        <module>framework-datasource-starter</module>
         <module>framework-excel</module>
         <module>framework-redis-starter</module>
         <module>framework-security</module>
