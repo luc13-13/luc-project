@@ -1,6 +1,7 @@
 package com.lc.framework.datasource.starter.annotation;
 
 import com.lc.framework.datasource.starter.config.DynamicDataSourceAutoConfiguration;
+import com.lc.framework.datasource.starter.config.ShardingJdbcAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;
@@ -10,11 +11,11 @@ import java.lang.annotation.*;
  * </pre>
  *
  * @author Lu Cheng
- * @date 2024/8/12 17:15
+ * @date 2024/8/12 17:21
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Import(DynamicDataSourceAutoConfiguration.class)
-public @interface EnableDynamicDataSource {
+@Import(ShardingJdbcAutoConfiguration.class)
+public @interface EnableShardingJdbc {
 }

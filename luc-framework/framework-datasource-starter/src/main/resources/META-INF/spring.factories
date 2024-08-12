@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.lc.framework.datasource.starter.config.DynamicDataSourceAutoConfiguration\
+com.lc.framework.datasource.starter.config.ShardingJdbcAutoConfiguration
