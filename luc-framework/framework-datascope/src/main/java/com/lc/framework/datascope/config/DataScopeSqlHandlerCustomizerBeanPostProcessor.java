@@ -17,7 +17,26 @@ import java.util.List;
 
 /**
  * <pre>
- *     处理所有IDataScopeSqlHandler实例的注册过程，为其执行匹配的DataScopeSqlHandlerCustomizer
+ *     由于DataScopeSqlHandlerCustomizer是FunctionalInterface，通过Lambda方式创建实例时，会被泛型擦除，导致无法获取内部类，无法判断要为IDataScopeSqlHandler执行哪一个Customizer
+ *     因此创建BeanPostProcessor和LambdaSafe.callBack()方法，干预所有IDataScopeSqlHandler实例的注册过程，为每个实例执行能够匹配的DataScopeSqlHandlerCustomizer
+ *     LambdaSafe.callBack方法内部捕捉了类型转换异常，对无法匹配的Handler和Customizer无法匹配的情况能够跳过执行customize方法
+ * Examples:
+ *  {@code
+ *  @Configuration
+ *  public class DataScopeAutoConfig {
+ *      // 这里每个Customizer实例的具体类型为lambda，无法判断应该用到哪个具体的Handler上
+ *      @Autowired
+ *      List<DataScopeSqlHandlerCustomizer> customizers;
+ *
+ *      // 这里每个handler实例可以获取到类型，但是无法与customizers进行匹配
+ *      @Bean
+ *      public DataScopeInterceptor dataScopeInterceptor(List<IDataScopeHandler) {
+ *          return new SysDataScopeSqlHandler()
+ *      }
+ *
+ *  }
+ *
+ *  }
  * </pre>
  *
  * @author Lu Cheng

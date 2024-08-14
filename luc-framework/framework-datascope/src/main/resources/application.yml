@@ -1,6 +1,6 @@
 data-scope:
   enabled: true
-  handlers:
+  handler-definition:
     - id: Tenant
       support-tables:
         - table-name: tenant

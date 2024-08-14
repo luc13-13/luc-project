@@ -10,9 +10,11 @@ import com.lc.framework.datascope.handler.SysRoleDataScopeSqlHandler;
 import com.lc.framework.datascope.handler.SysUserDataScopeSqlHandler;
 import com.lc.framework.datascope.handler.TenantDataScopeSqlHandler;
 import com.lc.framework.datascope.interceptor.DataScopeInterceptor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanNameGenerator;
@@ -27,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportBeanDefinitionRegistrar;
 import org.springframework.core.type.AnnotationMetadata;
+import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import java.util.*;
@@ -46,7 +49,11 @@ import static com.lc.framework.core.constants.StringConstants.DOT;
 @AutoConfigureAfter({DataSourceAutoConfiguration.class, MybatisPlusLanguageDriverAutoConfiguration.class})
 @EnableConfigurationProperties(DataScopeProperties.class)
 @Import(DataScopeAutoConfiguration.CustomizerBeanPostProcessorRegistry.class)
+@Slf4j
 public class DataScopeAutoConfiguration {
+
+    @Autowired
+    private List<DataScopeSqlHandlerCustomizer> customizers;
 
     /**
      * @param handlers 所有handler的单例bean， beanName必须为类名首字母小写
@@ -123,6 +130,7 @@ public class DataScopeAutoConfiguration {
         private <T> void registerSyntheticBeanIfMissing(BeanDefinitionRegistry registry, String name,
                                                         Class<T> beanClass) {
             if (ObjectUtils.isEmpty(this.beanFactory.getBeanNamesForType(beanClass, true, false))) {
+                log.info("向容器注册bean：{}, class:{}", name, beanClass.getName());
                 RootBeanDefinition beanDefinition = new RootBeanDefinition(beanClass);
                 beanDefinition.setSynthetic(true);
                 registry.registerBeanDefinition(name, beanDefinition);
