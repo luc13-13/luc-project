@@ -1,0 +1,72 @@
+<mxfile host="Electron" modified="2024-02-23T07:41:07.600Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/23.0.2 Chrome/120.0.6099.109 Electron/28.1.0 Safari/537.36" etag="qwTcPDoZaR03jdERhA4S" version="23.0.2" type="device" pages="2">
+  <diagram name="四色建模" id="IglyjK21oQ1ir__Bf4et">
+    <mxGraphModel dx="397" dy="280" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-1" value="四色建模：通过三个关键逻辑，对四种对象进行发散和收敛，得到系统的领域模型" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="15" y="30" width="600" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-2" value="三个关键逻辑" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="55" y="78" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-3" value="四种对象" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="59.5" y="450" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-12" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="70" y="500" width="735" height="232" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-4" value="&lt;font color=&quot;#000000&quot;&gt;时标原型&lt;br&gt;Moment-Interval&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FF9999;" vertex="1" parent="UpVG_okWS6c0LwA0N9R7-12">
+          <mxGeometry x="140" y="62" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-5" value="&lt;font color=&quot;#000000&quot;&gt;角色原型&lt;br&gt;Role&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFFF66;" vertex="1" parent="UpVG_okWS6c0LwA0N9R7-12">
+          <mxGeometry x="260" y="62" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-6" value="&lt;font color=&quot;#000000&quot;&gt;参与方原型&lt;br&gt;Party-Place-Thing&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#99FF99;" vertex="1" parent="UpVG_okWS6c0LwA0N9R7-12">
+          <mxGeometry x="140" y="122" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-7" value="&lt;font color=&quot;#000000&quot;&gt;描述&lt;br&gt;Description&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#99CCFF;" vertex="1" parent="UpVG_okWS6c0LwA0N9R7-12">
+          <mxGeometry x="260" y="122" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-8" value="时标对象：在业务流程某个时间点、&lt;br&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;某段时间发生的事件，与角色请求对应，&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;需要包含起始时间、终止时间、唯一标识&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="UpVG_okWS6c0LwA0N9R7-12">
+          <mxGeometry width="240" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-9" value="角色：包含事件关联的人、物品" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="UpVG_okWS6c0LwA0N9R7-12">
+          <mxGeometry x="275" y="17" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-10" value="参与方：参与事件的人、事、物" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="UpVG_okWS6c0LwA0N9R7-12">
+          <mxGeometry y="202" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-11" value="描述：对前面三种原型属性进行补充描述，例如时间原型的起始时间，角色原型的" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="UpVG_okWS6c0LwA0N9R7-12">
+          <mxGeometry x="275" y="202" width="460" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-13" value="（1）有现金收入：收集凭据，证明履行了义务&lt;br&gt;（2）有现金之处：检查对方是否履约&lt;br&gt;（3）没有现金往来：建立目标，追踪实现目标的链路，检查实际结果" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="80" y="108" width="390" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-14" value="" style="shape=image;verticalLabelPosition=bottom;labelBackgroundColor=default;verticalAlign=top;aspect=fixed;imageAspect=0;image=https://pic3.zhimg.com/v2-2cad8eeacba1338a1775acf93732cbfa_r.jpg;" vertex="1" parent="1">
+          <mxGeometry x="139.5" y="180" width="434.11" height="220" as="geometry" />
+        </mxCell>
+        <mxCell id="UpVG_okWS6c0LwA0N9R7-15" value="1、食谱小程序" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="30" y="768" width="100" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="UMzzRQx9trks_rStCMYT" name="第 2 页">
+    <mxGraphModel dx="794" dy="559" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="t2R_10r-wmhd23oUnHjj-1" value="食谱" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="170" y="180" width="50" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PL_b940QCSWX2I28M1g7-1" value="读者订阅食谱" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="150" y="130" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="PL_b940QCSWX2I28M1g7-2" value="作者创建食谱" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="380" y="130" width="100" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
