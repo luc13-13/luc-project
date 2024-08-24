@@ -21,6 +21,7 @@ import org.springframework.beans.factory.support.BeanNameGenerator;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -52,9 +53,6 @@ import static com.lc.framework.core.constants.StringConstants.DOT;
 @Slf4j
 public class DataScopeAutoConfiguration {
 
-    @Autowired
-    private List<DataScopeSqlHandlerCustomizer> customizers;
-
     /**
      * @param handlers 所有handler的单例bean， beanName必须为类名首字母小写
      * @author Lu Cheng
@@ -62,7 +60,8 @@ public class DataScopeAutoConfiguration {
      */
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(name = "data-scope.enabled", havingValue = "true")
+    @ConditionalOnBean(IDataScopeSqlHandler.class)
+    @ConditionalOnProperty(name = "data-scope.enabled", havingValue = "true", matchIfMissing = true)
     public DataScopeInterceptor dataScopeInterceptor(DataScopeProperties dataScopeProperties,
                                                      List<IDataScopeSqlHandler> handlers) {
         // 所有处理器支持的表名， 采用全限定名 database.tableName
