@@ -42,14 +42,6 @@ public class AuthServerAuthenticationEntryPoint implements ServerAuthenticationE
             log.info("接收到信号: {}, 关闭buffer", signalType);
             DataBufferUtils.release(buffer);
         }));
-//                ServerResponse
-//                .status(HttpStatus.UNAUTHORIZED)
-//                .headers(headers -> {
-//                    headers.set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
-//                    headers.set(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, StringConstants.ASTERISK);
-//                    headers.set(HttpHeaders.CACHE_CONTROL, "no-cache");
-//                })
-//                .bodyValue(WebResult.error("认证失效", 401, "认证失效")).then();
     }
 
 }

@@ -83,8 +83,8 @@ public class GatewaySecurityConfig {
                         .authenticationEntryPoint(authenticationEntryPoint)
                         .accessDeniedHandler(accessDeniedHandler)
                 )
-                // 配置请求缓存，保存在cookie中
-                .requestCache(requestCache -> requestCache.requestCache(new CookieServerRequestCache()))
+                // 前后端分离项目，网关不缓存请求
+                .requestCache(ServerHttpSecurity.RequestCacheSpec::disable)
                 .oauth2ResourceServer(resourceServer -> resourceServer
                                 .jwt(Customizer.withDefaults())
                                 .authenticationFailureHandler(authenticationFailureHandler)

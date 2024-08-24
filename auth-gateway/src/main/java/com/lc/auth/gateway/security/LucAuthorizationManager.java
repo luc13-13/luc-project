@@ -42,11 +42,10 @@ public class LucAuthorizationManager implements ReactiveAuthorizationManager<Aut
         // （1）获取X-Access-Token：根据请求JSESSIONID从redis获取
 //        Authentication accessToken = redisHelper.hGet(ACCESS_TOKEN, jsessionid);
         // （2）获取X-Refresh-Token：根据请求JSESSIONID从redis获取
-        log.info("校验是否认证:{}", uri);
         return authentication
                 .map(obj -> {
-                    log.info("开始认证——是否认证：{}, credentials: {}", obj.isAuthenticated(), obj.getCredentials());
-                    return new AuthorizationDecision(true);
+                    log.info("开始认证url:, {} , 是否认证：{}, credentials: {}", uri, obj.isAuthenticated(), obj.getCredentials());
+                    return new AuthorizationDecision(obj.isAuthenticated());
                 });
     }
 }
