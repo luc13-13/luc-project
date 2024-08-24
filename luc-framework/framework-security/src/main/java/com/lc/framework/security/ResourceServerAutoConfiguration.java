@@ -26,12 +26,18 @@ public class ResourceServerAutoConfiguration {
     @Autowired
     private SysSecurityProperties sysSecurityProperties;
 
+    /**
+     * servlet服务的feign拦截器
+     */
     @Bean
     @ConditionalOnWebApplication
     public ServletFeignInterceptor servletFeignInterceptor() {
         return new ServletFeignInterceptor();
     }
 
+    /**
+     * webflux服务的feign拦截器
+     */
     @Bean
     @ConditionalOnNotWebApplication
     public WebFluxFeignInterceptor webFluxFeignInterceptor() {
