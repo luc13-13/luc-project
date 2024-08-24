@@ -57,7 +57,7 @@ spring:
         opaquetoken:
           client-id: gateway-client
           client-secret: secret
-          introspection-uri:
+#          introspection-uri:
 #      client:
 #        provider:
 #          provider-authorization-server:

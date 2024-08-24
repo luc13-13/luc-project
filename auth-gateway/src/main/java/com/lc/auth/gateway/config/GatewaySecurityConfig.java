@@ -115,12 +115,4 @@ public class GatewaySecurityConfig {
     public RedirectServerAuthenticationFailureHandler authenticationFailureHandler() {
         return new RedirectServerAuthenticationFailureHandler("/login?error");
     }
-
-//    public GrantedAuthoritiesMapper grantedAuthoritiesMapper() {
-//
-//    }
-//
-//    public MapReactiveUserDetailsService mapReactiveUserDetailsService() {
-//
-//    }
 }
