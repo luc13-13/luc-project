@@ -42,4 +42,4 @@ mybatis-plus:
 
 logging:
   level:
-    org.springframework.security: trace
+    org.springframework.security: debug
