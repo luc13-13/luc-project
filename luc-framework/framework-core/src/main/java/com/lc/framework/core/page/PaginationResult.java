@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * <pre>
- *     分页查询返回值封装, 包含实体列表、每页大小、当前页索引、总数、实体列表大小
+ *     分页查询返回值封装, 包含实体列表、每页大小、查询的最后一页索引、总数、实体列表大小
  * </pre>
  *
  * @author Lu Cheng
@@ -18,9 +18,6 @@ import java.util.List;
 public class PaginationResult<T> {
 
 
-    /**
-     * 查询结果
-     */
     private final List<T> results;
 
     /**
@@ -31,7 +28,7 @@ public class PaginationResult<T> {
     /**
      * 当前页索引，从0开始
      */
-    private final Long currentIndex;
+    private final Long currentPageIndex;
 
     /**
      * 总数
@@ -43,10 +40,10 @@ public class PaginationResult<T> {
      */
     private final Long count;
 
-    public PaginationResult(List<T> results, Long pageSize, Long currentIndex, Long total, Long count) {
+    public PaginationResult(List<T> results, Long pageSize, Long currentPageIndex, Long total, Long count) {
         this.results = results;
         this.pageSize = pageSize;
-        this.currentIndex = currentIndex;
+        this.currentPageIndex = currentPageIndex;
         this.total = total;
         this.count = count;
     }

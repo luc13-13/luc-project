@@ -2,7 +2,6 @@ package com.lc.framework.core.page;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;

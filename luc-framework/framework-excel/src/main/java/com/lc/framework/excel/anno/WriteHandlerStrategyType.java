@@ -12,6 +12,7 @@ import com.lc.framework.excel.handler.LoopDynamicMergeStrategy;
  * @date 2023-08-09 16:53
  */
 public enum WriteHandlerStrategyType {
+    //
     MERGE_INDEPENDENT("merge_independent", LoopDynamicMergeStrategy.class);
 
     final String strategy;
