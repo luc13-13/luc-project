@@ -15,9 +15,9 @@
 
     <appender name="fileInfoApp" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <filter class="ch.qos.logback.classic.filter.LevelFilter">
-            <level>info</level>
-            <onMatch>DENY</onMatch>
-            <onMismatch>ACCEPT</onMismatch>
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
         </filter>
         <encoder>
             <pattern>
@@ -68,7 +68,7 @@
 <!--    </appender>-->
 
     <!-- root 一定要放在最后，因有加载顺序的问题 -->
-    <root>
+    <root level="INFO">
         <appender-ref ref="consoleApp"/>
         <appender-ref ref="fileInfoApp"/>
         <appender-ref ref="fileErrorApp"/>
