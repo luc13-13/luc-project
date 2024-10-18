@@ -23,11 +23,17 @@ import org.springframework.context.annotation.Role;
 public class DynamicDataSourceAopConfiguration {
 
     @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     public DynamicDataSourceProperties dynamicDataSourceProperties() {
         return new DynamicDataSourceProperties();
     }
 
+    /**
+     * 针对注解创建切面
+     * @return 切面
+     */
     @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     public Advisor dynamicDataSourceAnnotationAdvisor() {
         DynamicDataSourceAnnotationInterceptor advice = new DynamicDataSourceAnnotationInterceptor();
         DynamicDataSourceAnnotationAdvisor advisor = new DynamicDataSourceAnnotationAdvisor(advice, DataSourceSwitch.class);

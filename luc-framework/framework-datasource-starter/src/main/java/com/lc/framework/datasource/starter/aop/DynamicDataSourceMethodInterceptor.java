@@ -5,13 +5,12 @@ import org.aopalliance.intercept.MethodInvocation;
 
 /**
  * <pre>
- *  基于注解的Advice
  * </pre>
  *
  * @author Lu Cheng
- * @date 2024/10/17 17:11
+ * @date 2024/10/18 16:28
  */
-public class DynamicDataSourceAnnotationInterceptor implements MethodInterceptor {
+public class DynamicDataSourceMethodInterceptor implements MethodInterceptor {
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
         return null;

@@ -21,7 +21,8 @@ import java.lang.reflect.Proxy;
 
 /**
  * <pre>
- *     基于注解的PointCut。Spring
+ *     基于注解的切面。
+ *     持有Advice和Pointcut
  * </pre>
  *
  * @author Lu Cheng
