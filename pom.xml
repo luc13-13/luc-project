@@ -54,6 +54,7 @@
         <druid.version>1.2.20</druid.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <mysql-connector.version>8.0.29</mysql-connector.version>
+        <mybatis-plus-dynamic-datasource.version>4.3.1</mybatis-plus-dynamic-datasource.version>
 
         <!--api文档-->
         <knife4j.version>4.5.0</knife4j.version>
@@ -185,6 +186,11 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-extension</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>dynamic-datasource-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus-dynamic-datasource.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
