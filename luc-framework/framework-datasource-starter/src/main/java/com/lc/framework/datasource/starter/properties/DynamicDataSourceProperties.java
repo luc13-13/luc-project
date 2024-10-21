@@ -29,6 +29,8 @@ public class DynamicDataSourceProperties {
      */
     private String primary = "master";
 
+    private boolean allowedPublicOnly = true;
+
     /**
      * 配置文件中分组配置的所有数据源
      */

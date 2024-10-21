@@ -1,5 +1,6 @@
 package com.lc.framework.datasource.starter.aop;
 
+import com.lc.framework.datasource.starter.aop.pointcut.AnnotationMethodPoint;
 import org.aopalliance.aop.Advice;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
@@ -54,58 +55,14 @@ public class DynamicDataSourceAnnotationAdvisor extends AbstractPointcutAdvisor 
 
     @Override
     public void setBeanFactory(BeanFactory beanFactory) throws BeansException {
-
+        if (this.advice instanceof BeanFactoryAware) {
+            ((BeanFactoryAware) this.advice).setBeanFactory(beanFactory);
+        }
     }
 
     private Pointcut buildPointcut() {
         Pointcut cpc = new AnnotationMatchingPointcut(annotation, true);
         Pointcut mpc = new AnnotationMethodPoint(annotation);
         return new ComposablePointcut(cpc).union(mpc);
-    }
-
-    private static class AnnotationMethodPoint implements Pointcut {
-
-        private final Class<? extends Annotation> annotationType;
-
-        public AnnotationMethodPoint(Class<? extends Annotation> annotationType) {
-            Assert.notNull(annotationType, "Annotation type must not be null");
-            this.annotationType = annotationType;
-        }
-
-        @Override
-        public ClassFilter getClassFilter() {
-            return ClassFilter.TRUE;
-        }
-
-        @Override
-        public MethodMatcher getMethodMatcher() {
-            return new AnnotationMethodMatcher(annotationType);
-        }
-
-        private static class AnnotationMethodMatcher extends StaticMethodMatcher {
-            private final Class<? extends Annotation> annotationType;
-
-            public AnnotationMethodMatcher(Class<? extends Annotation> annotationType) {
-                this.annotationType = annotationType;
-            }
-
-            @Override
-            public boolean matches(Method method, Class<?> targetClass) {
-                if (matchesMethod(method)) {
-                    return true;
-                }
-                // Proxy classes never have annotations on their redeclared methods.
-                if (Proxy.isProxyClass(targetClass)) {
-                    return false;
-                }
-                // The method may be on an interface, so let's check on the target class as well.
-                Method specificMethod = AopUtils.getMostSpecificMethod(method, targetClass);
-                return (specificMethod != method && matchesMethod(specificMethod));
-            }
-
-            private boolean matchesMethod(Method method) {
-                return AnnotatedElementUtils.hasAnnotation(method, this.annotationType);
-            }
-        }
     }
 }
