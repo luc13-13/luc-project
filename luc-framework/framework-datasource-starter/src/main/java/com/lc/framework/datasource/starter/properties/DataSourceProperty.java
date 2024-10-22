@@ -29,7 +29,8 @@ public class DataSourceProperty {
     private Class<? extends DataSource> type;
 
     /**
-     * JDBC driver
+     * JDBC driver。<br/>未设置时，将由DataSource实现类自动获取.<br/> 
+     * Druid根据url加载: 支持mysql、derby、logjdbc、mariadb、tidb等，具体见{@link com.alibaba.druid.util.JdbcUtils#getDriverClassName(String)}
      */
     private String driverClassName;
 

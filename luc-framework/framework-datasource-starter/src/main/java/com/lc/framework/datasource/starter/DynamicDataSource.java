@@ -24,7 +24,7 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
 
     @Getter
     @Setter
-    private String primary = "primary";
+    private String primary = "master";
 
     public DynamicDataSource(List<DynamicDataSourceProvider> providers) {
         this.providers = providers;

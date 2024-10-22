@@ -1,7 +1,32 @@
 spring:
   # mysql
   datasource:
-#    driver-class-name: com.mysql.cj.jdbc.Driver
+    dynamic:
+      primary: master
+      druid:
+        not-full-timeout-retry-count: 0
+        connection-error-retry-attempts: 1
+        time-between-connect-error-millis: 6000
+        time-between-eviction-runs-millis: 6000
+        break-after-acquire-failure: false
+      datasource:
+        master:
+          url: jdbc:mysql://localhost:3306/institution_center?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE&allowPublicKeyRetrieval=true
+          username: root
+          password: luc123456
+          driver-class-name: com.mysql.cj.jdbc.Driver
+          pointcut: 'execution(* com.lc.system.service.TestService.*master(..))'
+        slave:
+          username: root
+          password: luc123456
+          url: jdbc:mysql://localhost:3306/boss?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE&allowPublicKeyRetrieval=true
+#        shardingSphere:
+#          sharding: true
+#          sharding-config: config/sharding-sphere.yml
+
+
+
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
 #    username: root
 #    password: luc123456
 #    url: jdbc:mysql://localhost:3306/institution_center?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE

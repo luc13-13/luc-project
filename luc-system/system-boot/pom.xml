@@ -34,6 +34,15 @@
             <groupId>com.lc</groupId>
             <artifactId>framework-datascope</artifactId>
         </dependency>
+
+        <!--datasource-->
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-datasource-starter</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!--redis-->
         <dependency>
             <groupId>com.lc</groupId>
             <artifactId>framework-redis-starter</artifactId>

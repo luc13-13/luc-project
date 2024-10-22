@@ -21,7 +21,13 @@ public class DruidConfig {
     private Integer initialSize;
     private Integer maxActive;
     private Integer minIdle;
+    /**
+     * 获取连接的最大等待时间，默认为-1
+     */
     private Integer maxWait;
+    /**
+     * 关闭空闲连接的等待时间，单位毫秒
+     */
     private Long timeBetweenEvictionRunsMillis;
     private Long timeBetweenLogStatsMillis;
     private Long keepAliveBetweenTimeMillis;
@@ -42,8 +48,14 @@ public class DruidConfig {
     private String filters;
     private Boolean clearFiltersEnable;
     private Boolean resetStatEnable;
+    /**
+     * 获取连接失败的重试次数，默认为0，
+     */
     private Integer notFullTimeoutRetryCount;
     private Integer maxWaitThreadCount;
+    /**
+     * 获取、创建连接失败次数超过最大次数后，终止创建连接的线程，不建议设置为true，会导致服务终止，无法重新连接到数据库
+     */
     private Boolean failFast;
     private Long phyTimeoutMillis;
     private Long phyMaxUseCount;
@@ -58,7 +70,13 @@ public class DruidConfig {
     private Integer maxPoolPreparedStatementPerConnectionSize;
     private String initConnectionSqls;
     private Boolean sharePreparedStatements;
+    /**
+     * 创建连接失败后的重试次数，默认为0, 表示一直重试
+     */
     private Integer connectionErrorRetryAttempts;
+    /**
+     * 创建连接失败后终止创建线程，是true，否false. 默认为false，表示会在休眠一段时间后继续创建连接
+     */
     private Boolean breakAfterAcquireFailure;
     private Boolean removeAbandoned;
     private Integer removeAbandonedTimeoutMillis;
@@ -68,6 +86,9 @@ public class DruidConfig {
     private String publicKey;
     private Integer connectTimeout;
     private Integer socketTimeout;
+    /**
+     * 连接重试间隔，单位毫秒
+     */
     private Long timeBetweenConnectErrorMillis;
 
     private Map<String, Object> wall = new HashMap<>();

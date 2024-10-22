@@ -29,6 +29,9 @@ public class DynamicDataSourceProperties {
      */
     private String primary = "master";
 
+    /**
+     * 是否只对public方法进行拦截，默认为true
+     */
     private boolean allowedPublicOnly = true;
 
     /**

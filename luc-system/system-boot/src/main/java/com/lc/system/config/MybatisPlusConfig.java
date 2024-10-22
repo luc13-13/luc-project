@@ -28,24 +28,24 @@ import javax.sql.DataSource;
 @Configuration
 public class MybatisPlusConfig {
 
-    @Bean
-    @ConfigurationProperties(prefix = "spring.datasource.druid.master")
-    public DataSource masterDataSource() {
-        return DruidDataSourceBuilder.create().build();
-    }
-
-    @Bean
-    @ConfigurationProperties(prefix = "spring.datasource.druid.slave")
-    public DataSource slaveDataSource() {
-        return DruidDataSourceBuilder.create().build();
-    }
-
-    @Primary
-    @Bean
-    public DataSource dynamicDataSource(@Qualifier("masterDataSource") DataSource masterDataSource,
-                                        @Qualifier("slaveDataSource") DataSource slaveDataSource) {
-        return masterDataSource;
-    }
+//    @Bean
+//    @ConfigurationProperties(prefix = "spring.datasource.druid.master")
+//    public DataSource masterDataSource() {
+//        return DruidDataSourceBuilder.create().build();
+//    }
+//
+//    @Bean
+//    @ConfigurationProperties(prefix = "spring.datasource.druid.slave")
+//    public DataSource slaveDataSource() {
+//        return DruidDataSourceBuilder.create().build();
+//    }
+//
+//    @Primary
+//    @Bean
+//    public DataSource dynamicDataSource(@Qualifier("masterDataSource") DataSource masterDataSource,
+//                                        @Qualifier("slaveDataSource") DataSource slaveDataSource) {
+//        return masterDataSource;
+//    }
 
     @Bean
     @ConditionalOnBean(DataScopeInterceptor.class)
