@@ -3,6 +3,8 @@ spring:
   datasource:
     dynamic:
       primary: master
+      aop:
+        expression-enabled: true
       druid:
         not-full-timeout-retry-count: 0
         connection-error-retry-attempts: 1
@@ -15,7 +17,7 @@ spring:
           username: root
           password: luc123456
           driver-class-name: com.mysql.cj.jdbc.Driver
-          pointcut: 'execution(* com.lc.system.service.TestService.*master(..))'
+          pointcut: 'execution(* com.lc.system.service.TestService.*Master(..))'
         slave:
           username: root
           password: luc123456
