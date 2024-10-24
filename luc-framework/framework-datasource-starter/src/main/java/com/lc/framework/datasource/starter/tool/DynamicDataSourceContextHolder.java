@@ -19,9 +19,11 @@ public class DynamicDataSourceContextHolder {
     /**
      * Deque存储当前线程的数据源，防止方法多次切换数据源造成执行混乱
      */
-    private static final ThreadLocal<Deque<String>> LOOKUP_KEY_HOLDER = new NamedThreadLocal<Deque<String>>("dynamic-datasource") {
+    private static final ThreadLocal<Deque<String>> LOOKUP_KEY_HOLDER = new NamedThreadLocal<>("dynamic-datasource") {
         @Override
-        protected Deque<String> initialValue() { return new ArrayDeque<>(); }
+        protected Deque<String> initialValue() {
+            return new ArrayDeque<>();
+        }
     };
 
     private DynamicDataSourceContextHolder() {
@@ -38,12 +40,10 @@ public class DynamicDataSourceContextHolder {
      * </p>
      *
      * @param ds 数据源名称
-     * @return 数据源名称
      */
-    public static String push(String ds) {
-        String dataSourceStr = StringUtils.isEmpty(ds) ? "" : ds;
+    public static void push(String ds) {
+        String dataSourceStr = StringUtils.hasLength(ds) ? ds : "";
         LOOKUP_KEY_HOLDER.get().push(dataSourceStr);
-        return dataSourceStr;
     }
 
     /**

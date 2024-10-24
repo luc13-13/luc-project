@@ -6,8 +6,6 @@ import com.lc.framework.datasource.starter.properties.DataSourceProperty;
 import lombok.extern.slf4j.Slf4j;
 import javax.sql.DataSource;
 import java.io.File;
-import java.io.IOException;
-import java.sql.SQLException;
 
 /**
  * <pre>
@@ -34,10 +32,7 @@ public class ShardingDataSourceCreator implements DataSourceCreator {
     }
 
     @Override
-    public boolean support(DataSourceProperty dataSourceProperty) {
-        return dataSourceProperty.getSharding()
-                && dataSourceProperty.getShardingConfig() != null
-                && dataSourceProperty.getType() != null
-                && DataSourceConstants.SHARDING_DATASOURCE_TYPE.equals(dataSourceProperty.getType().getName());
+    public boolean support(Class<? extends DataSource> type) {
+        return type != null && DataSourceConstants.SHARDING_DATASOURCE_TYPE.equals(type.getName());
     }
 }

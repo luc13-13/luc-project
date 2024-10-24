@@ -51,4 +51,8 @@ public class DynamicDataSourceProperties {
     @NestedConfigurationProperty
     private HikariCpConfig hikari = new HikariCpConfig();
 
+    /**
+     * AOP配置
+     */
+    private DynamicDatasourceAopProperties aop = new DynamicDatasourceAopProperties();
 }

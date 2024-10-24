@@ -112,12 +112,12 @@ public class DruidDataSourceCreator implements DataSourceCreator {
 
     /**
      * 当未指定数据源类型或指定为Druid类型时，可以创建Druid数据源
-     * @param dataSourceProperty 数据源属性
+     * @param type 数据源属性
      * @return true支持创建，false不支持创建
      */
     @Override
-    public boolean support(DataSourceProperty dataSourceProperty) {
-        return dataSourceProperty.getType() == null || DataSourceConstants.DRUID_DATASOURCE_TYPE.equals(dataSourceProperty.getType().getName());
+    public boolean support(Class<? extends DataSource> type) {
+        return type == null || DataSourceConstants.DRUID_DATASOURCE_TYPE.equals(type.getName());
     }
 
     private List<Filter> initFilters(DruidConfig config, String filters) {

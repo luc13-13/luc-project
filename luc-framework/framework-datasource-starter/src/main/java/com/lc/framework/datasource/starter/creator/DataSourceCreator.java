@@ -24,8 +24,8 @@ public interface DataSourceCreator {
 
     /**
      * 校验是否支持对数据源的构建
-     * @param dataSourceProperty 数据源DataSource配置
+     * @param type 数据源DataSource配置
      * @return true表示当前creator支持创建， false表示不支持
      */
-    boolean support(DataSourceProperty dataSourceProperty);
+    boolean support(Class<? extends DataSource> type);
 }

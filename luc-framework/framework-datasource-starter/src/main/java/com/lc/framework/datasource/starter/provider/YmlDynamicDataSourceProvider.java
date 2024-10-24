@@ -3,6 +3,7 @@ package com.lc.framework.datasource.starter.provider;
 
 import com.lc.framework.datasource.starter.creator.DataSourceCreator;
 import com.lc.framework.datasource.starter.properties.DataSourceProperty;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
@@ -17,6 +18,7 @@ import java.util.Map;
  * @author Lu Cheng
  * @date 2024/10/15 14:00
  */
+@Slf4j
 public class YmlDynamicDataSourceProvider implements DynamicDataSourceProvider{
 
     /**
@@ -45,9 +47,10 @@ public class YmlDynamicDataSourceProvider implements DynamicDataSourceProvider{
                 property.setPoolName(dataSourceName);
             }
             for (DataSourceCreator creator : dataSourceCreators) {
-                if (creator.support(property)) {
+                if (creator.support(property.getType())) {
                     DataSource dataSource = creator.createDataSource(property);
                     if (dataSource != null) {
+                        log.info("DataSource of type {} has been created", dataSource.getClass().getName());
                         dataSourceMap.put(dataSourceName, dataSource);
                     }
                     break;

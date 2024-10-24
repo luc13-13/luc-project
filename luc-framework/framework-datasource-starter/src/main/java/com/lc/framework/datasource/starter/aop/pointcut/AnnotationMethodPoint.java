@@ -1,6 +1,5 @@
 package com.lc.framework.datasource.starter.aop.pointcut;
 
-import com.lc.framework.datasource.starter.aop.DynamicDataSourceAnnotationAdvisor;
 import org.springframework.aop.ClassFilter;
 import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
@@ -15,6 +14,7 @@ import java.lang.reflect.Proxy;
 
 /**
  * <pre>
+ *     spring < 5 时，用该pointcut匹配注解
  * </pre>
  *
  * @author Lu Cheng

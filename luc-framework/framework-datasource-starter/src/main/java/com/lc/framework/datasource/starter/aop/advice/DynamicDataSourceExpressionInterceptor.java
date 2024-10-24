@@ -1,9 +1,9 @@
 package com.lc.framework.datasource.starter.aop.advice;
 
+import com.lc.framework.datasource.starter.tool.DynamicDataSourceContextHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-
-import java.util.Map;
 
 /**
  * <pre>
@@ -13,11 +13,24 @@ import java.util.Map;
  * @author Lu Cheng
  * @date 2024/10/18 16:28
  */
+@Slf4j
 public class DynamicDataSourceExpressionInterceptor implements MethodInterceptor {
 
-    private Map<String, String> dataSourceExpressionMap;
+    private final String datasourceKey;
+
+    public DynamicDataSourceExpressionInterceptor(String datasourceKey) {
+        this.datasourceKey = datasourceKey;
+    }
+
     @Override
     public Object invoke(MethodInvocation invocation) throws Throwable {
-        return null;
+        DynamicDataSourceContextHolder.push(datasourceKey);
+        log.info("基于表达式的通知：执行方法{}, 切换至{}", invocation.getMethod().getName(), datasourceKey);
+        try {
+            return invocation.proceed();
+        } finally {
+            DynamicDataSourceContextHolder.poll();
+            log.info("基于表达式的通知: 方法{}执行完毕, 剔除{}", invocation.getMethod().getName(), datasourceKey);
+        }
     }
 }

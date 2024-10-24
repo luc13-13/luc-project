@@ -80,8 +80,11 @@ public class HikariDataSourceCreator implements DataSourceCreator {
         return dataSource;
     }
 
+    /**
+     * 创建Druid数据源失败时，可以继续尝试创建Hikari数据源
+     */
     @Override
-    public boolean support(DataSourceProperty dataSourceProperty) {
-        return dataSourceProperty.getType() == null || DataSourceConstants.HIKARI_DATASOURCE_TYPE.equals(dataSourceProperty.getType().getName());
+    public boolean support(Class<? extends DataSource> type) {
+        return type == null || DataSourceConstants.HIKARI_DATASOURCE_TYPE.equals(type.getName());
     }
 }
