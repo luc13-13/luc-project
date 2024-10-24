@@ -27,7 +27,7 @@ public class DsConfigUtil {
      */
     public static String lineToUpper(String str) {
         Matcher matcher = LINE_PATTERN.matcher(str);
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         while (matcher.find()) {
             matcher.appendReplacement(sb, matcher.group(1).toUpperCase());
         }
@@ -35,23 +35,8 @@ public class DsConfigUtil {
         return sb.toString();
     }
 
-    /**
-     * 合并配置
-     *
-     * @param c 当前配置
-     * @param g 全局配置
-     * @return 合并配置
-     */
-    public static Map<String, Object> mergeMap(Map<String, Object> c, Map<String, Object> g) {
-        int size = 1 + (int) ((c.size() + g.size()) / 0.75);
-        Map<String, Object> map = new HashMap<>(size);
-        map.putAll(g);
-        map.putAll(c);
-        return map;
-    }
-
     public static Map<String, PropertyDescriptor> getPropertyDescriptorMap(Class<?> clazz) {
-        Map<String, PropertyDescriptor> methodMap = new HashMap<>();
+        Map<String, PropertyDescriptor> methodMap = new HashMap<>(16);
         try {
             for (PropertyDescriptor pd : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
                 if (!"class".equals(pd.getName())) {
@@ -69,28 +54,8 @@ public class DsConfigUtil {
      * @param clazz 类
      * @return setter方法
      */
-    public static Map<String, Method> getGetterMethods(Class<?> clazz) {
-        Map<String, Method> methodMap = new HashMap<>();
-        try {
-            for (PropertyDescriptor pd : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
-                Method method = pd.getReadMethod();
-                if (method != null) {
-                    methodMap.put(pd.getName(), method);
-                }
-            }
-        } catch (Exception ignore) {
-        }
-        return methodMap;
-    }
-
-    /**
-     * 通过clazz获取对应的setter方法
-     *
-     * @param clazz 类
-     * @return setter方法
-     */
     public static Map<String, Method> getSetterMethods(Class<?> clazz) {
-        Map<String, Method> methodMap = new HashMap<>();
+        Map<String, Method> methodMap = new HashMap<>(16);
         try {
             for (PropertyDescriptor pd : Introspector.getBeanInfo(clazz).getPropertyDescriptors()) {
                 Method method = pd.getWriteMethod();

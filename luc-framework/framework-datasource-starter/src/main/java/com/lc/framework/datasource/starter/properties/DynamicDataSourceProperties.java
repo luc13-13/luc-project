@@ -54,5 +54,6 @@ public class DynamicDataSourceProperties {
     /**
      * AOP配置
      */
+    @NestedConfigurationProperty
     private DynamicDatasourceAopProperties aop = new DynamicDatasourceAopProperties();
 }
