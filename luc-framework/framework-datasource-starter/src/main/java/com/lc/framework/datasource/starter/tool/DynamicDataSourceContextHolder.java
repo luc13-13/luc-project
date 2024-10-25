@@ -19,7 +19,7 @@ public class DynamicDataSourceContextHolder {
     /**
      * Deque存储当前线程的数据源，防止方法多次切换数据源造成执行混乱
      */
-    private static final ThreadLocal<Deque<String>> LOOKUP_KEY_HOLDER = new NamedThreadLocal<>("dynamic-datasource") {
+    private static final ThreadLocal<Deque<String>> LOOKUP_KEY_HOLDER = new NamedThreadLocal<Deque<String>>("dynamic-datasource") {
         @Override
         protected Deque<String> initialValue() {
             return new ArrayDeque<>();

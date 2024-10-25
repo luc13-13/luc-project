@@ -35,6 +35,7 @@ import java.util.Map;
  * @author Lu Cheng
  * @date 2024/10/17 15:43
  */
+@Slf4j
 @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 @Configuration(proxyBeanMethods = false)
 @Import(DynamicDataSourceAopConfiguration.DynamicDataSourceExpressionAdvisorRegistrar.class)
@@ -54,6 +55,7 @@ public class DynamicDataSourceAopConfiguration {
     @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
     public Advisor dynamicDataSourceAnnotationAdvisor() {
         DynamicDataSourceAnnotationInterceptor advice = new DynamicDataSourceAnnotationInterceptor(DataSourceSwitch.class, new DataSourceClassResolver(dynamicDataSourceProperties.isAllowedPublicOnly()));
+        log.info("DynamicDataSourceAnnotationAdvisor is created successfully, annotation：{}", DataSourceSwitch.class.getName());
         return new DynamicDataSourceAnnotationAdvisor(advice, DataSourceSwitch.class);
     }
 
