@@ -4,8 +4,12 @@ import com.lc.framework.datasource.starter.creator.DataSourceCreator;
 import com.lc.framework.datasource.starter.properties.DataSourceConstants;
 import com.lc.framework.datasource.starter.properties.DataSourceProperty;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shardingsphere.driver.api.yaml.YamlShardingSphereDataSourceFactory;
+
 import javax.sql.DataSource;
 import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
 
 /**
  * <pre>
@@ -23,11 +27,12 @@ public class ShardingDataSourceCreator implements DataSourceCreator {
         log.info("ShardingDataSourceCreator加载配置:{}", ymlConfigPath);
         File shardingSphereConfigFile = new File(ymlConfigPath);
         DataSource dataSource = null;
-//        try {
-////            dataSource = YamlShardingSphereDataSourceFactory.createDataSource(shardingSphereConfigFile);
-//        } catch (SQLException | IOException e) {
-//            log.warn("creat ShardingSphereDataSource failed, caused by", new RuntimeException(e));
-//        }
+        try {
+            dataSource = YamlShardingSphereDataSourceFactory.createDataSource(shardingSphereConfigFile);
+        } catch (SQLException | IOException e) {
+            log.error("creat ShardingSphereDataSource failed, caused by", new RuntimeException(e));
+            return null;
+        }
         return dataSource;
     }
 
