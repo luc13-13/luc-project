@@ -55,6 +55,8 @@
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
         <mysql-connector.version>8.0.29</mysql-connector.version>
         <mybatis-plus-dynamic-datasource.version>4.3.1</mybatis-plus-dynamic-datasource.version>
+        <!--分库分表-->
+        <shardingsphere.version>5.5.1</shardingsphere.version>
 
         <!--api文档-->
         <knife4j.version>4.5.0</knife4j.version>
@@ -104,42 +106,49 @@
                 <artifactId>framework-apidoc</artifactId>
                 <version>${reversion}</version>
             </dependency>
-
+            <!--web服务rest标准包-->
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-core</artifactId>
                 <version>${reversion}</version>
             </dependency>
-
+            <!--web服务基础依赖-->
+            <dependency>
+                <groupId>com.lc</groupId>
+                <artifactId>framework-web</artifactId>
+                <version>${reversion}</version>
+            </dependency>
+            <!--分库分表-->
+            <dependency>
+                <groupId>org.apache.shardingsphere</groupId>
+                <artifactId>shardingsphere-jdbc</artifactId>
+                <version>${shardingsphere.version}</version>
+            </dependency>
+            <!--租户数据权限-->
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-datascope</artifactId>
                 <version>${reversion}</version>
             </dependency>
-
+            <!--excel工具包-->
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-excel</artifactId>
                 <version>${reversion}</version>
             </dependency>
-
+            <!--redis-->
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-redis-starter</artifactId>
                 <version>${reversion}</version>
             </dependency>
-
+            <!--认证鉴权-->
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-security</artifactId>
                 <version>${reversion}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.lc</groupId>
-                <artifactId>framework-web</artifactId>
-                <version>${reversion}</version>
-            </dependency>
 
             <!--spring boot-->
             <dependency>

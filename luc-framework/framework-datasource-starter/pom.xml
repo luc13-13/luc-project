@@ -49,6 +49,14 @@
             <artifactId>druid-spring-boot-starter</artifactId>
             <optional>true</optional>
         </dependency>
+
+        <!--仅供本模块编译，如需开启shardingsphere，依赖方需单独引入-->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc</artifactId>
+            <optional>true</optional>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
 </project>
