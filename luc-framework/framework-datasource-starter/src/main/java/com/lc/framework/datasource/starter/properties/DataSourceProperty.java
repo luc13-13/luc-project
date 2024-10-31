@@ -65,7 +65,7 @@ public class DataSourceProperty {
     private Boolean sharding = false;
 
     /**
-     * 分库分表数据库的配置文件路径
+     * 分库分表数据库的配置文件<br/>支持yml文件、nacos两种配置方式:<br/>（1）classpath:本地路径(同日志配置文件声明方式)<br/>（2）nacos:data-id<br/>未指定文件来源时，默认从classpath获取
      */
     private String shardingConfig;
 
