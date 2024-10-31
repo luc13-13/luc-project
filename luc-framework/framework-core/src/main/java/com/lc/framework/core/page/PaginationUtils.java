@@ -33,11 +33,9 @@ public class PaginationUtils {
         long pageIndex = pageParams.getPageIndex();
         // 总数量
         long total = pageParams.getTotal();
-        log.info("分页查询工具——start，起始页{}，页大小{}，总数{}", pageIndex, pageSize, total);
         long count = 0;
         List<R> response = singlePageQueryFunction.apply(pageParams);
         if (skipPage(response)) {
-            log.info("分页查询工具——返回空页，当前页{}，页大小{}，总数{}", pageParams.getPageIndex(), pageSize, count);
             return paginationResult;
         }
         List<R> result = new ArrayList<>(response);
@@ -47,7 +45,6 @@ public class PaginationUtils {
             response = singlePageQueryFunction.apply(pageParams);
             count = count + response.size();
             if (skipPage(response)) {
-                log.info("分页查询工具——start，当前页{}，页大小{}，总数{}", pageParams.getPageIndex(), pageSize, count);
                 break;
             }
             result.addAll(response);
