@@ -6,7 +6,7 @@
 
     <groupId>com.lc</groupId>
     <artifactId>luc-project</artifactId>
-    <version>${reversion}</version>
+    <version>${revision}</version>
     <packaging>pom</packaging>
 
     <distributionManagement>
@@ -36,7 +36,7 @@
     <properties>
         <!-- luc-project项目统一版本变量，
         从maven3.5.0版本开始，只能识别reversion占位符传递父项目版本号-->
-        <reversion>1.0.0</reversion>
+        <revision>1.0.0</revision>
         <!--jdk17-->
         <java.version>17</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
@@ -104,19 +104,19 @@
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-apidoc</artifactId>
-                <version>${reversion}</version>
+                <version>${revision}</version>
             </dependency>
             <!--web服务rest标准包-->
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-core</artifactId>
-                <version>${reversion}</version>
+                <version>${revision}</version>
             </dependency>
             <!--web服务基础依赖-->
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-web</artifactId>
-                <version>${reversion}</version>
+                <version>${revision}</version>
             </dependency>
             <!--分库分表-->
             <dependency>
@@ -128,25 +128,25 @@
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-datascope</artifactId>
-                <version>${reversion}</version>
+                <version>${revision}</version>
             </dependency>
             <!--excel工具包-->
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-excel</artifactId>
-                <version>${reversion}</version>
+                <version>${revision}</version>
             </dependency>
             <!--redis-->
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-redis-starter</artifactId>
-                <version>${reversion}</version>
+                <version>${revision}</version>
             </dependency>
             <!--认证鉴权-->
             <dependency>
                 <groupId>com.lc</groupId>
                 <artifactId>framework-security</artifactId>
-                <version>${reversion}</version>
+                <version>${revision}</version>
             </dependency>
 
 
