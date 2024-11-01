@@ -60,9 +60,9 @@ public class DataSourceProperty {
     private Boolean lazy = false;
 
     /**
-     * 是否开启分库分表，默认不开启
+     * 是否开启当前数据源，默认开启
      */
-    private Boolean sharding = false;
+    private boolean enabled = true;
 
     /**
      * 分库分表数据库的配置文件<br/>支持yml文件、nacos两种配置方式:<br/>（1）classpath:本地路径(同日志配置文件声明方式)<br/>（2）nacos:data-id<br/>未指定文件来源时，默认从classpath获取

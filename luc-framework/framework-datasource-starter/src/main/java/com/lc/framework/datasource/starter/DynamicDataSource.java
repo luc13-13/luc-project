@@ -4,6 +4,7 @@ import com.lc.framework.datasource.starter.provider.DynamicDataSourceProvider;
 import com.lc.framework.datasource.starter.tool.DynamicDataSourceContextHolder;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
 
 import javax.sql.DataSource;
@@ -18,9 +19,10 @@ import java.util.Map;
  * @author Lu Cheng
  * @date 2024/8/12 11:10
  */
+@Slf4j
 public class DynamicDataSource extends AbstractRoutingDataSource {
 
-    private final List<DynamicDataSourceProvider> providers;
+    private List<DynamicDataSourceProvider> providers;
 
     @Getter
     @Setter
@@ -55,5 +57,6 @@ public class DynamicDataSource extends AbstractRoutingDataSource {
         super.setDefaultTargetDataSource(providedDataSources.get(this.primary));
 
         super.afterPropertiesSet();
+        log.info("DynamicDataSource created successfully! provided datasource {}, primary datasource is {}", providedDataSources.keySet(), this.primary);
     }
 }

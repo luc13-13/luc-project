@@ -1,5 +1,6 @@
 package com.lc.framework.datasource.starter.config;
 
+import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.lc.framework.datasource.starter.DynamicDataSource;
 import com.lc.framework.datasource.starter.creator.DataSourceCreator;
@@ -9,14 +10,18 @@ import com.lc.framework.datasource.starter.creator.sharding.ShardingDataSourceCr
 import com.lc.framework.datasource.starter.properties.DynamicDataSourceProperties;
 import com.lc.framework.datasource.starter.provider.DynamicDataSourceProvider;
 import com.lc.framework.datasource.starter.provider.YmlDynamicDataSourceProvider;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.annotation.Order;
 
 import javax.sql.DataSource;
@@ -30,6 +35,7 @@ import java.util.List;
  * @author Lu Cheng
  * @date 2024/8/12 10:49
  */
+@Slf4j
 @Configuration(proxyBeanMethods = false)
 @AutoConfigureBefore(value = {DataSourceAutoConfiguration.class, MybatisPlusAutoConfiguration.class},
         name = {
@@ -46,48 +52,54 @@ public class DynamicDataSourceAutoConfiguration {
     public static final int SHARDING_ORDER = 1000;
 
 
-    private final DynamicDataSourceProperties dynamicDataSourceProperties;
-
-    public DynamicDataSourceAutoConfiguration(DynamicDataSourceProperties dynamicDataSourceProperties) {
-        this.dynamicDataSourceProperties = dynamicDataSourceProperties;
-    }
-
 
     /**
      * 提供给mybatis的数据源, 需要声明为@Primary，因为MybatisPlusAutoConfiguration标注了@ConditionalOnSingleCandidate(DataSource.class)，存在多个bean时需要有Primary才能满足条件注解
      */
     @Bean(name = "dynamicDataSource")
     @ConditionalOnMissingBean
-    public DataSource dynamicDataSource(List<DynamicDataSourceProvider> providers) {
+    @RefreshScope
+    public DataSource dynamicDataSource(List<DynamicDataSourceProvider> providers,
+                                        DynamicDataSourceProperties dynamicDataSourceProperties) {
         DynamicDataSource dynamicDataSource = new DynamicDataSource(providers);
         dynamicDataSource.setPrimary(dynamicDataSourceProperties.getPrimary());
+        log.info("start to create DynamicDataSource with configuration: {}", dynamicDataSourceProperties);
         return dynamicDataSource;
     }
 
     @Bean
     @Order(0)
-    public DynamicDataSourceProvider ymlDynamicDataSourceProvider(List<DataSourceCreator> creators) {
+    @RefreshScope
+    public DynamicDataSourceProvider ymlDynamicDataSourceProvider(List<DataSourceCreator> creators,
+                                                                  DynamicDataSourceProperties dynamicDataSourceProperties) {
+        log.info("YmlDynamicDataSourceProvider created");
         return new YmlDynamicDataSourceProvider(dynamicDataSourceProperties.getDatasource(), creators);
     }
 
     @Bean
     @Order(DRUID_ORDER)
     @ConditionalOnMissingBean
-    public DruidDataSourceCreator druidDataSourceCreator() {
+    @RefreshScope
+    public DruidDataSourceCreator druidDataSourceCreator(DynamicDataSourceProperties dynamicDataSourceProperties) {
+        log.info("DruidDataSourceCreator created");
         return new DruidDataSourceCreator(dynamicDataSourceProperties.getDruid());
     }
 
     @Bean
     @Order(HIKARI_ORDER)
     @ConditionalOnMissingBean
-    public HikariDataSourceCreator hikariDataSourceCreator() {
+    @RefreshScope
+    public HikariDataSourceCreator hikariDataSourceCreator(DynamicDataSourceProperties dynamicDataSourceProperties) {
+        log.info("HikariDataSourceCreator created");
         return new HikariDataSourceCreator(dynamicDataSourceProperties.getHikari());
     }
 
     @Bean
     @Order(SHARDING_ORDER)
     @ConditionalOnMissingBean
+    @RefreshScope
     public ShardingDataSourceCreator shardingDataSourceCreator() {
+        log.info("ShardingDataSourceCreator created");
         return new ShardingDataSourceCreator();
     }
 }

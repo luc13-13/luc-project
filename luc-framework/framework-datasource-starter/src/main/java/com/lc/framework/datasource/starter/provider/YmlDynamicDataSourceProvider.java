@@ -46,6 +46,9 @@ public class YmlDynamicDataSourceProvider implements DynamicDataSourceProvider{
             if (poolName == null || "".equals(poolName)) {
                 property.setPoolName(dataSourceName);
             }
+            if (!property.isEnabled()) {
+                continue;
+            }
             for (DataSourceCreator creator : dataSourceCreators) {
                 if (creator.support(property.getType())) {
                     DataSource dataSource = creator.createDataSource(property);
