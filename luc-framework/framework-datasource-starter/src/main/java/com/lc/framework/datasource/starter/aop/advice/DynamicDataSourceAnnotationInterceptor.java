@@ -6,8 +6,8 @@ import com.lc.framework.datasource.starter.tool.DynamicDataSourceContextHolder;
 import lombok.extern.slf4j.Slf4j;
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;
-import org.springframework.util.StringUtils;
 
+import javax.annotation.Nonnull;
 import java.lang.annotation.Annotation;
 
 /**
@@ -31,7 +31,7 @@ public class DynamicDataSourceAnnotationInterceptor implements MethodInterceptor
     }
 
     @Override
-    public Object invoke(MethodInvocation invocation) throws Throwable {
+    public Object invoke(@Nonnull MethodInvocation invocation) throws Throwable {
         String key = this.determineDataSourceKey(invocation);
         DynamicDataSourceContextHolder.push(key);
         log.info("基于注解的通知：执行方法{}, 切换至{}", invocation.getMethod().getName(), key);

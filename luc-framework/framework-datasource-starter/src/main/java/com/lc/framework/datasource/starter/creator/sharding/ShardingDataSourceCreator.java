@@ -8,21 +8,19 @@ import com.lc.framework.datasource.starter.creator.DataSourceCreator;
 import com.lc.framework.datasource.starter.properties.DataSourceConstants;
 import com.lc.framework.datasource.starter.properties.DataSourceProperty;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.shardingsphere.driver.api.ShardingSphereDataSourceFactory;
 import org.apache.shardingsphere.driver.api.yaml.YamlShardingSphereDataSourceFactory;
 import org.springframework.context.EnvironmentAware;
-import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.env.Environment;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.util.ResourceUtils;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Properties;
+
+import static com.lc.framework.datasource.starter.properties.DataSourceConstants.CONFIG_TYPE_NACOS;
 
 /**
  * <pre>
@@ -43,7 +41,7 @@ public class ShardingDataSourceCreator implements DataSourceCreator, Environment
         String shardingConfig = dataSourceProperty.getShardingConfig();
         log.info("ShardingDataSourceCreator加载配置:{}", shardingConfig);
         // 通过ResourceLoader获取配置
-        DataSource dataSource = null;
+        DataSource dataSource;
         try {
             int index = shardingConfig.indexOf(":");
             if (index < 0) {
@@ -52,7 +50,7 @@ public class ShardingDataSourceCreator implements DataSourceCreator, Environment
             } else {
                 String location = shardingConfig.substring(0, index);
                 String name = shardingConfig.substring(index + 1);
-                if ("nacos".equals(location)) {
+                if (CONFIG_TYPE_NACOS.equals(location)) {
                     dataSource = createByNacos(name);
                 } else {
                     dataSource = createByFile(shardingConfig);

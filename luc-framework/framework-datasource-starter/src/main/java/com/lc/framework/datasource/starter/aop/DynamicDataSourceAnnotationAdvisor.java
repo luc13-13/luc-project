@@ -2,23 +2,14 @@ package com.lc.framework.datasource.starter.aop;
 
 import com.lc.framework.datasource.starter.aop.pointcut.AnnotationMethodPoint;
 import org.aopalliance.aop.Advice;
-import org.springframework.aop.ClassFilter;
-import org.springframework.aop.MethodMatcher;
 import org.springframework.aop.Pointcut;
 import org.springframework.aop.support.AbstractPointcutAdvisor;
-import org.springframework.aop.support.AopUtils;
 import org.springframework.aop.support.ComposablePointcut;
-import org.springframework.aop.support.StaticMethodMatcher;
 import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.BeanFactoryAware;
-import org.springframework.core.annotation.AnnotatedElementUtils;
-import org.springframework.util.Assert;
-
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 
 /**
  * <pre>

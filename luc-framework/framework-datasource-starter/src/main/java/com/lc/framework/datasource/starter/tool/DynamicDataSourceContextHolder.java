@@ -2,7 +2,6 @@ package com.lc.framework.datasource.starter.tool;
 
 import org.springframework.core.NamedThreadLocal;
 import org.springframework.util.StringUtils;
-
 import java.util.ArrayDeque;
 import java.util.Deque;
 

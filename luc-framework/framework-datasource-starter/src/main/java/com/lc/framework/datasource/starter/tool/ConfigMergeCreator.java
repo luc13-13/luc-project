@@ -3,7 +3,6 @@ package com.lc.framework.datasource.starter.tool;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -137,7 +136,7 @@ public class ConfigMergeCreator<C, T> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private void mergeMap(C global, C item, T result, PropertyDescriptor propertyDescriptor) {
         Method readMethod = propertyDescriptor.getReadMethod();
-        Map resultValue = new HashMap();
+        Map resultValue = new HashMap(8);
         Map value = (Map) readMethod.invoke(item);
         if (value == null) {
             value = (Map) readMethod.invoke(global);

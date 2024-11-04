@@ -25,6 +25,6 @@ public interface DataSourceConstants {
      */
     String SHARDING_DATASOURCE_TYPE = "org.apache.shardingsphere.driver.jdbc.core.datasource.ShardingSphereDataSource";
 
-
+    String CONFIG_TYPE_NACOS = "nacos";
 
 }
