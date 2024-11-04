@@ -21,9 +21,7 @@ import java.util.Map;
  * @date 2024/10/17 8:47
  */
 @Data
-@Component
-@RefreshScope
-@ConfigurationProperties(prefix = DynamicDataSourceProperties.PREFIX)
+//@ConfigurationProperties(prefix = DynamicDataSourceProperties.PREFIX)
 public class DynamicDataSourceProperties {
 
     public static final String PREFIX = "spring.datasource.dynamic";

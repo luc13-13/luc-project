@@ -11,6 +11,7 @@ import com.lc.framework.datasource.starter.properties.DynamicDataSourcePropertie
 import com.lc.framework.datasource.starter.provider.DynamicDataSourceProvider;
 import com.lc.framework.datasource.starter.provider.YmlDynamicDataSourceProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -23,6 +24,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.List;
@@ -44,12 +46,23 @@ import java.util.List;
         })
 @Import(DynamicDataSourceAopConfiguration.class)
 @ConditionalOnProperty(prefix = DynamicDataSourceProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
-@EnableConfigurationProperties(DynamicDataSourceProperties.class)
+@EnableConfigurationProperties
 public class DynamicDataSourceAutoConfiguration {
 
     public static final int DRUID_ORDER = 1000;
     public static final int HIKARI_ORDER = 1000;
     public static final int SHARDING_ORDER = 1000;
+
+    /**
+     * 配置类的Bean必须用RefreshScope标识，才能更新对其的依赖
+     * @return 配置类bean
+     */
+    @Bean
+    @RefreshScope
+    @ConfigurationProperties(prefix = DynamicDataSourceProperties.PREFIX)
+    public DynamicDataSourceProperties dynamicDataSourceProperties() {
+        return new DynamicDataSourceProperties();
+    }
 
 
 
@@ -72,7 +85,7 @@ public class DynamicDataSourceAutoConfiguration {
     @RefreshScope
     public DynamicDataSourceProvider ymlDynamicDataSourceProvider(List<DataSourceCreator> creators,
                                                                   DynamicDataSourceProperties dynamicDataSourceProperties) {
-        log.info("YmlDynamicDataSourceProvider created");
+        log.info("YmlDynamicDataSourceProvider created, DataSourceProperties{}", dynamicDataSourceProperties.hashCode());
         return new YmlDynamicDataSourceProvider(dynamicDataSourceProperties.getDatasource(), creators);
     }
 
