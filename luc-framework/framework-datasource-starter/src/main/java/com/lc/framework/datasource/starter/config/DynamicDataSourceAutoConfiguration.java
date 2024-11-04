@@ -1,6 +1,5 @@
 package com.lc.framework.datasource.starter.config;
 
-import com.alibaba.nacos.api.config.annotation.NacosConfigurationProperties;
 import com.baomidou.mybatisplus.autoconfigure.MybatisPlusAutoConfiguration;
 import com.lc.framework.datasource.starter.DynamicDataSource;
 import com.lc.framework.datasource.starter.creator.DataSourceCreator;
@@ -11,7 +10,6 @@ import com.lc.framework.datasource.starter.properties.DynamicDataSourcePropertie
 import com.lc.framework.datasource.starter.provider.DynamicDataSourceProvider;
 import com.lc.framework.datasource.starter.provider.YmlDynamicDataSourceProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,9 +20,7 @@ import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.core.annotation.Order;
-import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
 import java.util.List;

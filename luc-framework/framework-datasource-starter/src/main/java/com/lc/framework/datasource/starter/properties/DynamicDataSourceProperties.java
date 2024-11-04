@@ -3,25 +3,22 @@ package com.lc.framework.datasource.starter.properties;
 import com.lc.framework.datasource.starter.creator.druid.DruidConfig;
 import com.lc.framework.datasource.starter.creator.hikari.HikariCpConfig;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.stereotype.Component;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
  * <pre>
+ *     动态数据源配置类，包含：
+ *     1、主数据源属性
+ *     2、aop属性
+ *     3、多数据源属性
  * </pre>
  *
  * @author Lu Cheng
  * @date 2024/10/17 8:47
  */
 @Data
-//@ConfigurationProperties(prefix = DynamicDataSourceProperties.PREFIX)
 public class DynamicDataSourceProperties {
 
     public static final String PREFIX = "spring.datasource.dynamic";
