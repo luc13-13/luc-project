@@ -40,7 +40,7 @@ import java.util.List;
                 "com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceAutoConfigure",
                 "com.alibaba.druid.spring.boot3.autoconfigure.DruidDataSourceAutoConfigure"
         })
-@Import(DynamicDataSourceAopConfiguration.class)
+@Import({DynamicDataSourceAopConfiguration.class, DruidDynamicDataSourceConfiguration.class})
 @ConditionalOnProperty(prefix = DynamicDataSourceProperties.PREFIX, name = "enabled", havingValue = "true", matchIfMissing = true)
 @EnableConfigurationProperties
 public class DynamicDataSourceAutoConfiguration {
@@ -107,8 +107,8 @@ public class DynamicDataSourceAutoConfiguration {
     @Order(SHARDING_ORDER)
     @ConditionalOnMissingBean
     @RefreshScope
-    public ShardingDataSourceCreator shardingDataSourceCreator() {
+    public ShardingDataSourceCreator shardingDataSourceCreator(DynamicDataSourceProperties dynamicDataSourceProperties) {
         log.info("ShardingDataSourceCreator created");
-        return new ShardingDataSourceCreator();
+        return new ShardingDataSourceCreator(dynamicDataSourceProperties);
     }
 }
