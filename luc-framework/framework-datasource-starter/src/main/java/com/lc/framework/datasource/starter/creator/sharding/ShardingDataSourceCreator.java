@@ -3,6 +3,7 @@ package com.lc.framework.datasource.starter.creator.sharding;
 import com.alibaba.druid.pool.DruidDataSource;
 import com.alibaba.nacos.api.NacosFactory;
 import com.alibaba.nacos.api.PropertyKeyConst;
+import com.alibaba.nacos.api.common.Constants;
 import com.alibaba.nacos.api.config.ConfigService;
 import com.alibaba.nacos.api.exception.NacosException;
 import com.lc.framework.datasource.starter.creator.DataSourceCreator;
@@ -126,10 +127,13 @@ public class ShardingDataSourceCreator implements DataSourceCreator, Environment
 
         // group
         String group = environment.getProperty("spring.cloud.nacos.config.group");
+        if (!StringUtils.hasText(group)) {
+            group = Constants.DEFAULT_GROUP;
+        }
 
         Properties properties = new Properties();
         properties.put(PropertyKeyConst.SERVER_ADDR, StringUtils.hasText(configServer) ? configServer : nacosServer);
-        properties.put(PropertyKeyConst.NAMESPACE, namespace);
+        properties.put(PropertyKeyConst.NAMESPACE, StringUtils.hasText(namespace) ? namespace : Constants.DEFAULT_NAMESPACE_ID);
         properties.put(PropertyKeyConst.USERNAME, StringUtils.hasText(configUsername) ? configUsername : nacosUsername);
         properties.put(PropertyKeyConst.PASSWORD, StringUtils.hasText(configPassword) ? configPassword : nacosPassword);
 
