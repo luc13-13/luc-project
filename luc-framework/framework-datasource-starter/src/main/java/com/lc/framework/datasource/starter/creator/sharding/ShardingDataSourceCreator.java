@@ -133,9 +133,12 @@ public class ShardingDataSourceCreator implements DataSourceCreator, Environment
 
         Properties properties = new Properties();
         properties.put(PropertyKeyConst.SERVER_ADDR, StringUtils.hasText(configServer) ? configServer : nacosServer);
-        properties.put(PropertyKeyConst.NAMESPACE, StringUtils.hasText(namespace) ? namespace : Constants.DEFAULT_NAMESPACE_ID);
         properties.put(PropertyKeyConst.USERNAME, StringUtils.hasText(configUsername) ? configUsername : nacosUsername);
         properties.put(PropertyKeyConst.PASSWORD, StringUtils.hasText(configPassword) ? configPassword : nacosPassword);
+        if (StringUtils.hasText(namespace) && !Constants.DEFAULT_NAMESPACE_ID.equals(namespace)) {
+            // 如果命名空间为public，则无需在属性中设置，否则读取到的配置为null。因为nacos-server没有为public命名空间生成namespaceId
+            properties.put(PropertyKeyConst.NAMESPACE, namespace);
+        }
 
         ConfigService configService = NacosFactory.createConfigService(properties);
         String shardingConfig = configService.getConfig(dataId, group, 60000);
