@@ -1,0 +1,14 @@
+# 存储工具配置示例
+file:
+  storage:
+    type: qiniu
+    # ak
+    access-key: OdhEzyfQYOfuiy2Z2tPLCbIRM94pJafqO4B_X3Fb
+    # sk
+    secret-key: 3BUT6Iq8YLyfL13fRd0vHxR6_Z9L1EaxPvv_fZDk
+    # 属性
+    properties:
+      bucket-map:
+        name:
+        domain: storage.cloud.ffluc.online
+        use-https: true

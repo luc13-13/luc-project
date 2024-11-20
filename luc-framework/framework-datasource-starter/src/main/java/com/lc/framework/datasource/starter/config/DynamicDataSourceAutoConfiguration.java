@@ -6,6 +6,7 @@ import com.lc.framework.datasource.starter.creator.DataSourceCreator;
 import com.lc.framework.datasource.starter.creator.druid.DruidDataSourceCreator;
 import com.lc.framework.datasource.starter.creator.hikari.HikariDataSourceCreator;
 import com.lc.framework.datasource.starter.creator.sharding.ShardingDataSourceCreator;
+import com.lc.framework.datasource.starter.creator.sharding.ShardingSphereProperties;
 import com.lc.framework.datasource.starter.properties.DynamicDataSourceProperties;
 import com.lc.framework.datasource.starter.provider.DynamicDataSourceProvider;
 import com.lc.framework.datasource.starter.provider.YmlDynamicDataSourceProvider;
@@ -58,6 +59,13 @@ public class DynamicDataSourceAutoConfiguration {
     @ConfigurationProperties(prefix = DynamicDataSourceProperties.PREFIX)
     public DynamicDataSourceProperties dynamicDataSourceProperties() {
         return new DynamicDataSourceProperties();
+    }
+
+    @Bean
+    @RefreshScope
+    @ConfigurationProperties(prefix = ShardingSphereProperties.PREFIX)
+    public ShardingSphereProperties shardingSphereProperties() {
+        return new ShardingSphereProperties();
     }
 
 

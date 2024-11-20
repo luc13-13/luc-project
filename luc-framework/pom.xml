@@ -22,6 +22,7 @@
         <module>framework-datasource-starter</module>
         <module>framework-excel</module>
         <module>framework-redis-starter</module>
+        <module>framework-storage</module>
         <module>framework-security</module>
         <module>framework-web</module>
     </modules>
