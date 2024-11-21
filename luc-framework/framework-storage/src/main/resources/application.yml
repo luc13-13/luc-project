@@ -9,6 +9,9 @@ file:
     # 属性
     properties:
       bucket-map:
-        name:
-        domain: storage.cloud.ffluc.online
-        use-https: true
+        cookbook-mini-app:
+          domain: storage.cloud.ffluc.online
+          use-https: true
+        test-bucket:
+          domain: test.storage.ffluc.online
+          use-https: true

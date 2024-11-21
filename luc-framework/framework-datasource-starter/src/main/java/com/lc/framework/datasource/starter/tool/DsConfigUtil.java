@@ -27,7 +27,7 @@ public class DsConfigUtil {
      */
     public static String lineToUpper(String str) {
         Matcher matcher = LINE_PATTERN.matcher(str);
-        StringBuilder sb = new StringBuilder();
+        StringBuffer sb = new StringBuffer();
         while (matcher.find()) {
             matcher.appendReplacement(sb, matcher.group(1).toUpperCase());
         }

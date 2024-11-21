@@ -12,17 +12,17 @@ public interface StorageResult {
      * 获取bucket名称
      * @return bucket名称
      */
-    String getBucketName();
+    String bucketName();
 
     /**
      * 获取文件名称
      * @return 文件名称
      */
-    String getFileName();
+    String fileName();
 
     /**
      * 获取文件地址
      * @return url
      */
-    String getAccessUrl();
+    String accessUrl();
 }

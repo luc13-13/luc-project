@@ -4,8 +4,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import org.springframework.data.annotation.Id;
-
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,7 +19,6 @@ public class SysMenuDO implements Serializable {
     /**
      * 菜单ID
      */     
-    @Id
     @TableField("menu_id")
     private Long menuId;
 

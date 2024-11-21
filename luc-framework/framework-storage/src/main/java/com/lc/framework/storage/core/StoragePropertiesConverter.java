@@ -1,6 +1,6 @@
-package com.lc.framework.storage.client;
+package com.lc.framework.storage.core;
 
-import com.lc.framework.storage.core.StorageProperties;
+import com.lc.framework.storage.client.StorageClientTemplate;
 
 /**
  * <pre>

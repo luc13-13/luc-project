@@ -1,6 +1,7 @@
 package com.lc.auth.server.domain.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -19,8 +20,7 @@ import java.util.Date;
 public class SysUserDO implements Serializable {
     /**
      * 用户ID
-     */     
-    @Id
+     */
     @TableField("user_id")
     private Long userId;
 

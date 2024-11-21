@@ -1,4 +1,4 @@
-package com.lc.framework.storage.core.qiniu;
+package com.lc.framework.storage.core.oss;
 
 import lombok.Data;
 
@@ -12,7 +12,7 @@ import java.util.Map;
  * @date 2024/11/20 14:28
  */
 @Data
-public class QiniuStorageProperties {
+public class OssStorageProperties {
 
     private String accessKey;
 
@@ -33,5 +33,8 @@ public class QiniuStorageProperties {
      */
     private Boolean enableHttps = false;
 
+    /**
+     * 配置bucket信息，key为bucketName，value为具体bucket属性封装
+     */
     private Map<String, BucketInfo> bucketMap;
 }

@@ -53,17 +53,18 @@
         <!--数据库-->
         <druid.version>1.2.20</druid.version>
         <mybatis-plus.version>3.5.5</mybatis-plus.version>
-        <mysql-connector.version>8.0.29</mysql-connector.version>
+        <mysql-connector.version>9.1.0</mysql-connector.version>
         <mybatis-plus-dynamic-datasource.version>4.3.1</mybatis-plus-dynamic-datasource.version>
         <!--分库分表-->
         <shardingsphere.version>5.5.1</shardingsphere.version>
-
+        <!--文件存储和对象存储工具类-->
+        <aws.version>1.12.778</aws.version>
+        <qiniu.version>7.17.0</qiniu.version>
         <!--api文档-->
         <knife4j.version>4.5.0</knife4j.version>
         <springdoc-openapi.version>2.5.0</springdoc-openapi.version>
 
         <!--日志相关-->
-        <lombok.version>1.18.24</lombok.version>
         <plumelog-logback.version>3.5.3</plumelog-logback.version>
 
         <!--常用工具依赖-->
@@ -79,7 +80,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
         </dependency>
         <!-- 将配所有ConfigurationProperties的属性映射自动打包为json-->
         <dependency>
@@ -149,6 +149,25 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!--认证鉴权-->
+            <dependency>
+                <groupId>com.lc</groupId>
+                <artifactId>framework-storage</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-s3</artifactId>
+                <version>${aws.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.qiniu</groupId>
+                <artifactId>qiniu-java-sdk</artifactId>
+                <version>${qiniu.version}</version>
+            </dependency>
+
 
             <!--spring boot-->
             <dependency>
@@ -177,8 +196,8 @@
 
             <!--数据库-->
             <dependency>
-                <groupId>mysql</groupId>
-                <artifactId>mysql-connector-java</artifactId>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql-connector.version}</version>
             </dependency>
             <dependency>

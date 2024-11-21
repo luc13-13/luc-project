@@ -11,7 +11,10 @@ import com.lc.framework.datasource.starter.properties.DynamicDataSourcePropertie
 import com.lc.framework.datasource.starter.provider.DynamicDataSourceProvider;
 import com.lc.framework.datasource.starter.provider.YmlDynamicDataSourceProvider;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shardingsphere.driver.jdbc.core.datasource.ShardingSphereDataSource;
+import org.apache.shardingsphere.driver.yaml.YamlJDBCConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -112,9 +115,10 @@ public class DynamicDataSourceAutoConfiguration {
     }
 
     @Bean
+    @RefreshScope
     @Order(SHARDING_ORDER)
     @ConditionalOnMissingBean
-    @RefreshScope
+    @ConditionalOnClass(name = "org.apache.shardingsphere.driver.jdbc.core.datasource.ShardingDataSourceCreator")
     public ShardingDataSourceCreator shardingDataSourceCreator(DynamicDataSourceProperties dynamicDataSourceProperties) {
         log.info("ShardingDataSourceCreator created");
         return new ShardingDataSourceCreator(dynamicDataSourceProperties);

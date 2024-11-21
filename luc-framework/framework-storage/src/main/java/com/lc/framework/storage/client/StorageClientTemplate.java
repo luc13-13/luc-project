@@ -12,17 +12,28 @@ import java.io.InputStream;
  * @date 2024/11/20 9:01
  */
 public interface StorageClientTemplate {
+
     /**
      * 上传文件——MultipartFile
+     * @param bucketName 存储桶
+     * @param key 文件key
      * @param file 文件
      */
-    void upload(MultipartFile file);
+    StorageResult upload(String bucketName, String key, MultipartFile file);
 
     /**
      * 上传文件——InputStream
-     * @param inputStream
+     * @param bucketName 存储桶
+     * @param key 文件key
+     * @param inputStream 字节流
      */
-    void upload(InputStream inputStream);
+    StorageResult upload(String bucketName, String key, InputStream inputStream);
 
-    String getUrl();
+    /**
+     * 获取文件外链，默认外链有效期为600s
+     * @param bucketName 存储桶
+     * @param key 文件key
+     * @return 文件外链
+     */
+    StorageResult getFile(String bucketName, String key);
 }

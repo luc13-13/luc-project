@@ -88,6 +88,8 @@ data-scope:
     ## 2、配置文件只声明bean的创建，使用DataScopeSqlHandlerCustomizer在代码中对bean进行定制化开发
     - id: Tenant
 
+
+
 # framework-apidoc 日志设置，后续迁移到nacos中，各服务使用share-configs引入springdoc:
 springdoc:
   swagger-ui:
@@ -109,3 +111,23 @@ knife4j:
   enable: true
   setting:
     enable-response-code: false
+
+
+# 存储工具配置示例
+file:
+  storage:
+    enabled: true
+    type: qiniu
+    # ak
+    access-key: OdhEzyfQYOfuiy2Z2tPLCbIRM94pJafqO4B_X3Fb
+    # sk
+    secret-key: 3BUT6Iq8YLyfL13fRd0vHxR6_Z9L1EaxPvv_fZDk
+    # 属性
+    properties:
+      bucket-map:
+        cookbook-mini-app:
+          domain: storage.cloud.ffluc.online
+          use-https: true
+        test-bucket:
+          domain: test.storage.ffluc.online
+          use-https: true

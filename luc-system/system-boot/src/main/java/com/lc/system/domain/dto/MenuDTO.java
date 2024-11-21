@@ -6,8 +6,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
-
 import java.util.List;
 
 /**
@@ -29,7 +27,6 @@ public class MenuDTO {
     /**
      * 菜单ID
      */
-    @Id
     @Schema(name = "menuId", title = "菜单id")
     private Long menuId;
 

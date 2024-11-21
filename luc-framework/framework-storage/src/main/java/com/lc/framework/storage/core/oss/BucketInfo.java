@@ -1,8 +1,6 @@
-package com.lc.framework.storage.core.qiniu;
+package com.lc.framework.storage.core.oss;
 
 import lombok.Data;
-
-import java.util.Map;
 
 /**
  * <pre>
