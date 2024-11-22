@@ -8,7 +8,6 @@ import net.sf.jsqlparser.expression.LongValue;
 import net.sf.jsqlparser.expression.operators.relational.EqualsTo;
 import net.sf.jsqlparser.schema.Table;
 import org.springframework.util.StringUtils;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -23,7 +22,9 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TenantDataScopeSqlHandler implements IDataScopeSqlHandler {
 
-    // 封装表名与租户字段名映射关系
+    /**
+     * 封装表名与租户字段名映射关系
+     */
     private final Map<String, String> tenatTableColumnMap = new ConcurrentHashMap<>();
 
     @Override

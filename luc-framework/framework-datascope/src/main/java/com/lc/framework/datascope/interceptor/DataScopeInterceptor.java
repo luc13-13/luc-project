@@ -76,7 +76,9 @@ public class DataScopeInterceptor extends JsqlParserSupport implements InnerInte
         DataScopeEntity dataScopeEntity = getDataScopeEntity(parameter);
         // 获取注解声明的权限处理器
         List<IDataScopeSqlHandler> requiredHandlers = getRequiredHandlers(dataScopeAnno);
-        if (skip(ms, dataScopeAnno, dataScopeEntity)) return;
+        if (skip(ms, dataScopeAnno, dataScopeEntity)) {
+            return;
+        }
         try {
             PluginUtils.MPBoundSql mpBs = PluginUtils.mpBoundSql(boundSql);
             DataScopeContextHolder.putDataScopeWrapper(dataScopeAnno.isMutex(), dataScopeEntity, requiredHandlers);
@@ -105,7 +107,9 @@ public class DataScopeInterceptor extends JsqlParserSupport implements InnerInte
         DataScope dataScopeAnno = getAnnotationDataScope(ms);
         // 获取方法中的权限参数
         DataScopeEntity dataScopeEntity = getDataScopeEntity(paramObj);
-        if (skip(ms, dataScopeAnno, dataScopeEntity)) return;
+        if (skip(ms, dataScopeAnno, dataScopeEntity)) {
+            return;
+        }
         // 获取权限处理器
         List<IDataScopeSqlHandler> requiredHandlers = getRequiredHandlers(dataScopeAnno);
 
@@ -447,7 +451,7 @@ public class DataScopeInterceptor extends JsqlParserSupport implements InnerInte
      * 1. 子查询必须放在小括号中
      * 2. 子查询一般放在比较操作符的右边
      *
-     * @param where where 条件
+     * @param where 条件
      */
     protected void processWhereSubSelect(Expression where) {
         if (where == null) {

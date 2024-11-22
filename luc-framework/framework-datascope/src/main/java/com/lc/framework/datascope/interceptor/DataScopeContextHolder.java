@@ -17,7 +17,9 @@ import java.util.List;
  */
 public class DataScopeContextHolder {
 
-    // 当前线程执行的方法名，与DATA_SCOPE_ANNO_CACHE中的key匹配
+    /**
+     * 当前线程执行的方法名，与DATA_SCOPE_ANNO_CACHE中的key匹配
+     */
     private static final ThreadLocal<DataScopeWrapper> DATA_SCOPE_WRAPPER_THREAD_LOCAL = new TransmittableThreadLocal<>();
 
     private static final ThreadLocal<Boolean> REWRITE = TransmittableThreadLocal.withInitial(() -> Boolean.FALSE);

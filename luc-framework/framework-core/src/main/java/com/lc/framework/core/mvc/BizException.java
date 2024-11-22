@@ -1,7 +1,5 @@
-package com.lc.framework.web.excp;
+package com.lc.framework.core.mvc;
 
-
-import com.lc.framework.core.mvc.StatusConstants;
 
 /**
  * @author : Lu Cheng
@@ -14,13 +12,13 @@ public class BizException extends RuntimeException {
     private final String message;
 
     public BizException(String message) {
-        super();
+        super(message);
         this.code = StatusConstants.CODE_BIZ_ERROR;
         this.message = message;
     }
 
     public BizException(Integer code, String message) {
-        super();
+        super(message);
         this.code = code;
         this.message = message;
     }
@@ -29,6 +27,7 @@ public class BizException extends RuntimeException {
         return this.code;
     }
 
+    @Override
     public String getMessage() {
         return this.message;
     }

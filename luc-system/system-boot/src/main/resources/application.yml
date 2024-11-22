@@ -117,17 +117,19 @@ knife4j:
 file:
   storage:
     enabled: true
-    type: qiniu
-    # ak
-    access-key: OdhEzyfQYOfuiy2Z2tPLCbIRM94pJafqO4B_X3Fb
-    # sk
-    secret-key: 3BUT6Iq8YLyfL13fRd0vHxR6_Z9L1EaxPvv_fZDk
-    # 属性
-    properties:
-      bucket-map:
-        cookbook-mini-app:
-          domain: storage.cloud.ffluc.online
+    oss:
+      enabled: true
+      # ak
+      access-key: OdhEzyfQYOfuiy2Z2tPLCbIRM94pJafqO4B_X3Fb
+      # sk
+      secret-key: 3BUT6Iq8YLyfL13fRd0vHxR6_Z9L1EaxPvv_fZDk
+      # 默认bucket名
+      default-bucket-name: mini-program-cookbook
+      # 默认domain
+      default-domain-of-bucket: qiniucs.com
+      buckets:
+        - name: mini-program-cookbook
+          region: cn-south-1
           use-https: true
-        test-bucket:
-          domain: test.storage.ffluc.online
-          use-https: true
+          path-style-enabled: false
+

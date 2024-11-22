@@ -11,6 +11,9 @@ import com.lc.framework.datascope.handler.*;
  * @date 2023-08-04 09:10
  */
 public enum DataColumnType {
+    /**
+     * 多租户sql处理器类型
+     */
     SYS_USER(SysUserDataScopeSqlHandler.class),
     SYS_ROLE(SysRoleDataScopeSqlHandler.class),
     TENANT(TenantDataScopeSqlHandler.class);

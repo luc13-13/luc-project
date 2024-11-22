@@ -1,23 +1,32 @@
 package com.lc.system.web;
 
+import com.lc.framework.core.mvc.WebResult;
 import com.lc.framework.datascope.entity.DataScopeEntity;
+import com.lc.framework.storage.client.StorageClientTemplate;
 import com.lc.system.domain.bo.OAuth2Profile;
 import com.lc.system.domain.dto.UserDTO;
 import com.lc.system.mapper.SysUserMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Arrays;
 
+/**
+ * @author Lu Cheng
+ */
 @RestController
 @RequestMapping("/test")
 @Tag(name = "测试接口",description = "用于测试网关路由功能")
+@AllArgsConstructor
 public class TestController {
-    @Autowired
+
     private SysUserMapper sysUserMapper;
+
+    private StorageClientTemplate storageClientTemplate;
+
     @GetMapping("/hello")
     public String test1(){
         return "hello test-luc1";
@@ -36,5 +45,11 @@ public class TestController {
     @GetMapping("")
     public String index(){
         return "welcome index";
+    }
+
+    @PostMapping("upload")
+    public WebResult<String> upload(@RequestParam("file") MultipartFile file) {
+        storageClientTemplate.upload(null, null, file);
+        return WebResult.success();
     }
 }

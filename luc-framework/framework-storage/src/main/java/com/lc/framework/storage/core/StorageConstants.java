@@ -13,7 +13,7 @@ public class StorageConstants {
         /**
          * 存储类型枚举类
          */
-        OSS_QINIU("qiniu"),
+        OSS_STORAGE("oss"),
         OSS_LOCAL("local");
 
         public final String type;

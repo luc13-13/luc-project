@@ -16,21 +16,46 @@ import java.util.List;
  */
 public interface DataScopeEntity {
 
-    // 必备属性， 后续优化为方法 String getUserId()
-//    private String userId;
-
+    /**
+     * 获取userId
+     * @return userId
+     */
     String getUserId();
 
+    /**
+     * 获取当前角色
+     * @return roleId
+     */
     String getCurrentRole();
 
+    /**
+     * 获取当前部门
+     * @return deptId
+     */
     String getCurrentDeptId();
 
+    /**
+     * 获取当前区域
+     * @return regionId
+     */
     String getCurrentRegionId();
 
+    /**
+     * 获取角色列表
+     * @return roleIdList
+     */
     List<String> getRoleIds();
 
+    /**
+     * 获取权限列表
+     * @return permissionIdList
+     */
     List<String> getPermissionIds();
 
+    /**
+     * 获取部门列表
+     * @return deptIdList
+     */
     List<String> getDeptIds();
 
     List<String> getRegionIds();

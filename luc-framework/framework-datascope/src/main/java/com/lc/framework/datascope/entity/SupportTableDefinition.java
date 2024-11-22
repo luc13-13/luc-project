@@ -13,12 +13,18 @@ import lombok.Data;
 @Data
 public class SupportTableDefinition {
     private String database;
-    // 需要进行数据过滤的表名
+    /**
+     * 需要进行数据过滤的表名
+     */
     private String tableName;
 
-    // 数据过滤依赖的列名
+    /**
+     * 数据过滤依赖的列名
+     */
     private String columnName;
 
-    // 列数据类型, 默认为VARCHAR
+    /**
+     * 列数据类型, 默认为VARCHAR
+     */
     private String columnType = "VARCHAR";
 }

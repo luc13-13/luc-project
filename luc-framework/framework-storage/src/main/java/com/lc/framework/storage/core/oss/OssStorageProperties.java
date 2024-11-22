@@ -1,8 +1,10 @@
 package com.lc.framework.storage.core.oss;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * <pre>
@@ -12,29 +14,30 @@ import java.util.Map;
  * @date 2024/11/20 14:28
  */
 @Data
+@NoArgsConstructor
 public class OssStorageProperties {
+    /**
+     * 是否开启oss存储，true是，false否。默认为false
+     */
+    private boolean enabled = false;
 
     private String accessKey;
 
     private String secretKey;
 
     /**
-     * 默认bucket
+     * 默认bucket，需要与bucketMap中的key匹配
      */
+    @NotBlank(message = "defaultBucketName must not be null")
     private String defaultBucketName;
 
     /**
-     * 默认domain
+     * 默认domain, 如果没有设置bucketMap或者bucketMap中没有设置domain，则默认取defaultDomainOfBucket
      */
     private String defaultDomainOfBucket;
 
     /**
-     * 是否开启https<br/>默认不开启，具体看bucket属性的设置
-     */
-    private Boolean enableHttps = false;
-
-    /**
      * 配置bucket信息，key为bucketName，value为具体bucket属性封装
      */
-    private Map<String, BucketInfo> bucketMap;
+    private List<BucketInfo> buckets;
 }

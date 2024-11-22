@@ -1,9 +1,10 @@
-package com.lc.framework.web.utils;
+package com.lc.framework.core.utils;
 
-import com.lc.framework.web.excp.BizException;
+import com.lc.framework.core.mvc.BizException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import jakarta.validation.groups.Default;
 import org.hibernate.validator.HibernateValidator;
 import org.springframework.util.CollectionUtils;
 
@@ -16,7 +17,7 @@ import java.util.Set;
  * @date : 2023/4/15 13:43
  */
 public class ValidatorUtil {
-    static final Validator validator = Validation.byProvider(HibernateValidator.class).configure().failFast(true).buildValidatorFactory().getValidator();
+    static final Validator VALIDATOR = Validation.byProvider(HibernateValidator.class).configure().failFast(true).buildValidatorFactory().getValidator();
 
     /**
      * @author Lu Cheng
@@ -24,7 +25,12 @@ public class ValidatorUtil {
      * @date 2023/4/15
      */
     public static <T> void validate(T targets, Class<?>...groups) throws BizException {
-        Set<ConstraintViolation<T>> validations = validator.validate(targets, groups);
+        Set<ConstraintViolation<T>> validations;
+        if (groups == null) {
+            validations = VALIDATOR.validate(targets, Default.class);
+        } else {
+            validations = VALIDATOR.validate(targets, groups);
+        }
         if(!CollectionUtils.isEmpty(validations)) {
             StringBuilder sb = new StringBuilder();
             for(ConstraintViolation<T> v : validations) {

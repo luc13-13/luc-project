@@ -1,5 +1,6 @@
 package com.lc.framework.web.excp;
 
+import com.lc.framework.core.mvc.BizException;
 import com.lc.framework.core.mvc.WebResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ControllerAdvice;
