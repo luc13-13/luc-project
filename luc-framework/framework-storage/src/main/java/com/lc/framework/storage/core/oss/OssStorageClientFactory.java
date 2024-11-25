@@ -48,10 +48,6 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
         return new OssClientTemplate(defaultS3Client, s3ClientMap);
     }
 
-    private void checkBucketInfo(BucketInfo bucketInfo) {
-        Assert.notNull(bucketInfo.getName(), "");
-    }
-
     private void mergeGlobalProperty(OssStorageProperties global, BucketInfo bucketInfo) {
         // ak
         if (!StringUtils.hasText(bucketInfo.getAccessKey())) {
