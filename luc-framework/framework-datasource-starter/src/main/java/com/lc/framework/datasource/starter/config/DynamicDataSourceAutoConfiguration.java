@@ -118,7 +118,7 @@ public class DynamicDataSourceAutoConfiguration {
     @RefreshScope
     @Order(SHARDING_ORDER)
     @ConditionalOnMissingBean
-    @ConditionalOnClass(name = "org.apache.shardingsphere.driver.jdbc.core.datasource.ShardingDataSourceCreator")
+    @ConditionalOnClass(name = "org.apache.shardingsphere.driver.jdbc.core.datasource.ShardingSphereDataSource")
     public ShardingDataSourceCreator shardingDataSourceCreator(DynamicDataSourceProperties dynamicDataSourceProperties) {
         log.info("ShardingDataSourceCreator created");
         return new ShardingDataSourceCreator(dynamicDataSourceProperties);
