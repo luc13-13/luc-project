@@ -53,6 +53,9 @@ public class BeanConfig {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * 开启跨域
+     */
     @Bean
     @ConditionalOnProperty(value = "sys.cors.enabled")
     public CorsConfigurationSource configurationSource(SysCorsProperties corsProperties) {
@@ -75,13 +78,14 @@ public class BeanConfig {
         return configurationSource;
     }
 
-    // 向redisTemplate中添加SpringSecurity相关类的序列化支持
+    /**
+     * 向redisTemplate中添加SpringSecurity相关类的序列化支持
+     */
     @Bean
     public ObjectMapperCustomizer<ObjectMapper> redisSerializerCustomizer() {
         return objectMapper -> objectMapper
                 .registerModules(SecurityJackson2Modules.getModules(getClass().getClassLoader()))
                 .registerModules(new OAuth2ClientJackson2Module())
-                .registerModules(new CoreJackson2Module())
-                ;
+                .registerModules(new CoreJackson2Module());
     }
 }
