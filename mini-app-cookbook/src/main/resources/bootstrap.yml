@@ -1,0 +1,8 @@
+server:
+  port: 19101
+spring:
+  application:
+    name:
+      mini-app-cookbook
+  profiles:
+    active: dev
