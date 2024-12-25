@@ -35,3 +35,5 @@ hs_err_pid*
 
 # backup file
 *.bkp
+
+**/.flattened-pom.xml
