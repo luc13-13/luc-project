@@ -2,6 +2,7 @@
 !.idea/icon.png
 **/.idea/
 **/*.iml
+*.iml
 *.cmd
 mvnw
 *.mvn
@@ -36,4 +37,4 @@ hs_err_pid*
 # backup file
 *.bkp
 
-**/.flattened-pom.xml
+.flattened-pom.xml
