@@ -54,8 +54,8 @@ public class BucketInfo {
 
     /**
      * 是否将bucket名称作为路径名，true是，false否<br/>
-     * 以七牛为例，bucket的s3访问域名为https://bucket名.s3.区域id.qiniucs.com，则不是pathStyle，徐设置为false<br/>
-     * 如果是https://s3.区域id.test.com/bucket名称，则设置pathStyle=true
+     * 以七牛为例，bucket的s3访问域名为https://bucket名.s3.区域id.qiniucs.com，则不是pathStyle，需设置为false<br/>
+     * 如果是https://s3.区域id.qiniucs.com/bucket名称，则设置pathStyle=true
      */
     private boolean pathStyleEnabled = false;
 }
