@@ -31,7 +31,6 @@
         <module>auth-gateway</module>
         <module>auth-server</module>
         <module>luc-system</module>
-        <module>mini-app-cookbook</module>
     </modules>
 
     <properties>
