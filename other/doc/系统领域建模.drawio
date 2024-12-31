@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
   <diagram name="系统设计通用流程" id="IglyjK21oQ1ir__Bf4et">
-    <mxGraphModel dx="1761" dy="658" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="2150" dy="932" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -927,9 +927,6 @@
         <mxCell id="q052o4oiL9A1xDnhalKl-64" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;菜谱分类&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="970" y="1709" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="q052o4oiL9A1xDnhalKl-65" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;食材分类&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="970" y="1804" width="120" height="60" as="geometry" />
-        </mxCell>
         <mxCell id="q052o4oiL9A1xDnhalKl-66" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;配额订单&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="970" y="1150" width="120" height="60" as="geometry" />
         </mxCell>
@@ -1107,7 +1104,7 @@
         <mxCell id="q052o4oiL9A1xDnhalKl-119" value="unit = 次&lt;br&gt;charge = 100&lt;br&gt;charge_size = 300&lt;br&gt;单价 = 100 元 / 300 次" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="-500.5" y="1644" width="160" height="80" as="geometry" />
         </mxCell>
-        <mxCell id="q052o4oiL9A1xDnhalKl-132" value="" style="endArrow=classic;html=1;rounded=0;fontSize=14;strokeColor=#fcf8f8;strokeWidth=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="q052o4oiL9A1xDnhalKl-68" edge="1" target="q052o4oiL9A1xDnhalKl-66">
+        <mxCell id="q052o4oiL9A1xDnhalKl-132" value="" style="endArrow=classic;html=1;rounded=0;fontSize=14;strokeColor=#fcf8f8;strokeWidth=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" parent="1" source="q052o4oiL9A1xDnhalKl-68" target="q052o4oiL9A1xDnhalKl-66" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1320" y="1310" as="sourcePoint" />
             <mxPoint x="1280" y="1180" as="targetPoint" />
@@ -1121,7 +1118,7 @@
         <mxCell id="q052o4oiL9A1xDnhalKl-134" value="&lt;font color=&quot;#000000&quot;&gt;租户&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="1430" y="1344" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="q052o4oiL9A1xDnhalKl-135" value="" style="endArrow=classic;html=1;rounded=0;fontSize=14;strokeColor=#f3eded;strokeWidth=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;labelBackgroundColor=#FCFCFC;" parent="1" source="q052o4oiL9A1xDnhalKl-134" edge="1" target="q052o4oiL9A1xDnhalKl-59">
+        <mxCell id="q052o4oiL9A1xDnhalKl-135" value="" style="endArrow=classic;html=1;rounded=0;fontSize=14;strokeColor=#f3eded;strokeWidth=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;labelBackgroundColor=#FCFCFC;" parent="1" source="q052o4oiL9A1xDnhalKl-134" target="q052o4oiL9A1xDnhalKl-59" edge="1">
           <mxGeometry width="50" height="50" relative="1" as="geometry">
             <mxPoint x="1320" y="1420" as="sourcePoint" />
             <mxPoint x="1280" y="1290" as="targetPoint" />
@@ -1132,17 +1129,73 @@
             <mxPoint x="57" y="19" as="offset" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="q052o4oiL9A1xDnhalKl-137" value="&lt;font color=&quot;#000000&quot;&gt;餐厅租户&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;fontSize=14;" parent="1" vertex="1">
-          <mxGeometry x="1430" y="1484" width="120" height="60" as="geometry" />
-        </mxCell>
-        <mxCell id="R88PN-_ZLcBIJziDM6yH-2" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;租户权限&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="R88PN-_ZLcBIJziDM6yH-2" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;租户权限&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="970" y="1250" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="R88PN-_ZLcBIJziDM6yH-3" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;餐厅成员&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="R88PN-_ZLcBIJziDM6yH-3" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;餐厅成员&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="970" y="1414" width="120" height="60" as="geometry" />
         </mxCell>
-        <mxCell id="R88PN-_ZLcBIJziDM6yH-4" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;食材&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+        <mxCell id="R88PN-_ZLcBIJziDM6yH-4" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;食材&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" parent="1" vertex="1">
           <mxGeometry x="970" y="1584" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-2" value="" style="endArrow=classic;html=1;rounded=0;fontSize=14;strokeWidth=4;strokeColor=#C72828;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="1695" y="1014" as="sourcePoint" />
+            <mxPoint x="1695" y="1824" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-3" value="顾客时间线" style="edgeLabel;html=1;align=center;verticalAlign=bottom;resizable=0;points=[];fontSize=16;horizontal=1;" vertex="1" connectable="0" parent="QxPLUypMRtre3j20Z3l3-2">
+          <mxGeometry x="-0.1556" y="2" relative="1" as="geometry">
+            <mxPoint x="48" y="-312" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-4" value="" style="sketch=0;pointerEvents=1;shadow=0;dashed=0;html=1;strokeColor=none;fillColor=#505050;labelPosition=center;verticalLabelPosition=bottom;verticalAlign=top;outlineConnect=0;align=center;shape=mxgraph.office.concepts.clock;fontSize=16;" vertex="1" parent="1">
+          <mxGeometry x="1650" y="1018" width="31" height="31" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-5" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;菜谱&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1745" y="1280" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-6" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;菜谱分类&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1745" y="1169" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-9" value="&lt;font color=&quot;#000000&quot;&gt;租户&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="2205" y="1154" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-10" value="&lt;font color=&quot;#000000&quot;&gt;餐厅&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1745" y="1064" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-11" value="&lt;font color=&quot;#000000&quot;&gt;所有公开的餐厅&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#99CCFF;strokeColor=none;fontSize=14;align=left;" vertex="1" parent="1">
+          <mxGeometry x="1880" y="1071.5" width="160" height="45" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-12" value="" style="endArrow=classic;html=1;rounded=0;fontSize=14;strokeColor=#fcf8f8;strokeWidth=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="QxPLUypMRtre3j20Z3l3-9">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="2095" y="1314" as="sourcePoint" />
+            <mxPoint x="1865" y="1184" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-20" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;订单&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1745" y="1399" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-21" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;支付记录&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1745" y="1494" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-22" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;餐厅所有者&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1430" y="1230" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-23" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;餐厅所有者&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1430" y="1408" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-25" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;餐厅成员&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="980" y="2144" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-26" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;餐厅所有者&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="980" y="2054" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-27" value="&lt;font color=&quot;#000000&quot; style=&quot;font-size: 14px;&quot;&gt;餐厅&lt;br style=&quot;font-size: 14px;&quot;&gt;&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFABC7;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="1130" y="2054" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="QxPLUypMRtre3j20Z3l3-28" value="&lt;font color=&quot;#000000&quot;&gt;顾客&lt;/font&gt;" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#FFB570;strokeColor=none;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="980" y="1972" width="120" height="60" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
