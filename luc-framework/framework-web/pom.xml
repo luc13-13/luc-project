@@ -69,7 +69,7 @@
         <!--数据库连接池 druid-->
         <dependency>
             <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-starter</artifactId>
+            <artifactId>druid-spring-boot-3-starter</artifactId>
             <scope>compile</scope>
         </dependency>
         <!--mybatis plus 拓展插件-->
