@@ -1,7 +1,6 @@
 package com.lc.system.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
-import com.alibaba.druid.spring.boot.autoconfigure.DruidDataSourceBuilder;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.lc.framework.datascope.config.DataScopeSqlHandlerCustomizer;
 import com.lc.framework.datascope.entity.SupportTableDefinition;

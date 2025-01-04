@@ -14,13 +14,13 @@
             <id>rdc-releases</id>
             <!--            <url>file:D:\tools\maven\repository</url>-->
 <!--            <url>file:/Users/luc13/Desktop/tools/maven/repository</url>-->
-            <url>https://packages.aliyun.com/maven/repository/2382558-release-6fydW8/</url>
+            <url>https://packages.aliyun.com/647763e3d2963c5649bdf9d8/maven/2382558-release-6fydw8</url>
         </repository>
         <snapshotRepository>
             <id>rdc-snapshots</id>
             <!--            <url>file:D:\tools\maven\repository</url>-->
 <!--            <url>file:/Users/luc13/Desktop/tools/maven/repository</url>-->
-            <url>https://packages.aliyun.com/maven/repository/2382558-snapshot-UbQTSr/</url>
+            <url>https://packages.aliyun.com/647763e3d2963c5649bdf9d8/maven/2382558-snapshot-ubqtsr</url>
         </snapshotRepository>
     </distributionManagement>
 
