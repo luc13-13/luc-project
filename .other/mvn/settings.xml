@@ -148,9 +148,18 @@
                 <maven.compiler.compilerVersion>17</maven.compiler.compilerVersion>
             </properties>
         </profile>
+        <profile>
+            <id>sonar</id>
+            <properties>
+                <sonar.token>9c250ad3fed2f6b7b2bacfa867e3aa28c95342c1</sonar.token>
+                <sonar.organization>lu-cheng</sonar.organization>
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+            </properties>
+        </profile>
     </profiles>
     <activeProfiles>
         <activeProfile>jdk-17</activeProfile>
         <activeProfile>rdc</activeProfile>
+        <activeProfile>sonar</activeProfile>
     </activeProfiles>
 </settings>
