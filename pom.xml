@@ -58,7 +58,7 @@
         <!--分库分表-->
         <shardingsphere.version>5.5.1</shardingsphere.version>
         <!--文件存储和对象存储工具类-->
-        <aws.version>1.12.778</aws.version>
+        <aws.version>2.29.50</aws.version>
         <qiniu.version>7.17.0</qiniu.version>
         <!--api文档-->
         <knife4j.version>4.5.0</knife4j.version>
@@ -163,10 +163,13 @@
                 <version>${revision}</version>
             </dependency>
 
+            <!--对象存储-->
             <dependency>
-                <groupId>com.amazonaws</groupId>
-                <artifactId>aws-java-sdk-s3</artifactId>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
                 <version>${aws.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
             </dependency>
 
             <dependency>

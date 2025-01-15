@@ -18,7 +18,7 @@ public interface StorageResult {
      * 获取文件名称
      * @return 文件名称
      */
-    String fileName();
+    String filename();
 
     /**
      * 获取文件地址

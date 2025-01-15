@@ -17,6 +17,11 @@ import java.io.InputStream;
 public class LocalStorageClientTemplate implements StorageClientTemplate {
 
     @Override
+    public StorageResult upload(MultipartFile file) {
+        return null;
+    }
+
+    @Override
     public StorageResult upload(String bucketName, String key, MultipartFile file) {
         return null;
     }

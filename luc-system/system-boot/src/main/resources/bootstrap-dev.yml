@@ -12,3 +12,4 @@ spring:
         namespace: com-lc-dev
         # 本地测试时需要用本地地址，而非公网ip
         ip: 127.0.0.1
+        enabled: false

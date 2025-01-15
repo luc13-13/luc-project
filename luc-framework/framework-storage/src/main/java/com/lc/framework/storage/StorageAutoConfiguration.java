@@ -1,9 +1,5 @@
 package com.lc.framework.storage;
 
-import com.amazonaws.ClientConfiguration;
-import com.amazonaws.Protocol;
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.AmazonS3Client;
 import com.lc.framework.storage.client.StorageClientTemplate;
 import com.lc.framework.storage.core.oss.OssStorageClientFactory;
 import com.lc.framework.storage.core.StorageProperties;
