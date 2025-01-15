@@ -151,6 +151,7 @@
         <profile>
             <id>sonar</id>
             <properties>
+                <!--Token Name: analyze-common-token-->
                 <sonar.token>9c250ad3fed2f6b7b2bacfa867e3aa28c95342c1</sonar.token>
                 <sonar.organization>lu-cheng</sonar.organization>
                 <sonar.host.url>https://sonarcloud.io</sonar.host.url>

@@ -3,12 +3,8 @@ package com.lc.auth.gateway.security;
 import com.lc.auth.gateway.utils.WebFluxUtils;
 import com.lc.framework.redis.starter.utils.RedisHelper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.security.authentication.AnonymousAuthenticationToken;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -30,8 +26,11 @@ import static com.lc.framework.core.constants.RequestHeaderConstants.ACCESS_TOKE
 public class RedisServerSecurityContextRepository implements ServerSecurityContextRepository {
 
 
-    @Autowired
-    private RedisHelper redisHelper;
+    private final RedisHelper redisHelper;
+
+    public RedisServerSecurityContextRepository(RedisHelper redisHelper) {
+        this.redisHelper = redisHelper;
+    }
 
     @Override
     public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {

@@ -75,7 +75,7 @@
         <hutool.version>5.8.28</hutool.version>
 
         <!--代码扫描配置-->
-        <sonar.projectKey>lu-cheng_${artifactId}</sonar.projectKey>
+        <sonar.projectKey>lu-cheng_${project.artifactId}</sonar.projectKey>
     </properties>
 
     <dependencies>
