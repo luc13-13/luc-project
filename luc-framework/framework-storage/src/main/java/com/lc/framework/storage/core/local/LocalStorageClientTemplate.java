@@ -2,6 +2,7 @@ package com.lc.framework.storage.core.local;
 
 import com.lc.framework.storage.client.StorageClientTemplate;
 import com.lc.framework.storage.client.StorageResult;
+import com.lc.framework.storage.core.StorageConstants;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
@@ -34,5 +35,10 @@ public class LocalStorageClientTemplate implements StorageClientTemplate {
     @Override
     public StorageResult getFile(String bucketName, String key) {
         return null;
+    }
+
+    @Override
+    public int getOrder() {
+        return StorageConstants.StorageClientOrder.LOCAL.getOrder();
     }
 }

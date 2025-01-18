@@ -1,4 +1,4 @@
-package com.lc.framework.storage.core.oss;
+package com.lc.framework.storage.core.oss.properties;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -20,6 +20,16 @@ public class OssStorageProperties {
      * 是否开启oss存储，true是，false否。默认为false
      */
     private boolean enabled = false;
+
+    /**
+     * 是否开启异步。aws s3客户端支持同步和异步操作
+     */
+    private boolean useAsync = false;
+
+    /**
+     * 对象存储平台：qiniu、aliyun、txcloud
+     */
+    private String platform;
 
     private String accessKey;
 

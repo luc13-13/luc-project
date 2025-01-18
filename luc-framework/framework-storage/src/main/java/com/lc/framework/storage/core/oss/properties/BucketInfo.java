@@ -1,4 +1,4 @@
-package com.lc.framework.storage.core.oss;
+package com.lc.framework.storage.core.oss.properties;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -58,4 +58,9 @@ public class BucketInfo {
      * 如果是https://s3.区域id.qiniucs.com/bucket名称，则设置pathStyle=true
      */
     private boolean pathStyleEnabled = false;
+
+    /**
+     * 是否开启分段上传
+     */
+    private boolean multipartEnabled = false;
 }

@@ -8,7 +8,6 @@ import com.lc.system.domain.dto.UserDTO;
 import com.lc.system.mapper.SysUserMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -49,7 +48,13 @@ public class TestController {
 
     @PostMapping("upload")
     public WebResult<String> upload(@RequestParam("file") MultipartFile file) {
-        storageClientTemplate.upload(null, null, file);
+        storageClientTemplate.upload(file);
         return WebResult.success();
+    }
+
+    @GetMapping("getFile")
+    public WebResult<String> getFile(@RequestParam("filename") String filename) {
+        String url = storageClientTemplate.getFile(null, filename).accessUrl();
+        return WebResult.successData(url);
     }
 }

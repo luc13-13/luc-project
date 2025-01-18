@@ -1,7 +1,10 @@
 package com.lc.framework.storage.core.oss;
 
 import com.lc.framework.storage.client.StorageClientTemplate;
+import com.lc.framework.storage.client.StoragePlatformAdaptor;
 import com.lc.framework.storage.client.StorageResult;
+import com.lc.framework.storage.core.StorageConstants;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.Assert;
@@ -9,10 +12,13 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import software.amazon.awssdk.services.s3.model.*;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+import software.amazon.awssdk.services.s3.presigner.model.GetObjectPresignRequest;
+import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.time.Duration;
 import java.util.Map;
 
 /**
@@ -26,17 +32,20 @@ import java.util.Map;
 @Slf4j
 public class OssClientTemplate implements StorageClientTemplate, InitializingBean {
 
+    @Setter
+    private StoragePlatformAdaptor storagePlatformAdaptor;
+
     /**
      * 默认bucket，需要与bucketMap中的key匹配
      */
-    private final AmazonS3Wrapper defaultS3;
+    private final AmazonS3Wrapper<S3Client> defaultS3;
 
     /**
      * 每个bucket的s3客户端
      */
-    private final Map<String, AmazonS3Wrapper> s3Map;
+    private final Map<String, AmazonS3Wrapper<S3Client>> s3Map;
 
-    public OssClientTemplate(AmazonS3Wrapper defaultS3, Map<String, AmazonS3Wrapper> s3Map) {
+    public OssClientTemplate(AmazonS3Wrapper<S3Client> defaultS3, Map<String, AmazonS3Wrapper<S3Client>> s3Map) {
         this.defaultS3 = defaultS3;
         this.s3Map = s3Map;
     }
@@ -44,14 +53,13 @@ public class OssClientTemplate implements StorageClientTemplate, InitializingBea
 
     @Override
     public StorageResult upload(MultipartFile file) {
-        try {
+        try (S3Client s3Client = defaultS3.amazonS3()) {
             String filename = getDefaultFilename(file.getOriginalFilename());
-            AmazonS3Wrapper s3Wrapper = defaultS3;
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(s3Wrapper.bucketName())
+                    .bucket(defaultS3.bucketName())
                     .key(filename).build();
-            PutObjectResponse putObjectResponse = s3Wrapper.amazonS3().putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-            log.info("upload file: {}, into default bucket: {}, endpoint:{}",filename, s3Wrapper.bucketName(), s3Wrapper.endpoint());
+            PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+            log.info("upload file: {}, into default bucket: {}, endpoint:{}",filename, defaultS3.bucketName(), defaultS3.endpoint());
             return new OssStorageResult(null, null, putObjectResponse.versionId());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -60,14 +68,14 @@ public class OssClientTemplate implements StorageClientTemplate, InitializingBea
 
     @Override
     public StorageResult upload(String bucketName, String key, MultipartFile file) {
-        try {
-            AmazonS3Wrapper s3Wrapper = getAmazonS3Wrapper(bucketName);
+        AmazonS3Wrapper<S3Client> s3Wrapper = getAmazonS3Wrapper(bucketName);
+        try (S3Client s3Client = s3Wrapper.amazonS3()){
             String filename = getFilename(key, file.getOriginalFilename());
             log.info("upload file: {}, into bucket: {}, endpoint:{}",filename, s3Wrapper.bucketName(), s3Wrapper.endpoint());
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket(s3Wrapper.bucketName())
                     .key(filename).build();
-            PutObjectResponse putObjectResponse = s3Wrapper.amazonS3().putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+            PutObjectResponse putObjectResponse = s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
             return new OssStorageResult(null, null, putObjectResponse.versionId());
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -76,15 +84,28 @@ public class OssClientTemplate implements StorageClientTemplate, InitializingBea
 
     @Override
     public StorageResult upload(String bucketName, String key, InputStream inputStream) {
-        return null;
+        throw new UnsupportedOperationException("awssdk of S3Client not support upload with InputStream");
     }
 
     @Override
     public StorageResult getFile(String bucketName, String key) {
-        return null;
+        AmazonS3Wrapper<S3Client> s3Wrapper = getAmazonS3Wrapper(bucketName);
+        try (S3Presigner presigner = s3Wrapper.presigner()) {
+            GetObjectRequest request = GetObjectRequest.builder()
+                    .bucket(s3Wrapper.bucketName())
+                    .key(key)
+                    .build();
+            GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder().signatureDuration(Duration.ofMinutes(30))
+                    .getObjectRequest(request)
+                    .build();
+            PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(presignRequest);
+            return new OssStorageResult(bucketName, key, presignedRequest.url().toString());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    private AmazonS3Wrapper getAmazonS3Wrapper(String bucket) {
+    private AmazonS3Wrapper<S3Client> getAmazonS3Wrapper(String bucket) {
         return bucket == null || bucket.isEmpty() || !s3Map.containsKey(bucket) ? defaultS3 : s3Map.get(bucket);
     }
 
@@ -97,11 +118,8 @@ public class OssClientTemplate implements StorageClientTemplate, InitializingBea
         log.info("OssClientTemplate initiated successfully");
     }
 
-    /**
-     * 对AmazonS3进行封装，保存bucketNam
-     * @param endpoint bucket的访问端点
-     * @param bucketName
-     * @param amazonS3
-     */
-    public record AmazonS3Wrapper(String endpoint, String bucketName, S3Client amazonS3) {}
+    @Override
+    public int getOrder() {
+        return StorageConstants.StorageClientOrder.OSS_S3.getOrder();
+    }
 }

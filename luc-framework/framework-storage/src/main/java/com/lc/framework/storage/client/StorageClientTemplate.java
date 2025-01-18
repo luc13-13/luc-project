@@ -1,10 +1,14 @@
 package com.lc.framework.storage.client;
 
-import cn.hutool.core.io.FileUtil;
-import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.lang.UUID;
 import cn.hutool.core.util.StrUtil;
+import com.lc.framework.core.FileUtils;
+import com.lc.framework.core.constants.StringConstants;
+import org.springframework.core.Ordered;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.awscore.AwsClient;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -17,7 +21,7 @@ import java.time.format.DateTimeFormatter;
  * @author Lu Cheng
  * @date 2024/11/20 9:01
  */
-public interface StorageClientTemplate {
+public interface StorageClientTemplate extends Ordered {
 
     /**
      * 上传至默认bucket
@@ -69,6 +73,14 @@ public interface StorageClientTemplate {
      * @return 生成端存储端文件名
      */
     default String getDefaultFilename(String originalFilename) {
-        return LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE) + StrUtil.DOT + IdUtil.simpleUUID() + StrUtil.DOT + FileUtil.extName(originalFilename);
+        return LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE) + StrUtil.DOT + UUID.randomUUID().toString(true) + StringConstants.DOT + FileUtils.getExtName(originalFilename);
     }
+
+    /**
+     * 对AmazonS3进行封装，保存bucketNam
+     * @param endpoint bucket的访问端点
+     * @param bucketName
+     * @param amazonS3
+     */
+    record AmazonS3Wrapper<T extends AwsClient>(String endpoint, String bucketName, T amazonS3, S3Presigner presigner) {}
 }

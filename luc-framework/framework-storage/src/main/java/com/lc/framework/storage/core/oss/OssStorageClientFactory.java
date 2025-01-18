@@ -3,23 +3,37 @@ package com.lc.framework.storage.core.oss;
 import com.lc.framework.core.utils.ValidatorUtil;
 import com.lc.framework.storage.client.StorageClientFactory;
 import com.lc.framework.storage.client.StorageClientTemplate;
+import com.lc.framework.storage.client.StorageClientTemplate.AmazonS3Wrapper;
+import com.lc.framework.storage.core.adaptor.QiniuStoragePlatformAdaptor;
+import com.lc.framework.storage.core.oss.async.OssAsyncClientTemplate;
+import com.lc.framework.storage.core.oss.properties.BucketInfo;
+import com.lc.framework.storage.core.oss.properties.OssStorageProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.AwsCredentialsProvider;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.awscore.AwsClient;
 import software.amazon.awssdk.core.client.config.ClientOverrideConfiguration;
+import software.amazon.awssdk.core.client.config.SdkAdvancedAsyncClientOption;
 import software.amazon.awssdk.core.retry.RetryMode;
 import software.amazon.awssdk.http.SdkHttpClient;
 import software.amazon.awssdk.http.apache.ApacheHttpClient;
+import software.amazon.awssdk.http.async.SdkAsyncHttpClient;
+import software.amazon.awssdk.http.nio.netty.NettyNioAsyncHttpClient;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.multipart.MultipartConfiguration;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+
 import java.net.URI;
 import java.time.Duration;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.*;
+import java.util.function.Function;
 
 /**
  * <pre>
@@ -31,27 +45,53 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public class OssStorageClientFactory implements StorageClientFactory<OssStorageProperties> {
+
+    private final ExecutorService executorService;
+
+    public OssStorageClientFactory(ExecutorService executorService) {
+        this.executorService = executorService;
+    }
+
     @Override
     public StorageClientTemplate newInstance(OssStorageProperties properties) {
         // 转换为OssStorageProperties
         Assert.notNull(properties, "StorageProperties must not be bull");
         ValidatorUtil.validate(properties);
         // 构建AmazonS3
-        Map<String, OssClientTemplate.AmazonS3Wrapper> s3ClientMap = new ConcurrentHashMap<>();
-        for (BucketInfo bucketInfo : properties.getBuckets()) {
-            // 封装全局属性
-            mergeGlobalProperty(properties, bucketInfo);
-            // 校验bucket属性
-            ValidatorUtil.validate(bucketInfo);
-            // 创建AmazonS3
-            OssClientTemplate.AmazonS3Wrapper s3ClientWrapper = new OssClientTemplate.AmazonS3Wrapper(bucketInfo.getEndpoint(), bucketInfo.getName(), createS3Client(bucketInfo));
-            s3ClientMap.put(bucketInfo.getName(), s3ClientWrapper);
-            log.info("AmazonS3 client created, bucketName:{}, endpoint:{}", bucketInfo.getName(), bucketInfo.getEndpoint());
+        Map<String, StorageClientTemplate.AmazonS3Wrapper<S3Client>> s3ClientMap = getS3WrapperMap(properties, this::createS3Client);
+        // 设置默认Bucket
+        StorageClientTemplate.AmazonS3Wrapper<S3Client> defaultS3Client = s3ClientMap.get(properties.getDefaultBucketName());
+        log.info("StorageClientTemplate with S3Client created successfully");
+        OssClientTemplate ossClientTemplate = new OssClientTemplate(defaultS3Client, s3ClientMap);
+        if ("qiniu".equals(properties.getPlatform())) {
+            ossClientTemplate.setStoragePlatformAdaptor(new QiniuStoragePlatformAdaptor());
         }
-        OssClientTemplate.AmazonS3Wrapper defaultS3Client = s3ClientMap.get(properties.getDefaultBucketName());
-        return new OssClientTemplate(defaultS3Client, s3ClientMap);
+        return ossClientTemplate;
     }
 
+    public StorageClientTemplate newAsyncInstance(OssStorageProperties properties) {
+        log.info("当前线程池配置: {}", executorService);
+        // 转换为OssStorageProperties
+        Assert.notNull(properties, "StorageProperties must not be bull");
+        ValidatorUtil.validate(properties);
+        // 构建AmazonS3
+        Map<String, StorageClientTemplate.AmazonS3Wrapper<S3AsyncClient>> s3ClientMap = getS3WrapperMap(properties, this::createS3AsyncClient);
+        // 设置默认Bucket
+        StorageClientTemplate.AmazonS3Wrapper<S3AsyncClient> defaultS3Client = s3ClientMap.get(properties.getDefaultBucketName());
+        log.info("StorageClientTemplate with S3AsyncClient created successfully");
+        OssAsyncClientTemplate ossAsyncClientTemplate = new OssAsyncClientTemplate(defaultS3Client, s3ClientMap, executorService);
+        if ("qiniu".equals(properties.getPlatform())) {
+            ossAsyncClientTemplate.setStoragePlatformAdaptor(new QiniuStoragePlatformAdaptor());
+        }
+        return ossAsyncClientTemplate;
+    }
+
+    /**
+     * 将全局属性赋予BucketInfo中未设置的属性
+     *
+     * @param global     全局属性
+     * @param bucketInfo 当前bucket
+     */
     private void mergeGlobalProperty(OssStorageProperties global, BucketInfo bucketInfo) {
         // ak
         if (!StringUtils.hasText(bucketInfo.getAccessKey())) {
@@ -74,34 +114,149 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
         }
     }
 
-    private S3Client createS3Client(BucketInfo bucketInfo) {
-        // 1、S3客户端配置
-        ClientOverrideConfiguration clientConfiguration = ClientOverrideConfiguration.builder()
-                .apiCallTimeout(Duration.ofSeconds(60))
-                .apiCallAttemptTimeout(Duration.ofSeconds(60))
-                .retryStrategy(RetryMode.STANDARD)
-                .build();
+    private <T extends AwsClient> Map<String, StorageClientTemplate.AmazonS3Wrapper<T>> getS3WrapperMap(OssStorageProperties properties, Function<BucketInfo, StorageClientTemplate.AmazonS3Wrapper<T>> wrapperCreator) {
+        Map<String, StorageClientTemplate.AmazonS3Wrapper<T>> s3ClientMap = new ConcurrentHashMap<>();
+        for (BucketInfo bucketInfo : properties.getBuckets()) {
+            // 封装全局属性
+            mergeGlobalProperty(properties, bucketInfo);
+            // 校验bucket属性
+            ValidatorUtil.validate(bucketInfo);
+            // 创建AmazonS3客户端包装类
+            StorageClientTemplate.AmazonS3Wrapper<T> s3ClientWrapper = wrapperCreator.apply(bucketInfo);
+            s3ClientMap.put(bucketInfo.getName(), s3ClientWrapper);
+            log.info("AmazonS3 client created, bucketName:{}, endpoint:{}", bucketInfo.getName(), bucketInfo.getEndpoint());
+        }
+        return s3ClientMap;
+    }
 
-        // 2、http客户端配置
+    private AmazonS3Wrapper<S3Client> createS3Client(BucketInfo bucketInfo) {
+        // http客户端配置
         SdkHttpClient httpClient = ApacheHttpClient.builder()
                 .maxConnections(20)
                 .connectionTimeout(Duration.ofMinutes(2))
-                .connectionAcquisitionTimeout(Duration.ofMinutes(1))
-                .build();
+                .connectionAcquisitionTimeout(Duration.ofMinutes(1)).build();
 
-        // 3、凭证配置
-        AwsCredentialsProvider credentialsProvider = StaticCredentialsProvider.create(AwsBasicCredentials.create(bucketInfo.getAccessKey(), bucketInfo.getSecretKey()));
-
-        // 4、S3协议配置
-        S3Configuration s3Configuration = S3Configuration.builder().pathStyleAccessEnabled(bucketInfo.isPathStyleEnabled()).build();
-
-        return S3Client.builder()
-                .region(Region.of(bucketInfo.getRegion()))
-                .overrideConfiguration(clientConfiguration)
-                .endpointOverride(URI.create(bucketInfo.getEndpoint()))
-                .credentialsProvider(credentialsProvider)
+        // 创建S3客户端
+        S3Client s3Client = S3Client.builder()
+                // 区域
+                .region(getRegion(bucketInfo))
+                // 访问端点
+                .endpointOverride(getEndpoint(bucketInfo))
+                // 客户端
                 .httpClient(httpClient)
-                .serviceConfiguration(s3Configuration)
-                .build();
+                // 重写客户端属性
+                .overrideConfiguration(getClientOverrideConfiguration(bucketInfo))
+                // 凭证
+                .credentialsProvider(getCredentialsProvider(bucketInfo))
+                // S3协议配置
+                .serviceConfiguration(getS3Configuration(bucketInfo)).build();
+
+        // 预签名，用于生成access url
+        S3Presigner presigner = createPresigner(bucketInfo, s3Client);
+        return new AmazonS3Wrapper<>(bucketInfo.getEndpoint(), bucketInfo.getName(), s3Client, presigner);
+    }
+
+    private AmazonS3Wrapper<S3AsyncClient> createS3AsyncClient(BucketInfo bucketInfo) {
+
+        // http客户端配置
+        SdkAsyncHttpClient httpClient = NettyNioAsyncHttpClient.builder()
+                .maxConcurrency(20)
+                .connectionTimeout(Duration.ofMinutes(10))
+                .connectionAcquisitionTimeout(Duration.ofMinutes(10)).build();
+
+        // 分片上传配置
+        MultipartConfiguration multipartConfiguration = MultipartConfiguration.builder()
+                .minimumPartSizeInBytes(1024L * 1024 * 10)
+                .apiCallBufferSizeInBytes(1024L * 1024 * 256)
+                .thresholdInBytes(1024L * 1024 * 16).build();
+        // 创建S3客户端
+        S3AsyncClient s3AsyncClient = S3AsyncClient.builder()
+                // 区域
+                .region(getRegion(bucketInfo))
+                // 访问端点
+                .endpointOverride(getEndpoint(bucketInfo))
+                // 客户端
+                .httpClient(httpClient)
+                // 重写客户端属性
+                .overrideConfiguration(getClientOverrideConfiguration(bucketInfo))
+                // 凭证
+                .credentialsProvider(getCredentialsProvider(bucketInfo))
+                // S3协议配置
+                .serviceConfiguration(getS3Configuration(bucketInfo))
+                .multipartEnabled(bucketInfo.isMultipartEnabled())
+                .multipartConfiguration(multipartConfiguration)
+                .asyncConfiguration(ac -> ac.advancedOption(SdkAdvancedAsyncClientOption.FUTURE_COMPLETION_EXECUTOR, executorService)).build();
+        // 预签名
+        S3Presigner presigner = createPresigner(bucketInfo, null);
+        return new AmazonS3Wrapper<>(bucketInfo.getEndpoint(), bucketInfo.getName(),s3AsyncClient, presigner);
+    }
+
+    /**
+     * 获取区域
+     * @param bucketInfo 存储桶信息
+     * @return 区域
+     */
+    private Region getRegion(BucketInfo bucketInfo) {
+        return Region.of(bucketInfo.getRegion());
+    }
+
+    /**
+     * 获取endpoint，由对象存储厂商提供
+     * @param bucketInfo 存储桶信息
+     * @return endpoint
+     */
+    private URI getEndpoint(BucketInfo bucketInfo) {
+        return URI.create(bucketInfo.getEndpoint());
+    }
+
+    /**
+     * http客户端配置
+     * @param bucketInfo 存储桶信息
+     * @return 配置
+     */
+    private ClientOverrideConfiguration getClientOverrideConfiguration(BucketInfo bucketInfo) {
+        return ClientOverrideConfiguration.builder()
+                .apiCallTimeout(Duration.ofSeconds(300))
+                .apiCallAttemptTimeout(Duration.ofSeconds(300))
+                .retryStrategy(RetryMode.STANDARD).build();
+    }
+
+    /**
+     * 创建静态凭证
+     * @param bucketInfo 存储桶信息
+     * @return 静态凭证
+     */
+    private AwsCredentialsProvider getCredentialsProvider(BucketInfo bucketInfo) {
+        return StaticCredentialsProvider.create(AwsBasicCredentials.create(bucketInfo.getAccessKey(), bucketInfo.getSecretKey()));
+    }
+
+    /**
+     * S3客户端配置
+     * @param bucketInfo 存储桶信息
+     * @return S3客户端配置
+     */
+    private S3Configuration getS3Configuration(BucketInfo bucketInfo) {
+        return S3Configuration.builder().pathStyleAccessEnabled(bucketInfo.isPathStyleEnabled()).build();
+    }
+
+    /**
+     * 创建预签名
+     * @param bucketInfo 存储桶信息
+     * @param s3Client s3客户端
+     * @return 预签名
+     */
+    private S3Presigner createPresigner(BucketInfo bucketInfo, S3Client s3Client) {
+
+        return S3Presigner.builder()
+                // 区域
+                .region(getRegion(bucketInfo))
+                // 访问端点
+                .endpointOverride(getEndpoint(bucketInfo))
+                // 客户端
+                .s3Client(s3Client)
+                // 凭证
+                .credentialsProvider(getCredentialsProvider(bucketInfo))
+                // S3协议配置
+                .serviceConfiguration(getS3Configuration(bucketInfo)).build();
     }
 }

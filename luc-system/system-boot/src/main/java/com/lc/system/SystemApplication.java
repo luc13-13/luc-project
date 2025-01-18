@@ -9,7 +9,7 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 /**
  * @author lucheng
  */
-@SpringBootApplication(exclude = DataSourceAutoConfiguration.class)
+@SpringBootApplication(exclude = DataSourceAutoConfiguration.class, scanBasePackages = "com.lc.*")
 @EnableDynamicDataSource
 @EnableAspectJAutoProxy(exposeProxy = true)
 public class SystemApplication {

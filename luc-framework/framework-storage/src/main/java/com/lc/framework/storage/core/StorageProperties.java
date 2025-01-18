@@ -1,6 +1,6 @@
 package com.lc.framework.storage.core;
 
-import com.lc.framework.storage.core.oss.OssStorageProperties;
+import com.lc.framework.storage.core.oss.properties.OssStorageProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import static com.lc.framework.storage.core.StorageProperties.PREFIX;

@@ -119,6 +119,7 @@ file:
       default-bucket-name: mini-program-cookbook
       # 默认domain
       default-domain-of-bucket: qiniucs.com
+      use-async: true
       buckets:
         - name: mini-program-cookbook
           region: cn-south-1
