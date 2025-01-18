@@ -1,7 +1,5 @@
 package com.lc.framework.storage.client;
 
-import cn.hutool.core.lang.UUID;
-import cn.hutool.core.util.StrUtil;
 import com.lc.framework.core.FileUtils;
 import com.lc.framework.core.constants.StringConstants;
 import org.springframework.core.Ordered;
@@ -13,6 +11,7 @@ import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.UUID;
 
 /**
  * <pre>
@@ -73,7 +72,7 @@ public interface StorageClientTemplate extends Ordered {
      * @return 生成端存储端文件名
      */
     default String getDefaultFilename(String originalFilename) {
-        return LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE) + StrUtil.DOT + UUID.randomUUID().toString(true) + StringConstants.DOT + FileUtils.getExtName(originalFilename);
+        return LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE) + StringConstants.DOT + UUID.randomUUID() + StringConstants.DOT + FileUtils.getExtName(originalFilename);
     }
 
     /**
