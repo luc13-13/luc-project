@@ -51,6 +51,9 @@ spring:
           max-active: 2000
           max-wait: 10000
           enabled: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
 
 # mybatis-plus配置
 mybatis-plus:

@@ -1,17 +1,12 @@
 package com.lc.system.web;
 
-import com.lc.framework.core.mvc.WebResult;
 import com.lc.framework.datascope.entity.DataScopeEntity;
-import com.lc.framework.storage.client.StorageClientTemplate;
-import com.lc.framework.storage.core.StorageResult;
 import com.lc.system.domain.bo.OAuth2Profile;
 import com.lc.system.domain.dto.UserDTO;
 import com.lc.system.mapper.SysUserMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.Arrays;
 
 /**
@@ -25,7 +20,6 @@ public class TestController {
 
     private SysUserMapper sysUserMapper;
 
-    private StorageClientTemplate storageClientTemplate;
 
     @GetMapping("/hello")
     public String test1(){
@@ -45,17 +39,5 @@ public class TestController {
     @GetMapping("")
     public String index(){
         return "welcome index";
-    }
-
-    @PostMapping("upload")
-    public WebResult<String> upload(@RequestParam("file") MultipartFile file) {
-        StorageResult result = storageClientTemplate.upload(null, "images", file);
-        return WebResult.successData(result.accessUrl());
-    }
-
-    @GetMapping("getFile")
-    public WebResult<String> getFile(@RequestParam("filename") String filename) {
-        String url = storageClientTemplate.getFile(null, filename).accessUrl();
-        return WebResult.successData(url);
     }
 }
