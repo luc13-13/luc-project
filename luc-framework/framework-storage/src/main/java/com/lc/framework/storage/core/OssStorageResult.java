@@ -1,6 +1,4 @@
-package com.lc.framework.storage.core.oss;
-
-import com.lc.framework.storage.client.StorageResult;
+package com.lc.framework.storage.core;
 
 /**
  * <pre>

@@ -26,6 +26,9 @@ public interface StringConstants {
 
     String SLASH = "/";
 
+    String HTTPS = "https";
+
+    String HTTP = "http";
     /**
      * ============ session 相关常量 START ============
      */

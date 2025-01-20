@@ -1,13 +1,15 @@
-package com.lc.framework.storage.core.oss;
+package com.lc.framework.storage.oss;
 
 import com.lc.framework.core.utils.ValidatorUtil;
+import com.lc.framework.storage.adaptor.StoragePlatformAdaptor;
 import com.lc.framework.storage.client.StorageClientFactory;
 import com.lc.framework.storage.client.StorageClientTemplate;
 import com.lc.framework.storage.client.StorageClientTemplate.AmazonS3Wrapper;
-import com.lc.framework.storage.core.adaptor.QiniuStoragePlatformAdaptor;
-import com.lc.framework.storage.core.oss.async.OssAsyncClientTemplate;
-import com.lc.framework.storage.core.oss.properties.BucketInfo;
-import com.lc.framework.storage.core.oss.properties.OssStorageProperties;
+import com.lc.framework.storage.adaptor.QiniuStoragePlatformAdaptor;
+import com.lc.framework.storage.oss.async.OssAsyncClientTemplate;
+import com.lc.framework.storage.core.BucketInfo;
+import com.lc.framework.storage.core.OssStorageProperties;
+import com.lc.framework.storage.oss.sync.OssClientTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
@@ -58,15 +60,14 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
         Assert.notNull(properties, "StorageProperties must not be bull");
         ValidatorUtil.validate(properties);
         // 构建AmazonS3
-        Map<String, StorageClientTemplate.AmazonS3Wrapper<S3Client>> s3ClientMap = getS3WrapperMap(properties, this::createS3Client);
+        Map<String, AmazonS3Wrapper<S3Client>> s3ClientMap = getS3WrapperMap(properties, this::createS3Client);
         // 设置默认Bucket
-        StorageClientTemplate.AmazonS3Wrapper<S3Client> defaultS3Client = s3ClientMap.get(properties.getDefaultBucketName());
+        AmazonS3Wrapper<S3Client> defaultS3Client = s3ClientMap.get(properties.getDefaultBucketName());
         log.info("StorageClientTemplate with S3Client created successfully");
-        OssClientTemplate ossClientTemplate = new OssClientTemplate(defaultS3Client, s3ClientMap);
-        if ("qiniu".equals(properties.getPlatform())) {
-            ossClientTemplate.setStoragePlatformAdaptor(new QiniuStoragePlatformAdaptor());
-        }
-        return ossClientTemplate;
+        OssClientTemplate clientTemplate = new OssClientTemplate(this.newAdaptor(properties.getPlatform()), defaultS3Client);
+        // 放入所有bucket
+        clientTemplate.putAllS3Wrappers(s3ClientMap.values());
+        return clientTemplate;
     }
 
     public StorageClientTemplate newAsyncInstance(OssStorageProperties properties) {
@@ -75,15 +76,14 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
         Assert.notNull(properties, "StorageProperties must not be bull");
         ValidatorUtil.validate(properties);
         // 构建AmazonS3
-        Map<String, StorageClientTemplate.AmazonS3Wrapper<S3AsyncClient>> s3ClientMap = getS3WrapperMap(properties, this::createS3AsyncClient);
+        Map<String, AmazonS3Wrapper<S3AsyncClient>> s3ClientMap = getS3WrapperMap(properties, this::createS3AsyncClient);
         // 设置默认Bucket
-        StorageClientTemplate.AmazonS3Wrapper<S3AsyncClient> defaultS3Client = s3ClientMap.get(properties.getDefaultBucketName());
+        AmazonS3Wrapper<S3AsyncClient> defaultS3Client = s3ClientMap.get(properties.getDefaultBucketName());
         log.info("StorageClientTemplate with S3AsyncClient created successfully");
-        OssAsyncClientTemplate ossAsyncClientTemplate = new OssAsyncClientTemplate(defaultS3Client, s3ClientMap, executorService);
-        if ("qiniu".equals(properties.getPlatform())) {
-            ossAsyncClientTemplate.setStoragePlatformAdaptor(new QiniuStoragePlatformAdaptor());
-        }
+        OssAsyncClientTemplate ossAsyncClientTemplate = new OssAsyncClientTemplate(this.newAdaptor(properties.getPlatform()), defaultS3Client, executorService);
+        ossAsyncClientTemplate.putAllS3Wrappers(s3ClientMap.values());
         return ossAsyncClientTemplate;
+
     }
 
     /**
@@ -93,6 +93,14 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
      * @param bucketInfo 当前bucket
      */
     private void mergeGlobalProperty(OssStorageProperties global, BucketInfo bucketInfo) {
+        // 存储平台
+        if (!StringUtils.hasText(bucketInfo.getPlatform())) {
+            bucketInfo.setPlatform(global.getPlatform());
+        }
+        // 存储平台cdn
+        if (!StringUtils.hasText(bucketInfo.getCdn())) {
+            bucketInfo.setCdn(global.getCdn());
+        }
         // ak
         if (!StringUtils.hasText(bucketInfo.getAccessKey())) {
             bucketInfo.setAccessKey(global.getAccessKey());
@@ -129,6 +137,18 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
         return s3ClientMap;
     }
 
+    /**
+     * TODO 放在工厂方法中，根据属性创建适配器
+     * @param platform 存储平台
+     * @return 适配器
+     */
+    private StoragePlatformAdaptor newAdaptor(String platform) {
+        if ("qiniu".equals(platform)) {
+            return new QiniuStoragePlatformAdaptor();
+        }
+        return null;
+    }
+
     private AmazonS3Wrapper<S3Client> createS3Client(BucketInfo bucketInfo) {
         // http客户端配置
         SdkHttpClient httpClient = ApacheHttpClient.builder()
@@ -145,7 +165,7 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
                 // 客户端
                 .httpClient(httpClient)
                 // 重写客户端属性
-                .overrideConfiguration(getClientOverrideConfiguration(bucketInfo))
+                .overrideConfiguration(getClientOverrideConfiguration())
                 // 凭证
                 .credentialsProvider(getCredentialsProvider(bucketInfo))
                 // S3协议配置
@@ -153,7 +173,7 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
 
         // 预签名，用于生成access url
         S3Presigner presigner = createPresigner(bucketInfo, s3Client);
-        return new AmazonS3Wrapper<>(bucketInfo.getEndpoint(), bucketInfo.getName(), s3Client, presigner);
+        return new AmazonS3Wrapper<>(bucketInfo, s3Client, presigner);
     }
 
     private AmazonS3Wrapper<S3AsyncClient> createS3AsyncClient(BucketInfo bucketInfo) {
@@ -178,7 +198,7 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
                 // 客户端
                 .httpClient(httpClient)
                 // 重写客户端属性
-                .overrideConfiguration(getClientOverrideConfiguration(bucketInfo))
+                .overrideConfiguration(getClientOverrideConfiguration())
                 // 凭证
                 .credentialsProvider(getCredentialsProvider(bucketInfo))
                 // S3协议配置
@@ -188,7 +208,7 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
                 .asyncConfiguration(ac -> ac.advancedOption(SdkAdvancedAsyncClientOption.FUTURE_COMPLETION_EXECUTOR, executorService)).build();
         // 预签名
         S3Presigner presigner = createPresigner(bucketInfo, null);
-        return new AmazonS3Wrapper<>(bucketInfo.getEndpoint(), bucketInfo.getName(),s3AsyncClient, presigner);
+        return new AmazonS3Wrapper<>(bucketInfo,s3AsyncClient, presigner);
     }
 
     /**
@@ -211,10 +231,9 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
 
     /**
      * http客户端配置
-     * @param bucketInfo 存储桶信息
      * @return 配置
      */
-    private ClientOverrideConfiguration getClientOverrideConfiguration(BucketInfo bucketInfo) {
+    private ClientOverrideConfiguration getClientOverrideConfiguration() {
         return ClientOverrideConfiguration.builder()
                 .apiCallTimeout(Duration.ofSeconds(300))
                 .apiCallAttemptTimeout(Duration.ofSeconds(300))

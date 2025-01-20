@@ -1,6 +1,11 @@
 package com.lc.framework.storage.core;
 
+import com.lc.framework.storage.client.StorageClientTemplate;
+import com.lc.framework.storage.local.LocalStorageClientTemplate;
+import com.lc.framework.storage.oss.sync.OssClientTemplate;
+import com.lc.framework.storage.oss.async.OssAsyncClientTemplate;
 import lombok.Getter;
+import org.springframework.core.Ordered;
 
 /**
  * <pre>
@@ -35,12 +40,25 @@ public class StorageConstants {
     @Getter
     public enum StorageClientOrder {
 
-        OSS_S3(1),
-        OSS_ASYNC(2),
-        LOCAL(3);
+        OSS_S3(OssClientTemplate.class, 1),
+        OSS_ASYNC(OssAsyncClientTemplate.class, 2),
+        LOCAL(LocalStorageClientTemplate.class, 3);
 
+        public final Class<? extends StorageClientTemplate> clazz;
         public final Integer order;
 
-        StorageClientOrder(Integer order) { this.order = order; }
+        StorageClientOrder(Class<? extends StorageClientTemplate> clazz, Integer order) {
+            this.clazz = clazz;
+            this.order = order;
+        }
+
+        public static Integer getOrder(Class<? extends StorageClientTemplate> clazz ) {
+            for (StorageClientOrder item : StorageClientOrder.values()) {
+                if (item.clazz.equals(clazz)) {
+                    return item.getOrder();
+                }
+            }
+            return Ordered.LOWEST_PRECEDENCE;
+        }
     }
 }

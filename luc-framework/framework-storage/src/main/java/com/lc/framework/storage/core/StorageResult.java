@@ -1,4 +1,4 @@
-package com.lc.framework.storage.client;
+package com.lc.framework.storage.core;
 
 /**
  * <pre>

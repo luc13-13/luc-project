@@ -1,6 +1,6 @@
-package com.lc.framework.storage.core.oss.async;
+package com.lc.framework.storage.oss.async;
 
-import com.lc.framework.storage.client.StorageResult;
+import com.lc.framework.storage.core.StorageResult;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 

@@ -20,7 +20,7 @@ public class FileUtils {
 
     public static String getExtName(String filename) {
         if (filename == null) {
-            return null;
+            return StringConstants.EMPTY_STRING;
         }
         final int index = filename.lastIndexOf(StringConstants.DOT);
         if (index == -1) {

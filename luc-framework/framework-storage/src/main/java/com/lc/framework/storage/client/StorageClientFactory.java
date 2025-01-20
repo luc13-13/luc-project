@@ -1,7 +1,5 @@
 package com.lc.framework.storage.client;
 
-import com.lc.framework.storage.core.StorageProperties;
-
 /**
  * <pre>
  *     属性转换器，将StorageProperties转换为目标属性

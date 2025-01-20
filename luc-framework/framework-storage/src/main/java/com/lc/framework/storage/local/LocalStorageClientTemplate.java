@@ -1,7 +1,7 @@
-package com.lc.framework.storage.core.local;
+package com.lc.framework.storage.local;
 
 import com.lc.framework.storage.client.StorageClientTemplate;
-import com.lc.framework.storage.client.StorageResult;
+import com.lc.framework.storage.core.StorageResult;
 import com.lc.framework.storage.core.StorageConstants;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,12 +23,12 @@ public class LocalStorageClientTemplate implements StorageClientTemplate {
     }
 
     @Override
-    public StorageResult upload(String bucketName, String key, MultipartFile file) {
+    public StorageResult upload(String bucketName, String prefix, MultipartFile file) {
         return null;
     }
 
     @Override
-    public StorageResult upload(String bucketName, String key, InputStream inputStream) {
+    public StorageResult upload(String bucketName, String key, InputStream inputStream, Long size) {
         return null;
     }
 

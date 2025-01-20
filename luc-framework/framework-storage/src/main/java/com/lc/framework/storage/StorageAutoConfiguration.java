@@ -1,7 +1,7 @@
 package com.lc.framework.storage;
 
-import com.lc.framework.storage.core.local.LocalStorageAutoConfiguration;
-import com.lc.framework.storage.core.oss.OssStorageAutoConfiguration;
+import com.lc.framework.storage.local.LocalStorageAutoConfiguration;
+import com.lc.framework.storage.oss.OssStorageAutoConfiguration;
 import com.lc.framework.storage.core.StorageProperties;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;

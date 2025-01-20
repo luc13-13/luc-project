@@ -111,15 +111,18 @@ file:
     enabled: true
     oss:
       enabled: true
+      # 存储平台
+      platform: qiniu
       # ak
-      access-key: OdhEzyfQYOfuiy2Z2tPLCbIRM94pJafqO4B_X3Fb
+      access-key: lUIjHxV60do6tsmas9ZW2FRDGh_Vs0o9YINgYbed
       # sk
-      secret-key: 3BUT6Iq8YLyfL13fRd0vHxR6_Z9L1EaxPvv_fZDk
+      secret-key: X9jo5EcdPYgZ0os8Z-h2DFf0gMihI773_6hP3whz
       # 默认bucket名
       default-bucket-name: mini-program-cookbook
       # 默认domain
       default-domain-of-bucket: qiniucs.com
       use-async: true
+      cdn: storage.cloud.ffluc.online
       buckets:
         - name: mini-program-cookbook
           region: cn-south-1

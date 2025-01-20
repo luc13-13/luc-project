@@ -1,4 +1,4 @@
-package com.lc.framework.storage.core.oss;
+package com.lc.framework.storage.oss;
 
 import com.lc.framework.storage.client.StorageClientTemplate;
 import com.lc.framework.storage.core.StorageProperties;

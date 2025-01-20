@@ -1,4 +1,4 @@
-package com.lc.framework.storage.core.oss.properties;
+package com.lc.framework.storage.core;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
@@ -31,8 +31,19 @@ public class OssStorageProperties {
      */
     private String platform;
 
+    /**
+     * 对象存储平台配置的加速域名cdn
+     */
+    private String cdn;
+
+    /**
+     * ak
+     */
     private String accessKey;
 
+    /**
+     * sk
+     */
     private String secretKey;
 
     /**
