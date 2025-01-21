@@ -1,6 +1,7 @@
 package com.lc.framework.storage.oss.sync;
 
 import com.lc.framework.storage.adaptor.StoragePlatformAdaptor;
+import com.lc.framework.storage.core.BucketInfo;
 import com.lc.framework.storage.core.StorageResult;
 import com.lc.framework.storage.oss.AbstractOssClientTemplate;
 import com.lc.framework.storage.core.OssStorageResult;
@@ -33,7 +34,7 @@ public class OssClientTemplate extends AbstractOssClientTemplate<S3Client> {
     }
 
     @Override
-    protected StorageResult doGetFile(String bucketName, String key, String url) {
-        return new OssStorageResult(bucketName, key, url);
+    protected StorageResult doGetFile(BucketInfo bucketInfo, String key, String url) {
+        return new OssStorageResult(bucketInfo, key, url);
     }
 }

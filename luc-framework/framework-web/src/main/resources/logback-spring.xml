@@ -3,7 +3,7 @@
     <!-- 引入spirng boot默认的logback配置文件 -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
     <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
-    <property name="LOG_HOME" value="./${APP_NAME}/logs"/>
+    <property name="LOG_HOME" value="logs"/>
 <!--    <springProperty scope="context" name="log.file.path" source="logging.file.path"/>-->
     <appender name="consoleApp" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -26,7 +26,7 @@
         <!-- 滚动策略 按日期，按大小记录-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 路径 -->
-            <fileNamePattern>${LOG_HOME}/info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}_info.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
 <!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
 <!--                <maxFileSize>10MB</maxFileSize>-->
 <!--            </timeBasedFileNamingAndTriggeringPolicy>-->
@@ -50,7 +50,7 @@
         <!-- 设置滚动策略 按日期，按大小记录-->
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <!-- 路径 -->
-            <fileNamePattern>${LOG_HOME}/error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>${LOG_HOME}/${APP_NAME}_error.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
 <!--            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">-->
 <!--                <maxFileSize>10MB</maxFileSize>-->

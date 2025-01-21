@@ -19,11 +19,13 @@ import com.lc.framework.storage.serializer.StorageResultSerializer;
  */
 @JsonSerialize(using = StorageResultSerializer.class)
 public interface StorageResult {
+
+
     /**
      * 获取bucket名称
      * @return bucket名称
      */
-    String bucketName();
+    BucketInfo bucketInfo();
 
     /**
      * 获取文件名称

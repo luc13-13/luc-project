@@ -25,7 +25,7 @@ public class StorageResultSerializer extends JsonSerializer<StorageResult> {
         gen.writeStartObject();
         gen.writeStringField(accessUrl, value != null ? value.accessUrl() : StringConstants.EMPTY_STRING);
         gen.writeStringField(filename, value != null ? value.filename() : StringConstants.EMPTY_STRING);
-        gen.writeStringField(bucket, value != null ? value.bucketName() : StringConstants.EMPTY_STRING);
+        gen.writeStringField(bucket, value != null ? value.bucketInfo().getName() : StringConstants.EMPTY_STRING);
         gen.writeEndObject();
     }
 }

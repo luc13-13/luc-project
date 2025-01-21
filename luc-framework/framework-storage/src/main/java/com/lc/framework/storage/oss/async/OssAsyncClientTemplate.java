@@ -1,6 +1,7 @@
 package com.lc.framework.storage.oss.async;
 
 import com.lc.framework.storage.adaptor.StoragePlatformAdaptor;
+import com.lc.framework.storage.core.BucketInfo;
 import com.lc.framework.storage.core.StorageResult;
 import com.lc.framework.storage.core.StorageConstants;
 import com.lc.framework.storage.oss.AbstractOssClientTemplate;
@@ -36,7 +37,7 @@ public class OssAsyncClientTemplate extends AbstractOssClientTemplate<S3AsyncCli
         // 获取异步返回值
         CompletableFuture<PutObjectResponse> response = s3Client.putObject(request, AsyncRequestBody.fromInputStream(inputStream, size, executor));
         // 构建返回对象
-        return new OssAsyncStorageResult(request.bucket(), request.key(),
+        return new OssAsyncStorageResult(getS3Map().get(request.bucket()).bucketInfo(), request.key(),
                 response.thenApply(it -> getFile(request.bucket(), request.key()).accessUrl())
                         .exceptionally(throwable -> {
                             log.error("upload error", throwable);
@@ -46,9 +47,9 @@ public class OssAsyncClientTemplate extends AbstractOssClientTemplate<S3AsyncCli
     }
 
     @Override
-    protected StorageResult doGetFile(String bucketName, String key, String url) {
+    protected StorageResult doGetFile(BucketInfo bucketInfo, String key, String url) {
         // 获取异步返回值
-        return new OssAsyncStorageResult(bucketName, key,
+        return new OssAsyncStorageResult(bucketInfo, key,
                 CompletableFuture
                         .supplyAsync(() -> url, executor).exceptionally(throwable -> {
                             log.error("get file error", throwable);

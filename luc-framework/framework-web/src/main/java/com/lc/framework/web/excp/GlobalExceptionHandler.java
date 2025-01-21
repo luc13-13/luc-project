@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Slf4j
 @ControllerAdvice
+@ResponseBody
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BizException.class)
-    @ResponseBody
     public <T> WebResult<T> handlerException(BizException e) {
         log.error("BizException:{}", e.getMessage(), e);
         return WebResult.error(e.getCode(), e.getMessage());

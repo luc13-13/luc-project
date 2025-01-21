@@ -1,5 +1,6 @@
 package com.lc.framework.storage.oss.async;
 
+import com.lc.framework.storage.core.BucketInfo;
 import com.lc.framework.storage.core.StorageResult;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -13,21 +14,21 @@ import java.util.concurrent.ExecutionException;
  */
 public class OssAsyncStorageResult implements StorageResult {
 
-    private final String bucketName;
+    private final BucketInfo bucketInfo;
 
     private final String filename;
 
     private final CompletableFuture<String> asyncAccessUrl;
 
-    public OssAsyncStorageResult(String bucketName, String filename, CompletableFuture<String> asyncAccessUrl) {
-        this.bucketName = bucketName;
+    public OssAsyncStorageResult(BucketInfo bucketInfo, String filename, CompletableFuture<String> asyncAccessUrl) {
+        this.bucketInfo = bucketInfo;
         this.filename = filename;
         this.asyncAccessUrl = asyncAccessUrl;
     }
 
     @Override
-    public String bucketName() {
-        return bucketName;
+    public BucketInfo bucketInfo() {
+        return bucketInfo;
     }
 
     @Override

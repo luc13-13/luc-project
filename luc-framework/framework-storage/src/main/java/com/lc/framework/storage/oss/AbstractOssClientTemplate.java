@@ -2,6 +2,7 @@ package com.lc.framework.storage.oss;
 
 import com.lc.framework.storage.client.StorageClientTemplate;
 import com.lc.framework.storage.adaptor.StoragePlatformAdaptor;
+import com.lc.framework.storage.core.BucketInfo;
 import com.lc.framework.storage.core.StorageResult;
 import com.lc.framework.storage.core.StorageConstants;
 import com.lc.framework.storage.oss.sync.OssClientTemplate;
@@ -102,10 +103,12 @@ public abstract class AbstractOssClientTemplate<T extends AwsClient> implements 
 
     @Override
     public StorageResult getFile(String bucketName, String key) {
+        Assert.hasText(bucketName, "bucketName must not be empty");
+        Assert.hasText(key, "key must not be empty");
         AmazonS3Wrapper<T> s3Wrapper = getAmazonS3Wrapper(bucketName);
         if (Objects.nonNull(storagePlatformAdaptor)) {
             log.info("从适配器获取外链：{}", storagePlatformAdaptor.getClass().getSimpleName());
-            return doGetFile(bucketName, key, storagePlatformAdaptor.getAccessUrl(s3Wrapper.bucketInfo(), key));
+            return doGetFile(s3Wrapper.bucketInfo(), key, storagePlatformAdaptor.getAccessUrl(s3Wrapper.bucketInfo(), key));
         }
         try (S3Presigner presigner = s3Wrapper.presigner()) {
             GetObjectRequest request = GetObjectRequest.builder()
@@ -116,13 +119,13 @@ public abstract class AbstractOssClientTemplate<T extends AwsClient> implements 
                     .getObjectRequest(request)
                     .build();
             PresignedGetObjectRequest presignedRequest = presigner.presignGetObject(presignRequest);
-            return doGetFile(bucketName, key, presignedRequest.url().toString());
+            return doGetFile(s3Wrapper.bucketInfo(), key, presignedRequest.url().toString());
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    protected abstract StorageResult doGetFile(String bucketName, String key, String url);
+    protected abstract StorageResult doGetFile(BucketInfo bucketName, String key, String url);
 
     @Override
     public int getOrder() {
