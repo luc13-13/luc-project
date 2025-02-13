@@ -4,8 +4,6 @@ package com.lc.auth.server.security.config;
 import com.lc.auth.server.security.customizer.AuthenticationProviderCustomizer;
 import com.lc.auth.server.security.customizer.OAuth2TokenEndpointCustomizer;
 import com.lc.auth.server.security.extension.LucDaoAuthenticationProvider;
-import com.lc.auth.server.security.extension.password.OAuth2PasswordAuthenticationConverter;
-import com.lc.auth.server.security.handler.ClientAuthenticationSuccessHandler;
 import com.lc.auth.server.security.handler.LoginTargetAuthenticationEntryPoint;
 import com.lc.auth.server.security.handler.OAuth2TokenSuccessHandler;
 import com.lc.auth.server.security.repository.RedisSecurityContextRepository;
