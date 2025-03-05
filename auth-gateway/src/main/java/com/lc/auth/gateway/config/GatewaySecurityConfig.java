@@ -66,7 +66,6 @@ public class GatewaySecurityConfig {
         if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())){
             whiteUrl = sysSecurityProperties.getWhitePaths().toArray(whiteUrl);
             log.info("white url: {}", Arrays.asList(whiteUrl));
-            log.info("white url: {}", sysSecurityProperties.getWhitePaths());
         }
 
         String[] finalWhiteUrl = whiteUrl;

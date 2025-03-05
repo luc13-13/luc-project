@@ -1,38 +1,38 @@
 spring:
   # mysql
   datasource:
+    # 只使用druid时的数据库配置
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: luc123456
+    url: jdbc:mysql://localhost:3306/institution_center?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE
+
     # 使用dynamic datasource的数据库配置
-    dynamic:
-      primary: master
-      aop:
-        expression-enabled: true
-      druid:
-        not-full-timeout-retry-count: 0
-        connection-error-retry-attempts: 1
-        time-between-connect-error-millis: 6000
-        time-between-eviction-runs-millis: 6000
-        break-after-acquire-failure: false
-      datasource:
-        master:
-          url: jdbc:mysql://localhost:3306/institution_center?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE&allowPublicKeyRetrieval=true
-          username: root
-          password: luc123456
-          driver-class-name: com.mysql.cj.jdbc.Driver
-          pointcut: 'execution(* com.lc.system.service.TestService.*Master(..))'
-        slave:
-          username: root
-          password: luc123456
-          url: jdbc:mysql://localhost:3306/boss?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE&allowPublicKeyRetrieval=true
+#    dynamic:
+#      primary: master
+#      aop:
+#        expression-enabled: true
+#      druid:
+#        not-full-timeout-retry-count: 0
+#        connection-error-retry-attempts: 1
+#        time-between-connect-error-millis: 6000
+#        time-between-eviction-runs-millis: 6000
+#        break-after-acquire-failure: false
+#      datasource:
+#        master:
+#          url: jdbc:mysql://localhost:3306/institution_center?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE&allowPublicKeyRetrieval=true
+#          username: root
+#          password: luc123456
+#          driver-class-name: com.mysql.cj.jdbc.Driver
+#          pointcut: 'execution(* com.lc.system.service.TestService.*Master(..))'
+#        slave:
+#          username: root
+#          password: luc123456
+#          url: jdbc:mysql://localhost:3306/boss?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE&allowPublicKeyRetrieval=true
 #        shardingSphere:
 #          sharding: true
 #          sharding-config: config/sharding-sphere.yml
-
-    # 只使用druid时的数据库配置
-#    druid:
-#      driver-class-name: com.mysql.cj.jdbc.Driver
-#      username: root
-#      password: luc123456
-#      url: jdbc:mysql://localhost:3306/institution_center?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE
 
   data:
     # redis

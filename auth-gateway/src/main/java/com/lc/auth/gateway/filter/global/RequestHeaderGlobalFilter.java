@@ -9,11 +9,16 @@ import org.springframework.cloud.gateway.filter.GlobalFilter;
 import org.springframework.core.Ordered;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.server.ServerWebExchange;
+import org.springframework.web.server.WebFilter;
+import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static org.springframework.http.HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS;
 
 /**
  * <pre>
@@ -25,19 +30,14 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class RequestHeaderGlobalFilter extends AbstractGlobalFilter implements GlobalFilter, Ordered {
+public class RequestHeaderGlobalFilter implements WebFilter, Ordered {
     @Override
     public int getOrder() {
         return Ordered.HIGHEST_PRECEDENCE;
     }
 
     @Override
-    public boolean isIgnore(ServerWebExchange exchange) {
-        return false;
-    }
-
-    @Override
-    public Mono<Void> doFilter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest().mutate().headers(httpHeaders -> {
             HeaderGenerator headerGenerator;
             List<String> accessControlAllowHeaders = new ArrayList<>();
@@ -49,8 +49,8 @@ public class RequestHeaderGlobalFilter extends AbstractGlobalFilter implements G
                     headerGenerator.generate(exchange, httpHeaders);
                 }
             }
-//            log.info("设置AccessControlAllowHeaders：{}", accessControlAllowHeaders);
-            httpHeaders.setAccessControlAllowHeaders(accessControlAllowHeaders);
+            log.info("添加请求头：{}", accessControlAllowHeaders);
+            httpHeaders.addAll(ACCESS_CONTROL_ALLOW_HEADERS, accessControlAllowHeaders);
         }).build();
         return chain.filter(exchange.mutate().request(request).build());
     }

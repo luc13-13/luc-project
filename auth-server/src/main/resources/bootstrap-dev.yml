@@ -9,6 +9,7 @@ spring:
         # 本地测试时需要用本地地址，而非公网ip
         ip: 127.0.0.1
       config:
+        enabled: false
         # 当前应用的配置文件按照命名规则从nacos获取：${spring.application.name}-${spring.profiles.active}.${spring.cloud.nacos.config.file-extension}
         file-extension: yaml
         namespace: com-lc-dev

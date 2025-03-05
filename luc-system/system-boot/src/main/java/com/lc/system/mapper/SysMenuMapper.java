@@ -1,7 +1,6 @@
 package com.lc.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.lc.framework.datasource.starter.annotation.DataSourceSwitch;
 import com.lc.system.domain.entity.SysMenuDO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -15,7 +14,6 @@ import java.util.List;
  */
 @Mapper
 public interface SysMenuMapper extends BaseMapper<SysMenuDO> {
-    @DataSourceSwitch
     List<SysMenuDO> selectMenuTreeByUserId(Long userId);
 }
 

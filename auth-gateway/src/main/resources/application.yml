@@ -101,7 +101,6 @@ knife4j:
 logging:
   level:
     root: info
-    org.springframework.security: trace
   config: classpath:logback-lc.xml
 
 sys:
