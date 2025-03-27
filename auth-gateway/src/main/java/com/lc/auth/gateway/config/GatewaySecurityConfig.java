@@ -54,7 +54,7 @@ public class GatewaySecurityConfig {
     private LucBearerServerAuthenticationConverter bearerServerAuthenticationConverter;
 
     /**
-     * 监听到Nacos配置文件刷新后，在创建Bean的位置使用@RefreshScope注解，可以重新创建Bean
+     * 监听到Nacos配置文件刷新后，在创建Bean的位置使用@RefreshScope注解，可以重新创建Bean，因为这里没有直接使用SysSecurityProperties，所以必须重新创建bean
      */
     @Bean
     @RefreshScope

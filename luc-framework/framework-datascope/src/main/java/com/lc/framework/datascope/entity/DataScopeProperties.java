@@ -2,6 +2,8 @@ package com.lc.framework.datascope.entity;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 
 import java.util.List;
 
@@ -24,6 +26,7 @@ import java.util.List;
  * @date : 2023/8/5 11:16
  */
 @Data
+@Scope(value = "refresh", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @ConfigurationProperties(prefix = "data-scope")
 public class DataScopeProperties {
 
