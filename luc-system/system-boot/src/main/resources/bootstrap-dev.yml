@@ -6,10 +6,10 @@ spring:
       password: luc123456
       server-addr: localhost:8848
       config:
-        enabled: false
+        enabled: true
       discovery:
 #        enabled: false
         namespace: com-lc-dev
         # 本地测试时需要用本地地址，而非公网ip
         ip: 127.0.0.1
-        enabled: false
+        enabled: true

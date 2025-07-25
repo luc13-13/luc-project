@@ -83,7 +83,7 @@ public class OpenApiConfig {
         OpenAPI openAPI = new OpenAPI();
         Info info = new Info().title(apiDocInfoProperties.getTitle())
                 .version(apiDocInfoProperties.getVersion())
-                .description(apiDocInfoProperties.getDescription());// 接口文档信息(不重要)
+                .description(apiDocInfoProperties.getDescription());
 
         if (Objects.nonNull(apiDocInfoProperties.getContact())) {
             info = info.contact(new Contact()
@@ -98,8 +98,7 @@ public class OpenApiConfig {
         Components components = null;
         if (StringUtils.hasText(apiDocInfoProperties.getTokenUri())) {
             log.info("framework-apidoc开启Authorization");
-            openAPI = openAPI// 接口全局添加 Authorization 参数
-                    .addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION));
+            openAPI = openAPI.addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION));
             components = new Components()
                     // 设置获取Authorization方式
                     .addSecuritySchemes(HttpHeaders.AUTHORIZATION,
@@ -121,6 +120,5 @@ public class OpenApiConfig {
                     );
         }
         return openAPI.info(info).components(components);
-
     }
 }
