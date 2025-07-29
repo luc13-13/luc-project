@@ -27,7 +27,7 @@ sys:
       - DELETE
       - OPTIONS
       - TRACE
-    allowed-headers: *
+    allowed-headers: "*"
 #      - "Authorization"
 #      - "Authentication"
 #      - "X-Refresh-Token"

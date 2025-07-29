@@ -102,10 +102,6 @@ springdoc:
       paths-to-match: '/**'
       packages-to-scan: com.lc
   default-flat-param-object: true
-knife4j:
-  enable: true
-  setting:
-    enable-response-code: false
 
 
 # 存储工具配置示例
