@@ -13,6 +13,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @Data
 @ConfigurationProperties(prefix = "springdoc.info")
 public class ApiDocInfoProperties {
+
+    private boolean discoverEnabled = false;
+
+    private String authorizationUrl = "http://127.0.0.1:8889/oauth2/authorize";
     /**
      * 鉴权地址
      */

@@ -105,7 +105,7 @@ public class OAuth2TokenSuccessHandler implements AuthenticationSuccessHandler {
         // 缓存token
         redisHelper.hPut(ACCESS_TOKEN, tokenKey, accessToken);
         redisHelper.hPut(REFRESH_TOKEN, tokenKey, refreshToken);
-        // 返回结果
+        // 返回结果(内部服务请求返回REST结果，其他请求返回原生JSON对象)
         if ((registeredClient != null && registeredClient.getClientId().equals("knife4j-client")) || code != null) {
             this.sendOriginalResult(response, accessToken, refreshToken, additionalParameters);
         } else {

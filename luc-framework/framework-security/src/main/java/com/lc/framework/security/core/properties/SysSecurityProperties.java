@@ -17,6 +17,10 @@ import java.util.List;
 @ConfigurationProperties(prefix = "sys.security")
 public class SysSecurityProperties {
     /**
+     * 认证服务器地址，所有服务保持一致
+     */
+    private String issuer = "http://127.0.0.1:8809";
+    /**
      * 登录页面地址，前后端分离项目需要填写绝对路径, 对应着前端页面的地址
       */
     private String loginPage;

@@ -50,13 +50,13 @@ spring:
   security:
     oauth2:
       authorizationserver:
-        issuer: ${gateway.endpoint}:${server.port}/auth-server
+        issuer: http://127.0.0.1:8889
       resourceserver:
         jwt:
-          issuer-uri: ${gateway.endpoint}:${server.port}/auth-server
-        opaquetoken:
-          client-id: gateway-client
-          client-secret: secret
+          issuer-uri: http://127.0.0.1:8889
+#        opaquetoken:
+#          client-id: gateway-client
+#          client-secret: secret
 #          introspection-uri:
 #      client:
 #        provider:
@@ -101,6 +101,8 @@ sys:
       - /*/v3/api-docs/**
       - /swagger-ui/**
       - /captcha
+      - /.well-known/**
+      - /*/.well-known/**
 luc:
   gateway:
     captcha:

@@ -2,15 +2,18 @@ package com.lc.framework.apidoc;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.headers.Header;
 import io.swagger.v3.oas.models.info.Contact;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.media.StringSchema;
 import io.swagger.v3.oas.models.parameters.HeaderParameter;
+import io.swagger.v3.oas.models.parameters.Parameter;
 import io.swagger.v3.oas.models.security.OAuthFlow;
 import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
@@ -21,6 +24,9 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
+
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -107,17 +113,23 @@ public class OpenApiConfig {
                                     .type(SecurityScheme.Type.OAUTH2)
                                     .name(HttpHeaders.AUTHORIZATION)
                                     .flows(new OAuthFlows()
-                                            .clientCredentials(
-                                                    new OAuthFlow()
-                                                            .tokenUrl(apiDocInfoProperties.getTokenUri())
-                                                            .refreshUrl(apiDocInfoProperties.getTokenUri())
+                                            .authorizationCode(new OAuthFlow()
+                                                    .authorizationUrl(apiDocInfoProperties.getAuthorizationUrl())
+                                                    .tokenUrl(apiDocInfoProperties.getTokenUri())
                                             )
+//                                            .clientCredentials(
+//                                                    new OAuthFlow()
+//                                                            .authorizationUrl(apiDocInfoProperties.getAuthorizationUrl())
+//                                                            .tokenUrl(apiDocInfoProperties.getTokenUri())
+//                                                            .refreshUrl(apiDocInfoProperties.getTokenUri())
+//                                            )
                                     )
                                     // 安全模式使用Bearer令牌（即JWT）
                                     .in(SecurityScheme.In.HEADER)
                                     .scheme("Bearer")
                                     .bearerFormat("JWT")
-                    );
+                    )
+                    .addParameters("myHeader1", new Parameter().in("header").schema(new StringSchema()).name("myHeader1")).addHeaders("myHeader2", new Header().description("myHeader2 header").schema(new StringSchema()));
         }
         return openAPI.info(info).components(components);
     }
