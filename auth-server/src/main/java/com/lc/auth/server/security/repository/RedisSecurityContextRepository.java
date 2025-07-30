@@ -57,26 +57,34 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
 
     @Override
     public void saveContext(SecurityContext context, HttpServletRequest request, HttpServletResponse response) {
-        // TODO: 采用基于用户、时间、机器的UID生成方法
         String tokenKey = SecurityUtils.getTokenKey(request);
+        log.info("准备保存SecurityContext, tokenKey: {}, context: {}", tokenKey, context);
+        
         if (!StringUtils.hasText(tokenKey)) {
-            tokenKey = "tokenKey_from_RedisSecurityContextRepository:" +
-                    UUID.randomUUID();
+            tokenKey = "tokenKey_from_RedisSecurityContextRepository:" + UUID.randomUUID();
+            log.warn("tokenKey为空，生成新的tokenKey: {}", tokenKey);
         }
+        
         if (ObjectUtils.isEmpty(tokenKey)) {
+            log.error("tokenKey仍为空，无法保存SecurityContext");
             return;
         }
 
-        // 如果当前的context是空的，则移除
         SecurityContext emptyContext = this.securityContextHolderStrategy.createEmptyContext();
         if (emptyContext.equals(context)) {
+            log.info("SecurityContext为空，删除Redis中的数据: {}", tokenKey);
             redisHelper.expired(tokenKey, SECURITY_CONTEXT_CACHE_PREFIX);
         } else {
-            // 保存认证信息
+            log.info("保存SecurityContext到Redis: tokenKey={}, authentication={}", 
+                    tokenKey, context.getAuthentication());
             request.setAttribute(ACCESS_TOKEN, tokenKey);
             redisHelper.set(tokenKey, context, SECURITY_CONTEXT_CACHE_PREFIX);
+            
+            // 验证保存是否成功
+            SecurityContext saved = redisHelper.get(tokenKey, SECURITY_CONTEXT_CACHE_PREFIX);
+            log.info("验证保存结果: {}", saved != null ? "成功" : "失败");
         }
-        // 向request中加入tokenKey
+        
         request.setAttribute(ACCESS_TOKEN, tokenKey);
     }
 

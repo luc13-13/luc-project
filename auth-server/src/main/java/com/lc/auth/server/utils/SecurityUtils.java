@@ -78,30 +78,37 @@ public class SecurityUtils {
     }
 
     /**
-     * tokenKey获取顺序：1、
+     * tokenKey获取顺序：1、请求头 2、Cookie 3、请求参数 4、生成新的tokenKey
      * @param request 当前请求
      * @return 随机字符串(sessionId)，这个字符串本来是前端生成，现在改为后端获取的sessionId
      */
     public static String getTokenKey(HttpServletRequest request) {
-        String tokenKey = Objects.isNull(request.getAttribute(ACCESS_TOKEN)) ? null : String.valueOf(request.getAttribute(ACCESS_TOKEN));
-        if (!StringUtils.hasText(tokenKey)) {
-            // 从cookie中获取
-            if (ArrayUtils.isNotEmpty(request.getCookies())) {
-                for (Cookie cookie : request.getCookies()) {
-                    if (cookie.getName().equalsIgnoreCase(ACCESS_TOKEN)) {
-                        tokenKey = cookie.getValue();
-                    }
-                }
-            }
-            // 从请求头中获取
-            if (!StringUtils.hasText(tokenKey)) {
-                tokenKey = request.getHeader(ACCESS_TOKEN);
-                if (!StringUtils.hasText(tokenKey)) {
-                    tokenKey = request.getParameter(ACCESS_TOKEN);
+        // 首先从请求头获取
+        String tokenKey = request.getHeader(ACCESS_TOKEN);
+        if (StringUtils.hasText(tokenKey)) {
+            return tokenKey;
+        }
+        
+        // 从Cookie获取
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (ACCESS_TOKEN.equals(cookie.getName())) {
+                    return cookie.getValue();
                 }
             }
         }
-        log.info("获取tokenKey: {}", tokenKey);
+        
+        // 从请求参数获取
+        tokenKey = request.getParameter(ACCESS_TOKEN);
+        if (StringUtils.hasText(tokenKey)) {
+            return tokenKey;
+        }
+        
+        // 如果都没有，生成新的tokenKey
+        String sessionId = request.getSession().getId();
+        tokenKey = "token_" + sessionId + "_" + System.currentTimeMillis();
+        log.info("生成新的tokenKey: {}", tokenKey);
         return tokenKey;
     }
 
