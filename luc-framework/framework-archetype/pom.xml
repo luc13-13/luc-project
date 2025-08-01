@@ -12,7 +12,7 @@
     <packaging>maven-archetype</packaging>
 
     <name>LUC Framework Maven Archetype</name>
-    <description>基于luc框架的Maven项目模板，用于快速生产spring boot项目</description>
+    <description>基于LUC框架的Maven项目模板</description>
     <url>http://maven.apache.org</url>
 
     <properties>

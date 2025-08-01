@@ -14,6 +14,33 @@ spring:
     url: jdbc:mysql://localhost:3306/${artifactId}?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8
     username: root
     password: your_password
+    
+  # Redis 配置
+  data:
+    redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      password: your_redis_password
+      timeout: 5000
+      client-type: lettuce
+      lettuce:
+        pool:
+          min-idle: 8
+          max-idle: 500
+          max-active: 2000
+          max-wait: 10000
+          enabled: true
+
+  # JPA 配置
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
 
 # MyBatis-Plus 配置
 mybatis-plus:
@@ -23,8 +50,65 @@ mybatis-plus:
 
 # SpringDoc OpenAPI 配置
 springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+    show-extensions: true
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: "default"
+      paths-to-match: '/**'
+      packages-to-scan: ${package}
+  default-flat-param-object: true
   info:
     title: "${artifactId} API文档"
     version: "1.0.0"
     description: "基于LUC框架的${artifactId}服务API文档"
 
+# 系统安全配置
+sys:
+  security:
+    # 白名单路径
+    white-paths:
+      - /v3/api-docs/**
+      - /swagger-ui/**
+      - /swagger-resources/**
+      - /doc.html
+      - /favicon.ico
+      - /actuator/**
+      - /health
+  cors:
+    enabled: true
+    allow-credentials: true
+    allowed-origin-patterns: "*"
+    allowed-methods:
+      - GET
+      - HEAD
+      - PUT
+      - POST
+      - PATCH
+      - DELETE
+      - OPTIONS
+      - TRACE
+    allowed-headers: "*"
+
+# 日志配置
+logging:
+  level:
+    root: info
+    ${package}: debug
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 管理端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
