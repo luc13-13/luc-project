@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>${groupId}</groupId>
+    <artifactId>${artifactId}</artifactId>
+    <version>${version}</version>
+    <packaging>jar</packaging>
+
+    <name>${artifactId}</name>
+    <description>基于LUC框架的Spring Boot项目</description>
+
+    <dependencies>
+        <!-- LUC Framework 核心依赖 -->
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-core</artifactId>
+        </dependency>
+        <!--web项目依赖-->
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-web</artifactId>
+        </dependency>
+        <!--api文档-->
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-apidoc</artifactId>
+        </dependency>
+    </dependencies>
+</project>

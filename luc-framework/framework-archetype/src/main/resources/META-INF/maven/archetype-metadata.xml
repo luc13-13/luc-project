@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archetype-descriptor xmlns="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.1.0"
+                      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                      xsi:schemaLocation="http://maven.apache.org/plugins/maven-archetype-plugin/archetype-descriptor/1.1.0 
+                      http://maven.apache.org/xsd/archetype-descriptor-1.1.0.xsd"
+                      name="luc-framework-archetype">
+
+    <requiredProperties>
+        <requiredProperty key="groupId">
+            <defaultValue>com.lc</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="artifactId">
+            <defaultValue>luc-demo</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="version">
+            <defaultValue>1.0.0</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="package">
+            <defaultValue>com.lc.demo</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="classNamePrefix">
+            <defaultValue>Demo</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="author">
+            <defaultValue>Lu Cheng</defaultValue>
+        </requiredProperty>
+        <requiredProperty key="date">
+            <defaultValue>2025-08-01</defaultValue>
+        </requiredProperty>
+    </requiredProperties>
+
+    <fileSets>
+        <!-- 主要源码目录 -->
+        <fileSet filtered="true" packaged="false" encoding="UTF-8">
+            <directory>src/main/java/__packageInPathFormat__</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+
+        <!-- 资源文件目录 -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/main/resources</directory>
+            <includes>
+                <include>**/*.yml</include>
+                <include>**/*.yaml</include>
+                <include>**/*.properties</include>
+                <include>**/*.xml</include>
+                <include>**/*.md</include>
+            </includes>
+        </fileSet>
+
+        <!-- 测试源码目录 -->
+        <fileSet filtered="true" packaged="false" encoding="UTF-8">
+            <directory>src/test/java/__packageInPathFormat__</directory>
+            <includes>
+                <include>**/*.java</include>
+            </includes>
+        </fileSet>
+
+        <!-- 测试资源目录 -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory>src/test/resources</directory>
+            <includes>
+                <include>**/*.yml</include>
+                <include>**/*.yaml</include>
+                <include>**/*.properties</include>
+                <include>**/*.xml</include>
+            </includes>
+        </fileSet>
+
+        <!-- 项目根目录文件 -->
+        <fileSet filtered="true" encoding="UTF-8">
+            <directory></directory>
+            <includes>
+                <include>README.md</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+</archetype-descriptor>
