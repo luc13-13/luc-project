@@ -49,7 +49,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AuthorizationServerConfig{
 
-    private final CustomOAuth2UserService customOAuth2UserService;
     private final PasswordEncoder passwordEncoder;
 
     /**
@@ -81,12 +80,6 @@ public class AuthorizationServerConfig{
 
         return http.build();
     }
-
-
-
-
-
-
 
     /**
      * 注册客户端仓库
