@@ -4,6 +4,9 @@ server:
 spring:
   application:
     name: authorization-server
+  devtools:
+    restart:
+      enabled: true
   profiles:
     active: dev
   cloud:
@@ -40,44 +43,36 @@ spring:
   # OAuth2 配置
   security:
     oauth2:
+      # 认证服务器配置，已注册的客户端。后续通过jdbc获取
       authorizationserver:
         issuer: http://127.0.0.1:8889
-        client:
+      # oauth2 客户端配置
+      client:
+        registration:
           gitee:
-            registration:
-              client-id: gitee-client-id
-              client-secret: your-gitee-client-secret
-              scopes:
-                - user_info
-                - openid
-                - profile
-              client-authentication-methods:
-                - client_secret_basic
-              authorization-grant-types:
-                - authorization_code
-              redirect-uris:
-                - http://127.0.0.1:8889/login/oauth2/code/gitee
-              post-logout-redirect-uris:
-                - http://127.0.0.1:8889/
-            require-authorization-consent: true
+            client-id: your-gitee-client-id
+            client-secret: your-gitee-client-secret
+            scope: user_info
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
           wechat:
-            registration:
-              client-id: your-wechat-client-id
-              client-secret: your-wechat-client-secret
-              scopes:
-                - snsapi_userinfo
-                - user_info
-                - openid
-                - profile
-              client-authentication-methods:
-                - client_secret_basic
-              authorization-grant-types:
-                - authorization_code
-              redirect-uris:
-                - http://127.0.0.1:8889/login/oauth2/code/wechat
-              post-logout-redirect-uris:
-                - http://127.0.0.1:8889/
-            require-authorization-consent: true
+            client-id: your-wechat-client-id
+            client-secret: your-wechat-client-secret
+            scope: snsapi_userinfo
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+        provider:
+          gitee:
+            authorization-uri: https://gitee.com/oauth/authorize
+            token-uri: https://gitee.com/oauth/token
+            user-info-uri: https://gitee.com/api/v5/user
+            user-name-attribute: login
+          wechat:
+            authorization-uri: https://open.weixin.qq.com/connect/oauth2/authorize
+            token-uri: https://api.weixin.qq.com/sns/oauth2/access_token
+            user-info-uri: https://api.weixin.qq.com/sns/userinfo
+            user-name-attribute: openid
+
 
 
 # MyBatis-Plus 配置
@@ -96,37 +91,36 @@ springdoc:
 # 系统配置
 sys:
   security:
+    # 登录配置
+    login:
+      login-page: /login
+      default-success-url: /
+      always-use-default-success-url: true
     # 白名单路径
     white-paths:
       # 首页
-      - /index
-      - /welcome
+      - "/index"
+      - "/welcome"
       # 静态资源
-      - /css/**
-      - /js/**
-      - /images/**
-      - /static/**"
+      - "/css/**"
+      - "/js/**"
+      - "/images/**"
+      - "/static/**"
       # api文档
-      - /v3/api-docs/**
-      - /swagger-ui/**
-      - /doc.html
-      - /favicon.ico
+      - "/v3/api-docs/**"
+      - "/swagger-ui/**"
+      - "/doc.html"
+      - "/favicon.ico"
       # 监控
-      - /actuator/**
-      - /health
+      - "/actuator/**"
+      - "/health"
       # 认证相关
-      - /oauth2/**
-      - /login/**
-      - /register/**
-      - /sms/**
+      - "/oauth2/**"
+      - "/login/**"
+      - "/register/**"
+      - "/sms/**"
   # 短信配置
-  sms:
-    enabled: true
-    provider: aliyun
-    access-key-id: your-access-key-id
-    access-key-secret: your-access-key-secret
-    sign-name: 您的签名
-    template-code: SMS_123456789
+
 
 # 日志配置
 logging:

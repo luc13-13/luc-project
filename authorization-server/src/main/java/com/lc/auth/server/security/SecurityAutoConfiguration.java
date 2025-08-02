@@ -1,14 +1,13 @@
-package com.lc.auth.server.config;
+package com.lc.auth.server.security;
 
 import com.lc.auth.server.security.encoder.EncoderConfiguration;
 import com.lc.auth.server.security.jwt.JwtConfiguration;
 import com.lc.auth.server.security.properties.LoginProperties;
 import com.lc.auth.server.security.properties.SysSecurityProperties;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
@@ -42,10 +41,9 @@ import java.util.UUID;
  * @date : 2025/8/2 16:57
  * @version : 1.0
  */
-@AllArgsConstructor
+@Slf4j
 @EnableWebSecurity
-@Configuration
-@Import({JwtConfiguration.class, EncoderConfiguration.class,})
+@Import({JwtConfiguration.class, EncoderConfiguration.class})
 @AutoConfiguration(after = {JwtConfiguration.class, EncoderConfiguration.class})
 @EnableConfigurationProperties({SysSecurityProperties.class, LoginProperties.class})
 public class SecurityAutoConfiguration {
@@ -53,6 +51,11 @@ public class SecurityAutoConfiguration {
     private final SysSecurityProperties sysSecurityProperties;
 
     private final LoginProperties loginProperties;
+
+    public SecurityAutoConfiguration(SysSecurityProperties sysSecurityProperties, LoginProperties loginProperties) {
+        this.sysSecurityProperties = sysSecurityProperties;
+        this.loginProperties = loginProperties;
+    }
 
     /**
      * Spring Authorization Server 安全接口过滤器链。
@@ -73,7 +76,7 @@ public class SecurityAutoConfiguration {
                 // Redirect to the login page when not authenticated from the authorization endpoint
                 .exceptionHandling((exceptions) -> exceptions
                         .defaultAuthenticationEntryPointFor(
-                                new LoginUrlAuthenticationEntryPoint("/login"),
+                                new LoginUrlAuthenticationEntryPoint(loginProperties.getLoginPage()),
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                         )
                 )
@@ -91,20 +94,17 @@ public class SecurityAutoConfiguration {
     @Bean
     @Order(2)
     public SecurityFilterChain authenticationSecurityFilterChain(HttpSecurity http) throws Exception {
+        log.info("登陆页配置：{}", loginProperties);
         http
-                .authorizeHttpRequests(authorize -> {
-                    if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())) {
-                        PathPatternRequestMatcher[] whiteRequestMatchers = new PathPatternRequestMatcher[CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())
-                                ? 0 : sysSecurityProperties.getWhitePaths().size()];
-                        if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())) {
-                            for (int i = 0; i < sysSecurityProperties.getWhitePaths().size(); i++) {
-                                whiteRequestMatchers[i] = PathPatternRequestMatcher.withDefaults().matcher(sysSecurityProperties.getWhitePaths().get(i));
+                .authorizeHttpRequests((authorize) -> {
+                            if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())) {
+                                log.info("设置访问白名单: {}", sysSecurityProperties.getWhitePaths());
+                                for (String whitePath : sysSecurityProperties.getWhitePaths()) {
+                                    authorize.requestMatchers(PathPatternRequestMatcher.withDefaults().matcher(whitePath));
+                                }
                             }
+                            authorize.anyRequest().authenticated();
                         }
-                        authorize.requestMatchers(whiteRequestMatchers).permitAll();
-                    }
-                    authorize.anyRequest().authenticated();
-                }
                 )
                 // 表单登录配置
                 .formLogin(formLogin -> formLogin
@@ -113,9 +113,9 @@ public class SecurityAutoConfiguration {
                         .failureUrl(loginProperties.getLoginPage() + "?error")
                         .permitAll()
                 )
-                // OAuth2第三方登录配置
+//                 OAuth2第三方登录配置
                 .oauth2Login(oauth2Login -> oauth2Login
-                                .loginPage(loginProperties.getLoginPage())
+//                                .loginPage(loginProperties.getLoginPage())
 //                        .userInfoEndpoint(userInfo -> userInfo
 //                                .userService(oAuth2UserService)
 //                        )
