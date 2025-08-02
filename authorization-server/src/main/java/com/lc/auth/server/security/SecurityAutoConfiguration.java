@@ -5,6 +5,7 @@ import com.lc.auth.server.security.jwt.JwtConfiguration;
 import com.lc.auth.server.security.properties.LoginProperties;
 import com.lc.auth.server.security.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -115,7 +116,8 @@ public class SecurityAutoConfiguration {
                 )
 //                 OAuth2第三方登录配置
                 .oauth2Login(oauth2Login -> oauth2Login
-//                                .loginPage(loginProperties.getLoginPage())
+                                .loginPage(loginProperties.getLoginPage())
+                                .authorizationEndpoint(authorization -> authorization.baseUri("/oauth2/authorization"))
 //                        .userInfoEndpoint(userInfo -> userInfo
 //                                .userService(oAuth2UserService)
 //                        )
@@ -184,5 +186,10 @@ public class SecurityAutoConfiguration {
                 .build();
 
         return new InMemoryRegisteredClientRepository(gatewayClient, apiDocClient);
+    }
+
+    @Bean
+    public ApplicationRunner securityApplicationRunner() {
+        return args -> log.info("登陆页: {}", loginProperties.getLoginPage());
     }
 }

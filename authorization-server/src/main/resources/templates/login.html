@@ -120,7 +120,7 @@
         
         .oauth-btn {
             flex: 1;
-            padding: 10px;
+            padding: 12px 10px;
             border: 1px solid #ddd;
             border-radius: 5px;
             background: white;
@@ -128,19 +128,45 @@
             text-decoration: none;
             text-align: center;
             color: #333;
-            transition: background-color 0.3s;
+            transition: all 0.3s;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
-        
+
         .oauth-btn:hover {
             background-color: #f5f5f5;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
-        
+
         .oauth-btn.gitee {
             color: #c71d23;
+            border-color: #c71d23;
         }
-        
+
+        .oauth-btn.gitee:hover {
+            background-color: #c71d23;
+            color: white;
+        }
+
         .oauth-btn.wechat {
             color: #07c160;
+            border-color: #07c160;
+        }
+
+        .oauth-btn.wechat:hover {
+            background-color: #07c160;
+            color: white;
+        }
+
+        .oauth-icon {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
         }
         
         .register-link {
@@ -178,14 +204,17 @@
         <div th:if="${error}" class="error-message" th:text="${error}"></div>
         
         <!-- 用户名密码登录表单 -->
-        <form class="login-form" action="/perform-login" method="post">
+        <form class="login-form" th:action="@{/login}" method="post">
+            <!-- CSRF 令牌 -->
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+
             <div class="form-group">
                 <label for="username">用户名</label>
-                <input type="text" id="username" name="username" required>
+                <input type="text" id="username" name="username" required autocomplete="username">
             </div>
             <div class="form-group">
                 <label for="password">密码</label>
-                <input type="password" id="password" name="password" required>
+                <input type="password" id="password" name="password" required autocomplete="current-password">
             </div>
             <button type="submit" class="login-btn">登录</button>
         </form>
@@ -198,9 +227,15 @@
         <!-- 第三方登录按钮 -->
         <div class="oauth-buttons">
             <a href="/oauth2/authorization/gitee" class="oauth-btn gitee">
+                <svg class="oauth-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0.297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                </svg>
                 Gitee登录
             </a>
             <a href="/oauth2/authorization/wechat" class="oauth-btn wechat">
+                <svg class="oauth-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M8.691 2.188C3.891 2.188 0 5.476 0 9.53c0 2.212 1.17 4.203 3.002 5.55a.59.59 0 0 1 .213.665l-.39 1.48c-.019.07-.048.141-.048.213 0 .163.13.295.29.295a.326.326 0 0 0 .167-.054l1.903-1.114a.864.864 0 0 1 .717-.098 10.16 10.16 0 0 0 2.837.403c.276 0 .543-.027.811-.05-.857-2.578.157-4.972 1.932-6.446 1.703-1.415 4.882-1.900 7.852.24-.71-3.842-4.493-6.616-8.596-6.616z"/>
+                </svg>
                 微信登录
             </a>
         </div>
@@ -215,11 +250,29 @@
         // 检查URL参数中是否有错误信息
         const urlParams = new URLSearchParams(window.location.search);
         const error = urlParams.get('error');
-        if (error) {
-            const errorMessage = document.getElementById('errorMessage');
-            errorMessage.textContent = '登录失败，请检查用户名和密码';
-            errorMessage.style.display = 'block';
+        if (error && !document.querySelector('.error-message')) {
+            // 如果URL中有error参数但页面上没有显示错误消息，则动态创建
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error-message';
+            errorDiv.textContent = '登录失败，请检查用户名和密码';
+
+            const loginForm = document.querySelector('.login-form');
+            loginForm.parentNode.insertBefore(errorDiv, loginForm);
         }
+
+        // 为第三方登录按钮添加点击事件（可选：添加加载状态）
+        document.querySelectorAll('.oauth-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.style.opacity = '0.7';
+                this.style.pointerEvents = 'none';
+
+                // 3秒后恢复按钮状态（防止用户重复点击）
+                setTimeout(() => {
+                    this.style.opacity = '1';
+                    this.style.pointerEvents = 'auto';
+                }, 3000);
+            });
+        });
     </script>
 </body>
 </html>
