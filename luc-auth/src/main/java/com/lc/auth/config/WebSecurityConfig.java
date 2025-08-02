@@ -1,15 +1,11 @@
 package com.lc.auth.config;
 
-import com.lc.auth.security.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 
@@ -33,8 +29,7 @@ public class WebSecurityConfig {
      */
     @Bean
     @Order(2)
-    public SecurityFilterChain authenticationSecurityFilterChain(HttpSecurity http,
-                                                                 OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService) throws Exception {
+    public SecurityFilterChain authenticationSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
                         // 认证相关的白名单路径
@@ -72,9 +67,9 @@ public class WebSecurityConfig {
                 // OAuth2第三方登录配置
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/login")
-                        .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oAuth2UserService)
-                        )
+//                        .userInfoEndpoint(userInfo -> userInfo
+//                                .userService(oAuth2UserService)
+//                        )
                         .defaultSuccessUrl("/oauth2/login/success", true)
                 )
                 // 登出配置

@@ -1,5 +1,4 @@
 package com.lc.auth.config;
-import com.lc.auth.security.CustomOAuth2UserService;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
