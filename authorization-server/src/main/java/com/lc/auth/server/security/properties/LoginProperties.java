@@ -1,7 +1,6 @@
 package com.lc.auth.server.security.properties;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -12,7 +11,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @version : 1.0
  */
 @Data
-@Accessors(fluent = true)
 @ConfigurationProperties(prefix = SysSecurityProperties.PREFIX + ".login")
 public class LoginProperties {
     /**

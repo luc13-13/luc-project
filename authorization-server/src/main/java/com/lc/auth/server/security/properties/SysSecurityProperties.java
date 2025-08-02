@@ -1,7 +1,6 @@
 package com.lc.auth.server.security.properties;
 
 import lombok.Data;
-import lombok.experimental.Accessors;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
@@ -14,7 +13,6 @@ import java.util.List;
  * @date 2024/3/20 16:43
  */
 @Data
-@Accessors(fluent = true)
 @ConfigurationProperties(prefix = SysSecurityProperties.PREFIX)
 public class SysSecurityProperties {
     /**

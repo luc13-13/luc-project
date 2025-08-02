@@ -93,12 +93,12 @@ public class SecurityAutoConfiguration {
     public SecurityFilterChain authenticationSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorize -> {
-                    if (!CollectionUtils.isEmpty(sysSecurityProperties.whitePaths())) {
-                        PathPatternRequestMatcher[] whiteRequestMatchers = new PathPatternRequestMatcher[CollectionUtils.isEmpty(sysSecurityProperties.whitePaths())
-                                ? 0 : sysSecurityProperties.whitePaths().size()];
-                        if (!CollectionUtils.isEmpty(sysSecurityProperties.whitePaths())) {
-                            for (int i = 0; i < sysSecurityProperties.whitePaths().size(); i++) {
-                                whiteRequestMatchers[i] = PathPatternRequestMatcher.withDefaults().matcher(sysSecurityProperties.whitePaths().get(i));
+                    if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())) {
+                        PathPatternRequestMatcher[] whiteRequestMatchers = new PathPatternRequestMatcher[CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())
+                                ? 0 : sysSecurityProperties.getWhitePaths().size()];
+                        if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())) {
+                            for (int i = 0; i < sysSecurityProperties.getWhitePaths().size(); i++) {
+                                whiteRequestMatchers[i] = PathPatternRequestMatcher.withDefaults().matcher(sysSecurityProperties.getWhitePaths().get(i));
                             }
                         }
                         authorize.requestMatchers(whiteRequestMatchers).permitAll();
@@ -108,23 +108,23 @@ public class SecurityAutoConfiguration {
                 )
                 // 表单登录配置
                 .formLogin(formLogin -> formLogin
-                        .loginPage(loginProperties.loginPage())
-                        .defaultSuccessUrl(loginProperties.defaultSuccessUrl(), loginProperties.alwaysUseDefaultSuccessUrl())
-                        .failureUrl(loginProperties.loginPage() + "?error")
+                        .loginPage(loginProperties.getLoginPage())
+                        .defaultSuccessUrl(loginProperties.getDefaultSuccessUrl(), loginProperties.isAlwaysUseDefaultSuccessUrl())
+                        .failureUrl(loginProperties.getLoginPage() + "?error")
                         .permitAll()
                 )
                 // OAuth2第三方登录配置
                 .oauth2Login(oauth2Login -> oauth2Login
-                                .loginPage(loginProperties.loginPage())
+                                .loginPage(loginProperties.getLoginPage())
 //                        .userInfoEndpoint(userInfo -> userInfo
 //                                .userService(oAuth2UserService)
 //                        )
-                                .defaultSuccessUrl(loginProperties.defaultOauth2SuccessUrl(), loginProperties.alwaysUseDefaultSuccessUrl())
+                                .defaultSuccessUrl(loginProperties.getDefaultOauth2SuccessUrl(), loginProperties.isAlwaysUseDefaultSuccessUrl())
                 )
                 // 登出配置，登出后默认跳转到首页
                 .logout(logout -> logout
-                        .logoutUrl(loginProperties.logoutUrl())
-                        .logoutSuccessUrl(loginProperties.logoutSuccessUrl())
+                        .logoutUrl(loginProperties.getLogoutUrl())
+                        .logoutSuccessUrl(loginProperties.getLogoutSuccessUrl())
                         .permitAll()
                 );
 
@@ -185,12 +185,4 @@ public class SecurityAutoConfiguration {
 
         return new InMemoryRegisteredClientRepository(gatewayClient, apiDocClient);
     }
-
-//    @Order
-//    @Bean
-//    @ConditionalOnMissingBean
-////    @ConditionalOnProperty(prefix = "sys.security", name = "enable-runner", matchIfMissing = true)
-//    public ApplicationRunner securityApplicationRunner() {
-//        return new SecurityApplicationRunner(loginProperties);
-//    }
 }

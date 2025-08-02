@@ -17,12 +17,6 @@
             <artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
         </dependency>
 
-        <!-- Spring Boot Validation -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-validation</artifactId>
-        </dependency>
-
         <!-- LUC Framework 核心依赖 -->
         <dependency>
             <groupId>com.lc</groupId>
@@ -33,18 +27,6 @@
         <dependency>
             <groupId>com.lc</groupId>
             <artifactId>framework-web</artifactId>
-        </dependency>
-
-        <!--安全认证-->
-        <dependency>
-            <groupId>com.lc</groupId>
-            <artifactId>framework-security</artifactId>
-        </dependency>
-
-        <!--Redis缓存-->
-        <dependency>
-            <groupId>com.lc</groupId>
-            <artifactId>framework-redis-starter</artifactId>
         </dependency>
 
         <!--api文档-->
