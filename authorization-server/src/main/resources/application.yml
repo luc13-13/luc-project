@@ -50,8 +50,8 @@ spring:
       client:
         registration:
           gitee:
-            client-id: your-gitee-client-id
-            client-secret: your-gitee-client-secret
+            client-id: 5f2347d5f004f353527c9f96ed162b97f461da0afc5589332172d5f2b78b71db
+            client-secret: 8bf85746f31139726b4bead33cedc8b7c63dae8068c025b8563c58c7990e3774
             scope: user_info
             authorization-grant-type: authorization_code
             redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
