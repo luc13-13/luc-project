@@ -20,6 +20,46 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class LoginController {
 
+    /**
+     * 首页
+     */
+    @GetMapping("/")
+    public String home(Authentication authentication, Model model) {
+        log.info("访问首页");
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            // 用户已登录，显示用户信息
+            String username = authentication.getName();
+            model.addAttribute("isAuthenticated", true);
+            model.addAttribute("username", username);
+
+            // 如果是 OAuth2 用户，获取更多信息
+            if (authentication.getPrincipal() instanceof OAuth2User oauth2User) {
+                String name = oauth2User.getAttribute("name");
+                String avatarUrl = oauth2User.getAttribute("avatar_url");
+                model.addAttribute("displayName", name != null ? name : username);
+                model.addAttribute("userAvatar", avatarUrl);
+                model.addAttribute("loginType", "oauth2");
+            } else {
+                model.addAttribute("displayName", username);
+                model.addAttribute("loginType", "form");
+            }
+        } else {
+            // 用户未登录
+            model.addAttribute("isAuthenticated", false);
+        }
+
+        return "index";
+    }
+
+    /**
+     * 首页 - 兼容 /home 路径
+     */
+    @GetMapping("/home")
+    public String homeAlias(Authentication authentication, Model model) {
+        return home(authentication, model);
+    }
+
     @RequestMapping("/login")
     public String login(@RequestParam(value = "error", required = false) String error, Model model) {
 //        log.debug("访问登录页面, error={}", error);

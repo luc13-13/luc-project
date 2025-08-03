@@ -126,6 +126,3 @@ sys:
 logging:
   level:
     root: info
-    com.lc.auth: debug
-    org.springframework.security: debug
-
