@@ -156,7 +156,7 @@ public class SecurityAutoConfiguration {
                 .scope("read")
                 .scope("write")
                 .clientSettings(ClientSettings.builder()
-                        .requireAuthorizationConsent(false)
+                        .requireAuthorizationConsent(true)
                         .build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofHours(2))
