@@ -1,11 +1,14 @@
 package com.lc.auth.server.security;
 
+import com.lc.auth.server.security.authentication.LoginSuccessHandler;
+import com.lc.auth.server.security.authentication.TestUserDetailsService;
+import com.lc.auth.server.security.authentication.config.LucAuthenticationConfiguration;
 import com.lc.auth.server.security.encoder.EncoderConfiguration;
 import com.lc.auth.server.security.jwt.JwtConfiguration;
 import com.lc.auth.server.security.properties.LoginProperties;
 import com.lc.auth.server.security.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -15,24 +18,16 @@ import org.springframework.http.MediaType;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.core.AuthorizationGrantType;
-import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
-import org.springframework.security.oauth2.core.oidc.OidcScopes;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
-import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
-import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
-import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
+import org.springframework.security.web.context.DelegatingSecurityContextRepository;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.util.CollectionUtils;
-
-import java.time.Duration;
-import java.util.UUID;
 
 /**
  * <pre>
@@ -44,8 +39,8 @@ import java.util.UUID;
  */
 @Slf4j
 @EnableWebSecurity
-@Import({JwtConfiguration.class, EncoderConfiguration.class})
-@AutoConfiguration(after = {JwtConfiguration.class, EncoderConfiguration.class})
+@Import({JwtConfiguration.class, EncoderConfiguration.class, LucAuthenticationConfiguration.class})
+@AutoConfiguration(after = {JwtConfiguration.class, EncoderConfiguration.class, LucAuthenticationConfiguration.class})
 @EnableConfigurationProperties({SysSecurityProperties.class, LoginProperties.class})
 public class SecurityAutoConfiguration {
 
@@ -53,9 +48,16 @@ public class SecurityAutoConfiguration {
 
     private final LoginProperties loginProperties;
 
-    public SecurityAutoConfiguration(SysSecurityProperties sysSecurityProperties, LoginProperties loginProperties) {
+    private final LoginSuccessHandler loginSuccessHandler;
+
+    private final TestUserDetailsService testUserDetailsService;
+
+    public SecurityAutoConfiguration(SysSecurityProperties sysSecurityProperties, LoginProperties loginProperties,
+                                   LoginSuccessHandler loginSuccessHandler, TestUserDetailsService testUserDetailsService) {
         this.sysSecurityProperties = sysSecurityProperties;
         this.loginProperties = loginProperties;
+        this.loginSuccessHandler = loginSuccessHandler;
+        this.testUserDetailsService = testUserDetailsService;
     }
 
     /**
@@ -94,7 +96,8 @@ public class SecurityAutoConfiguration {
      */
     @Bean
     @Order(2)
-    public SecurityFilterChain authenticationSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authenticationSecurityFilterChain(HttpSecurity http,
+                                                                 ObjectProvider<SecurityContextRepository> securityContextRepositoryProvider) throws Exception {
         log.info("登陆页配置：{}", loginProperties);
         http
                 .authorizeHttpRequests((authorize) -> {
@@ -107,10 +110,22 @@ public class SecurityAutoConfiguration {
                             authorize.anyRequest().authenticated();
                         }
                 )
+                // 优先获取注册的SecurityContextRepository
+                .securityContext(context -> context
+                        .securityContextRepository(securityContextRepositoryProvider.getIfAvailable(
+                                () -> new DelegatingSecurityContextRepository(
+                                        new RequestAttributeSecurityContextRepository(),
+                                        new HttpSessionSecurityContextRepository())
+                                )
+                        )
+                )
+                // 配置 UserDetailsService
+                .userDetailsService(testUserDetailsService)
+
                 // 表单登录配置
                 .formLogin(formLogin -> formLogin
                         .loginPage(loginProperties.getLoginPage())
-                        .defaultSuccessUrl(loginProperties.getDefaultSuccessUrl(), loginProperties.isAlwaysUseDefaultSuccessUrl())
+                        .successHandler(loginSuccessHandler)
                         .failureUrl(loginProperties.getLoginPage() + "?error")
                         .permitAll()
                 )
@@ -128,68 +143,12 @@ public class SecurityAutoConfiguration {
                         .logoutUrl(loginProperties.getLogoutUrl())
                         .logoutSuccessUrl(loginProperties.getLogoutSuccessUrl())
                         .permitAll()
+                )
+                // CSRF 配置
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/oauth2/**"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/login/oauth2/**"))
                 );
-
         return http.build();
-    }
-
-    /**
-     * 注册客户端仓库
-     */
-    @Bean
-    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
-        // 网关客户端
-        RegisteredClient gatewayClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("gateway-client")
-                .clientSecret(passwordEncoder.encode("secret"))
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
-                .redirectUri("http://127.0.0.1:8809/login/oauth2/code/gateway-client")
-                .redirectUri("http://localhost:8809/login/oauth2/code/gateway-client")
-                .redirectUri("http://127.0.0.1:8809/swagger-ui/oauth2-redirect.html")
-                .redirectUri("http://localhost:8809/swagger-ui/oauth2-redirect.html")
-                .postLogoutRedirectUri("http://127.0.0.1:8809/")
-                .scope(OidcScopes.OPENID)
-                .scope(OidcScopes.PROFILE)
-                .scope("read")
-                .scope("write")
-                .clientSettings(ClientSettings.builder()
-                        .requireAuthorizationConsent(true)
-                        .build())
-                .tokenSettings(TokenSettings.builder()
-                        .accessTokenTimeToLive(Duration.ofHours(2))
-                        .refreshTokenTimeToLive(Duration.ofDays(7))
-                        .build())
-                .build();
-
-        // API文档客户端
-        RegisteredClient apiDocClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("api-doc-client")
-                .clientSecret(passwordEncoder.encode("secret"))
-                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
-                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
-                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                .redirectUri("http://127.0.0.1:8889/swagger-ui/oauth2-redirect.html")
-                .redirectUri("http://localhost:8889/swagger-ui/oauth2-redirect.html")
-                .scope(OidcScopes.OPENID)
-                .scope(OidcScopes.PROFILE)
-                .scope("read")
-                .clientSettings(ClientSettings.builder()
-                        .requireAuthorizationConsent(false)
-                        .build())
-                .tokenSettings(TokenSettings.builder()
-                        .accessTokenTimeToLive(Duration.ofHours(2))
-                        .refreshTokenTimeToLive(Duration.ofDays(7))
-                        .build())
-                .build();
-
-        return new InMemoryRegisteredClientRepository(gatewayClient, apiDocClient);
-    }
-
-    @Bean
-    public ApplicationRunner securityApplicationRunner() {
-        return args -> log.info("登陆页: {}", loginProperties.getLoginPage());
     }
 }

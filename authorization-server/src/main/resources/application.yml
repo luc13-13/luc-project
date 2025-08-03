@@ -42,6 +42,9 @@ spring:
 
   # OAuth2 配置
   security:
+    user:
+      name: admin
+      password: admin
     oauth2:
       # 认证服务器配置，已注册的客户端。后续通过jdbc获取
       authorizationserver:
@@ -91,6 +94,7 @@ springdoc:
 # 系统配置
 sys:
   security:
+    enable-redis: true
     # 登录配置
     login:
       login-page: /login
@@ -99,6 +103,8 @@ sys:
     # 白名单路径
     white-paths:
       # 首页
+      - "/"
+      - "/home"
       - "/index"
       - "/welcome"
       # 静态资源
@@ -119,6 +125,9 @@ sys:
       - "/login/**"
       - "/register/**"
       - "/sms/**"
+      # 开发相关
+      - "/.well-known/appspecific/com.chrome.devtools.json"
+
   # 短信配置
 
 
@@ -126,3 +135,6 @@ sys:
 logging:
   level:
     root: info
+    org.springframework.security: debug
+    com.lc.auth.server: debug
+    org.springframework.web: debug

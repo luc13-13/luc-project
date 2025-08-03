@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.lc.auth.server.redis.customizer.ObjectMapperCustomizer;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
@@ -26,6 +27,7 @@ import org.springframework.data.redis.serializer.RedisSerializer;
  * @date : 2025/8/3 12:11
  * @version : 1.0
  */
+@Slf4j
 @AutoConfiguration(after = RedisConnectionFactory.class, before = RedisAutoConfiguration.class)
 public class LucRedisAutoConfiguration {
     /**
@@ -37,6 +39,7 @@ public class LucRedisAutoConfiguration {
     @Primary
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory factory,
                                                        ObjectProvider<ObjectMapperCustomizer<ObjectMapper>> customizerProvider) {
+        log.info("开启redis");
         RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         // key序列化方式
         redisTemplate.setKeySerializer(RedisSerializer.string());

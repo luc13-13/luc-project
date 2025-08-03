@@ -3,6 +3,7 @@ package com.lc.auth.server.security.properties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
+import java.time.Duration;
 import java.util.List;
 
 /**
@@ -28,4 +29,11 @@ public class SysSecurityProperties {
      * 资源服务器的白名单路径
      */
     private List<String> whitePaths;
+
+    private boolean enableRedis = false;
+
+    /**
+     * 登陆有效时间
+     */
+    private Duration tokenTimeToLive = Duration.ofSeconds(3600L);
 }
