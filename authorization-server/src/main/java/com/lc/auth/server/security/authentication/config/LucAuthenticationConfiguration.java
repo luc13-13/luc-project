@@ -3,15 +3,14 @@ package com.lc.auth.server.security.authentication.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lc.auth.server.redis.customizer.ObjectMapperCustomizer;
 import com.lc.auth.server.security.authentication.RedisSecurityContextRepository;
-import com.lc.auth.server.security.properties.LoginProperties;
 import com.lc.auth.server.security.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
@@ -19,7 +18,11 @@ import org.springframework.security.oauth2.client.jackson2.OAuth2ClientJackson2M
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
-import org.springframework.security.oauth2.server.authorization.client.InMemoryRegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.JdbcOAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationConsentService;
+import org.springframework.security.oauth2.server.authorization.OAuth2AuthorizationService;
+import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
@@ -44,7 +47,10 @@ public class LucAuthenticationConfiguration {
      * 注册客户端仓库
      */
     @Bean
-    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder) {
+    public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder,
+                                                                 JdbcTemplate jdbcTemplate) {
+
+        JdbcRegisteredClientRepository repository = new JdbcRegisteredClientRepository(jdbcTemplate);
         // 网关客户端
         RegisteredClient gatewayClient = RegisteredClient.withId(UUID.randomUUID().toString())
                 .clientId("gateway-client")
@@ -73,7 +79,7 @@ public class LucAuthenticationConfiguration {
 
         // API文档客户端
         RegisteredClient apiDocClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("api-doc-client")
+                .clientId("apidoc-client")
                 .clientSecret(passwordEncoder.encode("secret"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
@@ -92,12 +98,31 @@ public class LucAuthenticationConfiguration {
                         .build())
                 .build();
 
-        return new InMemoryRegisteredClientRepository(gatewayClient, apiDocClient);
+        repository.save(gatewayClient);
+        repository.save(apiDocClient);
+        return repository;
     }
 
+    /**
+     * 记录客户端授权信息
+     * @param jdbcTemplate 数据库操作类
+     * @param repository 客户端查询仓库
+     */
     @Bean
-    public ApplicationRunner securityApplicationRunner(LoginProperties loginProperties) {
-        return args -> log.info("登陆页: {}", loginProperties.getLoginPage());
+    public OAuth2AuthorizationService oauth2AuthorizationService(JdbcTemplate jdbcTemplate,
+                                                                 RegisteredClientRepository repository) {
+        return new JdbcOAuth2AuthorizationService(jdbcTemplate, repository);
+    }
+
+    /**
+     * 记录客户端授权确认信息
+     * @param jdbcTemplate 数据库操作类
+     * @param repository 客户端查询仓库
+     */
+    @Bean
+    public OAuth2AuthorizationConsentService oauth2AuthorizationConsentService(JdbcTemplate jdbcTemplate,
+                                                                        RegisteredClientRepository repository) {
+        return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, repository);
     }
 
     @Bean
