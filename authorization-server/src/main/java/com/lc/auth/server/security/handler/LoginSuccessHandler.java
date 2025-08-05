@@ -50,6 +50,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             WebUtil.makeResponse(response, MediaType.APPLICATION_JSON_VALUE, SUCCESS, authentication);
         } else {
             // 重定向到首页
+            log.info("重定向到首页");
             response.sendRedirect("/");
         }
     }

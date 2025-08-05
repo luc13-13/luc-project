@@ -1,6 +1,6 @@
 package com.lc.auth.server.security.annotation;
 
-import com.lc.auth.server.security.SecurityAutoConfiguration;
+import com.lc.auth.server.config.SecurityAutoConfiguration;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

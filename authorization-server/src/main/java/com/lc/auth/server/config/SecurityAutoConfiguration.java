@@ -1,4 +1,4 @@
-package com.lc.auth.server.security;
+package com.lc.auth.server.config;
 
 import com.lc.auth.server.security.authentication.LucAuthenticationConfiguration;
 import com.lc.auth.server.security.authentication.extension.MultiTypeAuthenticationFilter;
