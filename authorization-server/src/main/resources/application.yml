@@ -19,7 +19,7 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/institution_center?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8
+    url: jdbc:mysql://localhost:3306/authorization_server?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8
     username: root
     password: luc123456
 
@@ -100,6 +100,7 @@ sys:
       login-page: /login
       default-success-url: /
       always-use-default-success-url: true
+      enable-sms-login: true
     # 白名单路径
     white-paths:
       # 首页
@@ -125,6 +126,7 @@ sys:
       - "/login/**"
       - "/register/**"
       - "/sms/**"
+      - "/login/sms"
       # 开发相关
       - "/.well-known/appspecific/com.chrome.devtools.json"
 

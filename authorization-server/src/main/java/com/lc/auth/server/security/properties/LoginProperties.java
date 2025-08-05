@@ -11,8 +11,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  * @version : 1.0
  */
 @Data
-@ConfigurationProperties(prefix = SysSecurityProperties.PREFIX + ".login")
+@ConfigurationProperties(prefix = LoginProperties.PREFIX)
 public class LoginProperties {
+
+    public static final String PREFIX = SysSecurityProperties.PREFIX + ".login";
+
     /**
      * 登录页面地址，前后端分离项目需要填写绝对路径, 对应着前端页面的地址
      */
@@ -44,4 +47,9 @@ public class LoginProperties {
     private String logoutSuccessUrl = "/index";
 
     private String defaultOauth2SuccessUrl = "/oauth2/login/success";
+
+    /**
+     * 开启短信登陆方式
+     */
+    private boolean enableSmsLogin = false;
 }

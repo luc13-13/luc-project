@@ -1,16 +1,25 @@
-package com.lc.auth.server.security.authentication.config;
+package com.lc.auth.server.security.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lc.auth.server.redis.customizer.ObjectMapperCustomizer;
-import com.lc.auth.server.security.authentication.RedisSecurityContextRepository;
+import com.lc.auth.server.security.authentication.extension.MultiTypeAuthenticationFilter;
+import com.lc.auth.server.security.authentication.extension.RedisSecurityContextRepository;
+import com.lc.auth.server.security.authentication.extension.sms.SmsAuthenticationConverter;
+import com.lc.auth.server.security.authentication.extension.sms.SmsAuthenticationProvider;
+import com.lc.auth.server.security.authentication.extension.sms.SmsCodeService;
+import com.lc.auth.server.security.core.LoginUserDetailService;
+import com.lc.auth.server.security.properties.LoginProperties;
 import com.lc.auth.server.security.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
@@ -27,10 +36,11 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.context.SecurityContextRepository;
 
 import java.time.Duration;
-import java.util.UUID;
+import java.util.List;
 
 /**
  * <pre>
@@ -52,7 +62,7 @@ public class LucAuthenticationConfiguration {
 
         JdbcRegisteredClientRepository repository = new JdbcRegisteredClientRepository(jdbcTemplate);
         // 网关客户端
-        RegisteredClient gatewayClient = RegisteredClient.withId(UUID.randomUUID().toString())
+        RegisteredClient gatewayClient = RegisteredClient.withId("gateway-client")
                 .clientId("gateway-client")
                 .clientSecret(passwordEncoder.encode("secret"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
@@ -78,8 +88,8 @@ public class LucAuthenticationConfiguration {
                 .build();
 
         // API文档客户端
-        RegisteredClient apiDocClient = RegisteredClient.withId(UUID.randomUUID().toString())
-                .clientId("apidoc-client")
+        RegisteredClient apiDocClient = RegisteredClient.withId("openapi-client")
+                .clientId("openapi-client")
                 .clientSecret(passwordEncoder.encode("secret"))
                 .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                 .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
@@ -132,6 +142,31 @@ public class LucAuthenticationConfiguration {
                                                                     SysSecurityProperties sysSecurityProperties) {
         log.info("开启RedisSecurityContextRepository");
         return new RedisSecurityContextRepository(redisTemplate, sysSecurityProperties.getTokenTimeToLive().toSeconds());
+    }
+
+    /**
+     * 开启拓展认证方式
+     *
+     */
+    @Bean
+    @ConditionalOnBean(SmsAuthenticationConverter.class)
+    public MultiTypeAuthenticationFilter multiTypeAuthenticationFilter(List<AuthenticationConverter> converters) {
+        return  new MultiTypeAuthenticationFilter(converters);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SmsCodeService.class)
+    @ConditionalOnProperty(prefix = LoginProperties.PREFIX, name = "enable-sms-login", havingValue = "true")
+    public SmsCodeService smsCodeService(RedisTemplate<String, Object> redisTemplate) {
+        return new SmsCodeService(redisTemplate);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SmsAuthenticationProvider.class)
+    @ConditionalOnProperty(prefix = LoginProperties.PREFIX, name = "enable-sms-login", havingValue = "true")
+    public AuthenticationProvider smsAuthenticationProvider(SmsCodeService smsCodeService,
+                                                            LoginUserDetailService loginUserDetailService) {
+        return new SmsAuthenticationProvider(smsCodeService, loginUserDetailService);
     }
 
     /**

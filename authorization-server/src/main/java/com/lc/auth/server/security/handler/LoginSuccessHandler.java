@@ -1,4 +1,4 @@
-package com.lc.auth.server.security.authentication;
+package com.lc.auth.server.security.handler;
 
 import com.lc.framework.web.utils.WebUtil;
 import jakarta.servlet.http.Cookie;
@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static com.lc.auth.server.security.authentication.RedisSecurityContextRepository.TOKEN_HEADER;
+import static com.lc.auth.server.security.authentication.extension.RedisSecurityContextRepository.TOKEN_HEADER;
 import static com.lc.framework.core.mvc.StatusConstants.SUCCESS;
 
 /**

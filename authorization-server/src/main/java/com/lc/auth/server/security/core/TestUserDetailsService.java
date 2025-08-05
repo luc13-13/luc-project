@@ -1,9 +1,8 @@
-package com.lc.auth.server.security.authentication;
+package com.lc.auth.server.security.core;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 @Slf4j
-public class TestUserDetailsService implements UserDetailsService {
+public class TestUserDetailsService implements LoginUserDetailService {
     
     private final PasswordEncoder passwordEncoder;
     
@@ -47,5 +46,25 @@ public class TestUserDetailsService implements UserDetailsService {
         
         log.warn("用户不存在: {}", username);
         throw new UsernameNotFoundException("用户不存在: " + username);
+    }
+
+    @Override
+    public UserDetails loadByMobile(String mobile) {
+        return null;
+    }
+
+    @Override
+    public UserDetails loadByMail(String mail) {
+        return null;
+    }
+
+    @Override
+    public UserDetails loadByUserId(String userId) {
+        return null;
+    }
+
+    @Override
+    public boolean support(String clientId) {
+        return false;
     }
 }

@@ -1,4 +1,4 @@
-package com.lc.auth.server.security.authentication;
+package com.lc.auth.server.security.authentication.extension;
 
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
