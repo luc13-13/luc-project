@@ -9,13 +9,12 @@ import com.lc.auth.server.security.authentication.extension.sms.SmsAuthenticatio
 import com.lc.auth.server.security.authentication.extension.sms.SmsCodeService;
 import com.lc.auth.server.security.core.LoginUserDetailService;
 import com.lc.auth.server.security.properties.LoginProperties;
+import com.lc.auth.server.security.properties.SysCorsProperties;
 import com.lc.auth.server.security.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.*;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,6 +37,9 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.time.Duration;
 import java.util.List;
@@ -51,6 +53,7 @@ import java.util.List;
  */
 @Slf4j
 @AutoConfiguration
+@EnableConfigurationProperties({SysSecurityProperties.class, LoginProperties.class, SysCorsProperties.class})
 public class LucAuthenticationConfiguration {
 
     /**
@@ -178,5 +181,27 @@ public class LucAuthenticationConfiguration {
                 .registerModules(SecurityJackson2Modules.getModules(getClass().getClassLoader()))
                 .registerModules(new OAuth2ClientJackson2Module())
                 .registerModules(new CoreJackson2Module());
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = SysCorsProperties.PREFIX, value = "enabled", havingValue = "true")
+    public CorsConfigurationSource corsConfigurationSource(SysCorsProperties corsProperties) {
+        // 初始化cors配置对象
+        CorsConfiguration configuration = new CorsConfiguration();
+        // 设置跨域访问可以携带cookie
+        configuration.setAllowCredentials(corsProperties.isAllowCredentials());
+        // allowCredentials=true时，origin不可以用*匹配，需要设置originPattern
+        configuration.setAllowedOriginPatterns(corsProperties.getAllowedOriginPatterns());
+        // 允许所有的请求方法 ==> GET POST PUT Delete
+        configuration.setAllowedMethods(corsProperties.getAllowedMethods());
+        // 允许携带任何头信息
+        configuration.setAllowedHeaders(corsProperties.getAllowedHeaders());
+        // 初始化cors配置源对象
+        UrlBasedCorsConfigurationSource configurationSource = new UrlBasedCorsConfigurationSource();
+        // 给配置源对象设置过滤的参数
+        // 参数一: 过滤的路径 == > 所有的路径都要求校验是否跨域
+        // 参数二: 配置类
+        configurationSource.registerCorsConfiguration("/**", configuration);
+        return configurationSource;
     }
 }

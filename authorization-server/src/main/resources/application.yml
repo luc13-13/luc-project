@@ -97,7 +97,7 @@ sys:
     enable-redis: true
     # 登录配置
     login:
-      login-page: http://127.0.0.1/login #/login
+      login-page: /login #http://127.0.0.1/login
       always-use-default-success-url: false
       enable-sms-login: true
     # 白名单路径
@@ -127,7 +127,15 @@ sys:
       - "/sms/**"
       # 开发相关
       - "/.well-known/appspecific/com.chrome.devtools.json"
-
+    # cors配置
+    cors:
+      enabled: true
+      allowed-origins:
+        - http://localhost
+        - http://127.0.0.1
+      allowed-methods: "*"
+      allow-credentials: true
+      allowed-headers: "*"
   # 短信配置
 
 

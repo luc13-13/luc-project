@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
@@ -50,7 +49,6 @@ import org.springframework.util.CollectionUtils;
 @AllArgsConstructor
 @Import({JwtConfiguration.class, EncoderConfiguration.class, LucAuthenticationConfiguration.class})
 @AutoConfiguration(after = {JwtConfiguration.class, EncoderConfiguration.class, LucAuthenticationConfiguration.class})
-@EnableConfigurationProperties({SysSecurityProperties.class, LoginProperties.class})
 public class SecurityAutoConfiguration {
 
     private final SysSecurityProperties sysSecurityProperties;
@@ -126,6 +124,7 @@ public class SecurityAutoConfiguration {
                 // 表单登录配置
                 .formLogin(formLogin -> formLogin
                         .loginPage(loginProperties.getLoginPage())
+                        .loginProcessingUrl("/login")
                         .successHandler(loginSuccessHandler)
                         .failureHandler(new LoginFailureHandler())
                         .permitAll()
