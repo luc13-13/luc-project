@@ -36,10 +36,18 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             tokenKey = request.getAttribute(TOKEN_HEADER).toString();
         }
         log.info("登陆成功，用户: {}, tokenKey: {}", authentication.getName(), tokenKey);
+        // 设置响应头返回 token（不使用 Cookie）
+        if (StringUtils.hasText(tokenKey)) {
+            Cookie tokenCookie = new Cookie(TOKEN_HEADER, tokenKey);
+            tokenCookie.setPath("/");
+            response.addCookie(tokenCookie);
 
-        // 添加 Cookie（如果有 token）
-        if (tokenKey != null) {
-            response.addCookie(new Cookie(TOKEN_HEADER, tokenKey));
+            response.setHeader(TOKEN_HEADER, tokenKey);
+            // 设置 CORS 头，允许前端读取自定义响应头
+            response.setHeader("Access-Control-Expose-Headers", TOKEN_HEADER);
+            log.info("设置响应头 {}: {}", TOKEN_HEADER, tokenKey);
+        } else {
+            log.warn("tokenKey 为空，无法设置响应头");
         }
 
         // 检查请求是否期望 JSON 响应
@@ -50,7 +58,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
             WebUtil.makeResponse(response, MediaType.APPLICATION_JSON_VALUE, SUCCESS, authentication);
         } else {
             // 重定向到首页
-            log.info("重定向到首页");
+            log.info("重定向到首页，tokenKey: {}", tokenKey);
             response.sendRedirect("/");
         }
     }

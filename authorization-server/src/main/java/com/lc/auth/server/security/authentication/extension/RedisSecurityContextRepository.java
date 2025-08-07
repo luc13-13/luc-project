@@ -12,8 +12,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpRequestResponseHolder;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.util.StringUtils;
+import org.springframework.web.util.WebUtils;
 
-import java.util.Arrays;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -37,7 +37,7 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
     /**
      * 请求头中token的前缀
      */
-    private static final String TOKEN_PREFIX = "Bearer ";
+    private static final String BEARER_TOKEN_PREFIX = "Bearer ";
 
     @Override
     public SecurityContext loadContext(HttpRequestResponseHolder requestResponseHolder) {
@@ -127,11 +127,15 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
      * 从请求头中提取token
      */
     private String extractToken(HttpServletRequest request) {
-        String bearerToken = request.getHeader(TOKEN_HEADER);
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(TOKEN_PREFIX)) {
-            return bearerToken.substring(TOKEN_PREFIX.length());
+        String token = request.getHeader(TOKEN_HEADER);
+        if (StringUtils.hasText(token) && token.startsWith(BEARER_TOKEN_PREFIX)) {
+            return token.substring(BEARER_TOKEN_PREFIX.length());
         }
-        return Arrays.stream(request.getCookies()).filter(it -> TOKEN_HEADER.equals(it.getName())).map(Cookie::getValue).findFirst().orElse(null);
+        Cookie cookie;
+        if (!StringUtils.hasText(token) && (cookie = WebUtils.getCookie(request, TOKEN_HEADER)) != null) {
+            token = cookie.getValue();
+        }
+        return token;
     }
 
     /**
@@ -147,7 +151,7 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
      * 在响应头中设置token
      */
     private void setTokenInResponse(HttpServletResponse response, String token) {
-        response.setHeader("Authorization", TOKEN_PREFIX + token);
+        response.setHeader("Authorization", BEARER_TOKEN_PREFIX + token);
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
     }
 

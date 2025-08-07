@@ -97,9 +97,8 @@ sys:
     enable-redis: true
     # 登录配置
     login:
-      login-page: /login
-      default-success-url: /
-      always-use-default-success-url: true
+      login-page: http://127.0.0.1/login #/login
+      always-use-default-success-url: false
       enable-sms-login: true
     # 白名单路径
     white-paths:
@@ -126,7 +125,6 @@ sys:
       - "/login/**"
       - "/register/**"
       - "/sms/**"
-      - "/login/sms"
       # 开发相关
       - "/.well-known/appspecific/com.chrome.devtools.json"
 
@@ -137,6 +135,6 @@ sys:
 logging:
   level:
     root: info
-    org.springframework.security: debug
+    org.springframework.security: trace
     com.lc.auth.server: debug
     org.springframework.web: debug

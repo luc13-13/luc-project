@@ -1,13 +1,14 @@
 package com.lc.auth.server.web;
 
+import com.lc.auth.server.security.core.LoginDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * <pre>
@@ -17,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @version : 1.0
  */
 @Slf4j
-@Controller
+@RestController
 public class LoginController {
 
     /**
@@ -60,13 +61,19 @@ public class LoginController {
         return home(authentication, model);
     }
 
-    @RequestMapping("/login")
-    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
-//        log.debug("访问登录页面, error={}", error);
-        if (error != null) {
-            model.addAttribute("error", "登录失败，请检查用户名和密码");
-        }
-        return  "login";
+//    @RequestMapping("/login")
+//    public String login(@RequestParam(value = "error", required = false) String error, Model model) {
+////        log.debug("访问登录页面, error={}", error);
+//        if (error != null) {
+//            model.addAttribute("error", "登录失败，请检查用户名和密码");
+//        }
+//        return  "login";
+//    }
+
+    @PostMapping("/login")
+    public String login(@RequestBody LoginDTO loginDTO) {
+        log.info("登陆参数: {}", loginDTO);
+        return "access-token-test";
     }
 
     /**

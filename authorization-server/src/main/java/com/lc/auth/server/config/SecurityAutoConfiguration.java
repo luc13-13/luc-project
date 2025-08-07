@@ -3,7 +3,9 @@ package com.lc.auth.server.config;
 import com.lc.auth.server.security.authentication.LucAuthenticationConfiguration;
 import com.lc.auth.server.security.authentication.extension.MultiTypeAuthenticationFilter;
 import com.lc.auth.server.security.encoder.EncoderConfiguration;
+import com.lc.auth.server.security.handler.LoginFailureHandler;
 import com.lc.auth.server.security.handler.LoginSuccessHandler;
+import com.lc.auth.server.security.handler.SpaCsrfTokenRequestHandler;
 import com.lc.auth.server.security.jwt.JwtConfiguration;
 import com.lc.auth.server.security.properties.LoginProperties;
 import com.lc.auth.server.security.properties.SysSecurityProperties;
@@ -30,6 +32,7 @@ import org.springframework.security.web.context.DelegatingSecurityContextReposit
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.util.CollectionUtils;
@@ -102,7 +105,8 @@ public class SecurityAutoConfiguration {
                             if (!CollectionUtils.isEmpty(sysSecurityProperties.getWhitePaths())) {
                                 log.info("设置访问白名单: {}", sysSecurityProperties.getWhitePaths());
                                 for (String whitePath : sysSecurityProperties.getWhitePaths()) {
-                                    authorize.requestMatchers(PathPatternRequestMatcher.withDefaults().matcher(whitePath));
+                                    authorize.requestMatchers(PathPatternRequestMatcher.withDefaults().matcher(whitePath))
+                                            .permitAll();
                                 }
                             }
                             authorize.anyRequest().authenticated();
@@ -123,7 +127,7 @@ public class SecurityAutoConfiguration {
                 .formLogin(formLogin -> formLogin
                         .loginPage(loginProperties.getLoginPage())
                         .successHandler(loginSuccessHandler)
-                        .failureUrl(loginProperties.getLoginPage() + "?error")
+                        .failureHandler(new LoginFailureHandler())
                         .permitAll()
                 )
 //                 OAuth2第三方登录配置
@@ -140,13 +144,23 @@ public class SecurityAutoConfiguration {
                 .logout(logout -> logout
                         .logoutUrl(loginProperties.getLogoutUrl())
                         .logoutSuccessUrl(loginProperties.getLogoutSuccessUrl())
+                        .invalidateHttpSession(true)
                         .permitAll()
                 )
                 // CSRF 配置
                 .csrf(csrf -> csrf
-                        .ignoringRequestMatchers(PathPatternRequestMatcher.withDefaults().matcher("/oauth2/**"),
-                                PathPatternRequestMatcher.withDefaults().matcher("/login/oauth2/**"))
-                );
+                        // 忽略 OAuth2 相关路径
+                        .ignoringRequestMatchers(
+                                PathPatternRequestMatcher.withDefaults().matcher("/oauth2/**"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/login/oauth2/**"),
+                                PathPatternRequestMatcher.withDefaults().matcher("/api/csrf-token")
+                        )
+                        // 配置 CSRF token 存储方式
+                        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                        .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
+                )
+                .cors(Customizer.withDefaults());
+
         // 添加拓展的登陆过滤器
         multiTypeAuthenticationFilters.ifAvailable(filter -> http.addFilterBefore((Filter) filter, (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class));
         // 添加拓展的认证提供者
