@@ -12,7 +12,6 @@ import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 
-import static com.lc.framework.core.mvc.StatusConstants.BIZ_ERROR;
 import static com.lc.framework.core.mvc.StatusConstants.CODE_BIZ_ERROR;
 
 /**
