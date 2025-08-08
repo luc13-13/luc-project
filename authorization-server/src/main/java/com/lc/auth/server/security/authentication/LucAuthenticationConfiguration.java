@@ -164,6 +164,11 @@ public class LucAuthenticationConfiguration {
         return new SmsCodeService(redisTemplate);
     }
 
+    /**
+     * Create SMS code Authentication Provider bean when enable-sms-login is true. See {@link LoginProperties#isEnableSmsLogin()}
+     * @param smsCodeService 短信服务接口，调用方自行实现
+     * @param loginUserDetailService 登陆用户接口，调用方自行实现
+     */
     @Bean
     @ConditionalOnMissingBean(SmsAuthenticationProvider.class)
     @ConditionalOnProperty(prefix = LoginProperties.PREFIX, name = "enable-sms-login", havingValue = "true")

@@ -19,6 +19,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -86,15 +87,19 @@ public class SecurityAutoConfiguration {
     }
 
     /**
-     * 认证服务器默认安全过滤器链
-     * 处理登录、登出和OAuth2认证流程
+     * 认证服务器默认安全过滤器链，处理登录、登出和OAuth2认证流程
+     * @param userDetailsService 获取用户信息，校验密码
+     * @param loginSuccessHandler 登陆成功处理器
+     * @param securityContextRepositoryProvider 认证信息存储方式。支持Redis，默认为{@link RequestAttributeSecurityContextRepository}和{@link HttpSessionSecurityContextRepository}
+     * @param authenticationProviders 认证提供类，向{@link ProviderManager}中注入
+     * @param multiTypeAuthenticationFilters Extended login way. See {@link MultiTypeAuthenticationFilter}
      */
     @Bean
     @Order(2)
     public SecurityFilterChain authenticationSecurityFilterChain(HttpSecurity http,
-                                                                 ObjectProvider<SecurityContextRepository> securityContextRepositoryProvider,
-                                                                 LoginSuccessHandler loginSuccessHandler,
                                                                  UserDetailsService userDetailsService,
+                                                                 LoginSuccessHandler loginSuccessHandler,
+                                                                 ObjectProvider<SecurityContextRepository> securityContextRepositoryProvider,
                                                                  ObjectProvider<AuthenticationProvider> authenticationProviders,
                                                                  ObjectProvider<MultiTypeAuthenticationFilter> multiTypeAuthenticationFilters) throws Exception {
         log.info("登陆页配置：{}", loginProperties);
@@ -158,6 +163,7 @@ public class SecurityAutoConfiguration {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
                 )
+                // 前后端分离项目必须开启CORS，否则前端、gateway与认证服务不同源会被拒绝。同时提供CorsConfigurationSource, {@link }
                 .cors(Customizer.withDefaults());
 
         // 添加拓展的登陆过滤器

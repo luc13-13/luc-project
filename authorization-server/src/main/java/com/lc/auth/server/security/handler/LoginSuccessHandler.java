@@ -19,7 +19,8 @@ import static com.lc.framework.core.mvc.StatusConstants.SUCCESS;
 
 /**
  * <pre>
- *   只处理FormLogin登录成功，
+ *   处理/login，被MultiTypeAuthenticationFilter、UsernamePasswordAuthenticationFilter调用;
+ *   处理/login/oauth2/code/**，被OAuth2LoginAuthenticationFilter调用
  * </pre>
  *
  * @author Lu Cheng
