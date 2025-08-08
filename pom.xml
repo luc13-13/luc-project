@@ -29,9 +29,9 @@
         <module>luc-framework</module>
         <!--应用服务-->
         <module>auth-gateway</module>
-        <module>auth-server</module>
         <module>luc-system</module>
-        <module>luc-auth</module>
+        <module>authorization-server</module>
+        <module>authorization-gateway</module>
     </modules>
 
     <properties>
@@ -74,6 +74,7 @@
         <easyexcel.version>3.3.1</easyexcel.version>
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <hutool.version>5.8.28</hutool.version>
+        <commons-lang3.version>3.18.0</commons-lang3.version>
 
         <!--代码扫描配置-->
         <sonar.projectKey>lu-cheng_${project.artifactId}</sonar.projectKey>
@@ -279,6 +280,11 @@
                 <artifactId>hutool-core</artifactId>
                 <version>${hutool.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -378,6 +384,23 @@
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.14.0</version>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-configuration-processor</artifactId>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
             </plugin>
         </plugins>
     </build>

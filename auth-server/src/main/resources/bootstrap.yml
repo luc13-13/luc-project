@@ -1,9 +1,0 @@
-server:
-  port: 8889
-spring:
-  profiles:
-    active: dev
-  application:
-    name: auth-server
-  messages:
-    basename: messages
