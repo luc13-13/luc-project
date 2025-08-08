@@ -41,7 +41,7 @@ public class MenuController {
     public WebResult<List<MenuDTO>> getRoutes() {
 //        List<SysMenuDO> menuDOList = sysMenuMapper.selectMenuTreeByUserId(2L);
 //        List<MenuDTO> menuDTOList= buildMenuTree(menuDOList);
-        return WebResult.successData(buildMock());
+        return WebResult.success(buildMock());
     }
 
     private List<MenuDTO> buildMenuTree(List<SysMenuDO> menuDOList) {

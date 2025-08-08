@@ -53,14 +53,24 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
         // 检查请求是否期望 JSON 响应
         String acceptHeader = request.getHeader("Accept");
+
         if (acceptHeader != null && acceptHeader.contains("application/json")) {
             // 返回 JSON 响应
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
             WebUtil.makeResponse(response, MediaType.APPLICATION_JSON_VALUE, SUCCESS, authentication);
         } else {
-            // 重定向到首页
-            log.info("重定向到首页，tokenKey: {}", tokenKey);
-            response.sendRedirect("/");
+            // 获取原始请求的redirect参数
+            String redirectUrl = request.getParameter("redirect");
+            if (StringUtils.hasText(redirectUrl)) {
+                // 如果有redirect参数，重定向到指定地址并携带token
+                String callbackUrl = redirectUrl + (redirectUrl.contains("?") ? "&" : "?") + "token=" + tokenKey;
+                log.info("重定向到指定地址: {}", callbackUrl);
+                response.sendRedirect(callbackUrl);
+            } else {
+                // 默认重定向到vben-ele前端回调页面
+                log.info("重定向到前端回调页面，tokenKey: {}", tokenKey);
+                response.sendRedirect("http://127.0.0.1/oauth2/callback?token=" + tokenKey);
+            }
         }
     }
 }

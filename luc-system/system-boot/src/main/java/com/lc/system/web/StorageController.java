@@ -30,7 +30,7 @@ public class StorageController {
                                               @RequestParam(name = "bucket", required = false) String bucket,
                                               @RequestParam(name = "prefix", required = false) String prefix) {
         StorageResult result = storageClientTemplate.upload(bucket, prefix, file);
-        return WebResult.successData(StorageResultDTO.builder()
+        return WebResult.success(StorageResultDTO.builder()
                 .storageType(Objects.isNull(result.bucketInfo()) ? null : result.bucketInfo().getPlatform())
                 .bucketName(Objects.isNull(result.bucketInfo()) ? null : result.bucketInfo().getName())
                 .region(Objects.isNull(result.bucketInfo()) ? null : result.bucketInfo().getRegion())
@@ -43,7 +43,7 @@ public class StorageController {
     public WebResult<String> getFile(@RequestParam("bucket") String bucket,
                                      @RequestParam("filename") String filename) {
         String url = storageClientTemplate.getFile(bucket, filename).accessUrl();
-        return WebResult.successData(url);
+        return WebResult.success(url);
     }
 
 }

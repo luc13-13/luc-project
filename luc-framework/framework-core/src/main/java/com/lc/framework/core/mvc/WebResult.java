@@ -47,7 +47,7 @@ public class WebResult<S> implements Serializable {
         return success(null, StatusConstants.SUCCESS, StatusConstants.SUCCESS_MSG);
     }
 
-    public static <S> WebResult<S> successData(S data) {
+    public static <S> WebResult<S> success(S data) {
         return success(data, StatusConstants.SUCCESS, StatusConstants.SUCCESS_MSG);
     }
 
@@ -67,44 +67,12 @@ public class WebResult<S> implements Serializable {
         return response(data, status.getCode(), status.getDesc());
     }
 
-    public static <S> WebResult<S> bizErrorData(S data) {
-        return error(data, StatusConstants.BIZ_ERROR);
+    public static <S> WebResult<S> bizError(String msg) {
+        return response(null, StatusConstants.CODE_BIZ_ERROR, msg);
     }
 
     public static <S> boolean isSuccess(WebResult<S> result) {
         return result.getData() != null && StatusConstants.SUCCESS.equals(result.getCode());
-    }
-
-    public Long getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
-
-    public S getData() {
-        return data;
-    }
-
-    public void setData(S data) {
-        this.data = data;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public String getMsg() {
-        return msg;
     }
 
 }

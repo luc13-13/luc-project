@@ -11,138 +11,14 @@ spring:
     active: dev
   cloud:
     nacos:
+      username: 'luc'
+      password: 'luc123456'
       server-addr: 127.0.0.1:8848
       discovery:
         namespace: com-lc-dev
-
-  # 数据源配置
-  datasource:
-    type: com.alibaba.druid.pool.DruidDataSource
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/authorization_server?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8
-    username: root
-    password: luc123456
-
-  # Redis 配置
-  data:
-    redis:
-      database: 0
-      host: 127.0.0.1
-      port: 6379
-      password: luc123456
-      timeout: 5000
-      client-type: lettuce
-      lettuce:
-        pool:
-          min-idle: 8
-          max-idle: 500
-          max-active: 2000
-          max-wait: 10000
-          enabled: true
-
-  # OAuth2 配置
-  security:
-    user:
-      name: admin
-      password: admin
-    oauth2:
-      # 认证服务器配置，已注册的客户端。后续通过jdbc获取
-      authorizationserver:
-        issuer: http://127.0.0.1:8889
-      # oauth2 客户端配置
-      client:
-        registration:
-          gitee:
-            client-id: 5f2347d5f004f353527c9f96ed162b97f461da0afc5589332172d5f2b78b71db
-            client-secret: 8bf85746f31139726b4bead33cedc8b7c63dae8068c025b8563c58c7990e3774
-            scope: user_info
-            authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-          wechat:
-            client-id: your-wechat-client-id
-            client-secret: your-wechat-client-secret
-            scope: snsapi_userinfo
-            authorization-grant-type: authorization_code
-            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
-        provider:
-          gitee:
-            authorization-uri: https://gitee.com/oauth/authorize
-            token-uri: https://gitee.com/oauth/token
-            user-info-uri: https://gitee.com/api/v5/user
-            user-name-attribute: login
-          wechat:
-            authorization-uri: https://open.weixin.qq.com/connect/oauth2/authorize
-            token-uri: https://api.weixin.qq.com/sns/oauth2/access_token
-            user-info-uri: https://api.weixin.qq.com/sns/userinfo
-            user-name-attribute: openid
-
-
-
-# MyBatis-Plus 配置
-mybatis-plus:
-  mapper-locations: classpath*:mapper/*.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
-
-# SpringDoc OpenAPI 配置
-springdoc:
-  info:
-    title: "LUC认证中心 API文档"
-    version: "1.0.0"
-    description: "基于Spring Authorization Server构建的认证授权中心服务API文档"
-
-# 系统配置
-sys:
-  security:
-    enable-redis: true
-    # 登录配置
-    login:
-      login-page: /login #http://127.0.0.1/login
-      always-use-default-success-url: false
-      enable-sms-login: true
-    # 白名单路径
-    white-paths:
-      # 首页
-      - "/"
-      - "/home"
-      - "/index"
-      - "/welcome"
-      # 静态资源
-      - "/css/**"
-      - "/js/**"
-      - "/images/**"
-      - "/static/**"
-      # api文档
-      - "/v3/api-docs/**"
-      - "/swagger-ui/**"
-      - "/doc.html"
-      - "/favicon.ico"
-      # 监控
-      - "/actuator/**"
-      - "/health"
-      # 认证相关
-      - "/oauth2/**"
-      - "/login/**"
-      - "/register/**"
-      - "/sms/**"
-      # 开发相关
-      - "/.well-known/appspecific/com.chrome.devtools.json"
-    # cors配置
-    cors:
-      enabled: true
-      allowed-origins:
-        - http://localhost
-        - http://127.0.0.1
-      allowed-methods: "*"
-      allow-credentials: true
-      allowed-headers: "*"
-  # 短信配置
-
-
 # 日志配置
 logging:
   level:
     root: info
     org.springframework.security: trace
     com.lc.auth.server: debug
-    org.springframework.web: debug

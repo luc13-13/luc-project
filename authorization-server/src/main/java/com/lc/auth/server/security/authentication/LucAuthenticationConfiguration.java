@@ -13,12 +13,14 @@ import com.lc.auth.server.security.properties.SysCorsProperties;
 import com.lc.auth.server.security.properties.SysSecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.*;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
@@ -111,8 +113,37 @@ public class LucAuthenticationConfiguration {
                         .build())
                 .build();
 
+        // vben-ele前端客户端
+        RegisteredClient vbenEleClient = RegisteredClient.withId("vben-ele-client")
+                .clientId("vben-ele-client")
+                .clientSecret(passwordEncoder.encode("secret"))
+                .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
+                .authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                .redirectUri("http://127.0.0.1/oauth2/callback")
+                .redirectUri("http://localhost/oauth2/callback")
+                .redirectUri("http://127.0.0.1:80/oauth2/callback")
+                .redirectUri("http://localhost:80/oauth2/callback")
+                .postLogoutRedirectUri("http://127.0.0.1/")
+                .postLogoutRedirectUri("http://localhost/")
+                .scope(OidcScopes.OPENID)
+                .scope(OidcScopes.PROFILE)
+                .scope("read")
+                .scope("write")
+                .scope("user_info")
+                .clientSettings(ClientSettings.builder()
+                        .requireAuthorizationConsent(false) // 前端应用不需要用户确认
+                        .build())
+                .tokenSettings(TokenSettings.builder()
+                        .accessTokenTimeToLive(Duration.ofHours(8)) // 前端token有效期长一些
+                        .refreshTokenTimeToLive(Duration.ofDays(30))
+                        .build())
+                .build();
+
         repository.save(gatewayClient);
         repository.save(apiDocClient);
+        repository.save(vbenEleClient);
         return repository;
     }
 
@@ -172,11 +203,17 @@ public class LucAuthenticationConfiguration {
     @Bean
     @ConditionalOnMissingBean(SmsAuthenticationProvider.class)
     @ConditionalOnProperty(prefix = LoginProperties.PREFIX, name = "enable-sms-login", havingValue = "true")
-    public AuthenticationProvider smsAuthenticationProvider(SmsCodeService smsCodeService,
+    public SmsAuthenticationProvider smsAuthenticationProvider(SmsCodeService smsCodeService,
                                                             LoginUserDetailService loginUserDetailService) {
         return new SmsAuthenticationProvider(smsCodeService, loginUserDetailService);
     }
 
+    @Bean
+    @ConditionalOnMissingBean
+    @ConditionalOnProperty(prefix = LoginProperties.PREFIX, name = "enable-sms-login", havingValue = "true")
+    public SmsAuthenticationConverter smsAuthenticationConverter() {
+        return new SmsAuthenticationConverter();
+    }
     /**
      * 向redisTemplate中添加SpringSecurity相关类的序列化支持
      */
