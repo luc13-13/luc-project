@@ -233,7 +233,11 @@ public class LucAuthenticationConfiguration {
         // 设置跨域访问可以携带cookie
         configuration.setAllowCredentials(corsProperties.isAllowCredentials());
         // allowCredentials=true时，origin不可以用*匹配，需要设置originPattern
-        configuration.setAllowedOriginPatterns(corsProperties.getAllowedOriginPatterns());
+        if (corsProperties.isAllowCredentials()) {
+            configuration.setAllowedOrigins(corsProperties.getAllowedOrigins());
+        } else {
+            configuration.setAllowedOriginPatterns(corsProperties.getAllowedOriginPatterns());
+        }
         // 允许所有的请求方法 ==> GET POST PUT Delete
         configuration.setAllowedMethods(corsProperties.getAllowedMethods());
         // 允许携带任何头信息
