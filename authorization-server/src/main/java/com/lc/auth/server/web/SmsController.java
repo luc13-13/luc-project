@@ -36,10 +36,10 @@ public class SmsController {
      * 获取短信验证码
      */
     @PostMapping("/code")
-    public WebResult<String> sendSmsCode(@Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
-                                             @RequestParam String phone,
-                                         @RequestParam(defaultValue = "login") String type) {
-        log.info("发送短信验证码，手机号: {}, 类型: {}", phone, type);
+    public WebResult<String> sendSmsCode(@RequestParam("phone")
+                                             @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确") String phone) {
+//        @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
+        log.info("发送短信验证码，手机号: {}", phone);
         if (!StringUtils.hasText(phone)) {
             return WebResult.bizError("手机号不能为空");
         }
