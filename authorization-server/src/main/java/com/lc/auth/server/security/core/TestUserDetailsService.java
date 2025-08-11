@@ -2,11 +2,13 @@ package com.lc.auth.server.security.core;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.Instant;
+import java.util.Set;
 
 /**
  * 测试用户详情服务
@@ -23,22 +25,20 @@ public class TestUserDetailsService implements LoginUserDetailService {
     }
     
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public LoginUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("尝试加载用户: {}", username);
         
         if ("admin".equals(username)) {
             // 创建 admin 用户，密码为 admin
             String encodedPassword = passwordEncoder.encode("admin");
             log.info("用户 admin 找到，编码后密码: {}", encodedPassword);
-            
-            UserDetails user = User.builder()
+
+            LoginUserDetail user = LoginUserDetail.builder()
                     .username("admin")
-                    .password(encodedPassword)
-                    .authorities("ROLE_ADMIN", "ROLE_USER")
-                    .accountExpired(false)
-                    .accountLocked(false)
-                    .credentialsExpired(false)
-                    .disabled(false)
+                    .authorities(Set.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")))
+                    .accountNonExpired(false)
+                    .accountNonLocked(false)
+                    .credentialsIssuedAt(Instant.now())
                     .build();
                     
             log.info("返回用户详情: {}", user);
@@ -50,17 +50,16 @@ public class TestUserDetailsService implements LoginUserDetailService {
     }
 
     @Override
-    public UserDetails loadByMobile(String mobile) {
+    public LoginUserDetail loadByMobile(String mobile) {
         try {
             // 简化处理：如果手机号是 13800138000，则映射到 admin 用户
             if ("13800138000".equals(mobile)) {
-                UserDetails user = User.builder()
+                LoginUserDetail user = LoginUserDetail.builder()
                         .username("admin")
-                        .authorities("ROLE_ADMIN", "ROLE_USER")
-                        .accountExpired(false)
-                        .accountLocked(false)
-                        .credentialsExpired(false)
-                        .disabled(false)
+                        .authorities(Set.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")))
+                        .accountNonExpired(false)
+                        .accountNonLocked(false)
+                        .credentialsIssuedAt(Instant.now())
                         .build();
 
                 log.info("根据手机号 {} 返回用户详情: {}", mobile, user);
@@ -77,12 +76,12 @@ public class TestUserDetailsService implements LoginUserDetailService {
     }
 
     @Override
-    public UserDetails loadByMail(String mail) {
+    public LoginUserDetail loadByMail(String mail) {
         return null;
     }
 
     @Override
-    public UserDetails loadByUserId(String userId) {
+    public LoginUserDetail loadByUserId(String userId) {
         return null;
     }
 

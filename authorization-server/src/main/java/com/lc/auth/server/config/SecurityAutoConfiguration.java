@@ -163,7 +163,7 @@ public class SecurityAutoConfiguration {
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                         .csrfTokenRequestHandler(new SpaCsrfTokenRequestHandler())
                 )
-                // 前后端分离项目必须开启CORS，否则前端、gateway与认证服务不同源会被拒绝。同时提供CorsConfigurationSource, {@link }
+                // 前后端分离项目必须开启CORS，否则前端、gateway与认证服务不同源会被拒绝。同时提供CorsConfigurationSource
                 .cors(Customizer.withDefaults());
 
         // 添加拓展的登陆过滤器

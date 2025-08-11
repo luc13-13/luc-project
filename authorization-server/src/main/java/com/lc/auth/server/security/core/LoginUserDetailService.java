@@ -1,6 +1,5 @@
 package com.lc.auth.server.security.core;
 
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 /**
@@ -18,23 +17,19 @@ public interface LoginUserDetailService extends UserDetailsService {
      * @param mobile 手机号
      * @return 用户信息
      */
-    UserDetails loadByMobile(String mobile);
+    LoginUserDetail loadByMobile(String mobile);
 
     /**
      * @param mail 邮箱
      * @return 用户信息
      */
-    UserDetails loadByMail(String mail);
+    LoginUserDetail loadByMail(String mail);
 
     /**
      * @param userId 用户id
      * @return 用户信息
      */
-    UserDetails loadByUserId(String userId);
-
-    default UserDetails loadByUser(LoginUserDetail userDetail) {
-        return this.loadUserByUsername(userDetail.getUsername());
-    }
+    LoginUserDetail loadByUserId(String userId);
 
     /**
      * @param clientId 客户端id， 用于校验是否支持当前的客户端请求
