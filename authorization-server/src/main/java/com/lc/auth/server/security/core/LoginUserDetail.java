@@ -115,12 +115,6 @@ public class LoginUserDetail implements OAuth2AuthenticatedPrincipal, UserDetail
 
     private final Map<String, Object> attributes = new HashMap<>();
 
-    public LoginUserDetail(String username, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.username = username;
-        this.password = password;
-        this.authorities = Collections.unmodifiableSet(sortAuthorities(authorities));
-    }
-
 
     public boolean lock() {
         return nonLocked.compareAndSet(true, false);

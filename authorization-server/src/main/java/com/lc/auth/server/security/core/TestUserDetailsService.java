@@ -35,9 +35,10 @@ public class TestUserDetailsService implements LoginUserDetailService {
 
             LoginUserDetail user = LoginUserDetail.builder()
                     .username("admin")
+                    .password(encodedPassword)
                     .authorities(Set.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")))
-                    .accountNonExpired(false)
-                    .accountNonLocked(false)
+                    .accountNonExpired(true)
+                    .accountNonLocked(true)
                     .credentialsIssuedAt(Instant.now())
                     .build();
                     
@@ -57,8 +58,8 @@ public class TestUserDetailsService implements LoginUserDetailService {
                 LoginUserDetail user = LoginUserDetail.builder()
                         .username("admin")
                         .authorities(Set.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")))
-                        .accountNonExpired(false)
-                        .accountNonLocked(false)
+                        .accountNonExpired(true)
+                        .accountNonLocked(true)
                         .credentialsIssuedAt(Instant.now())
                         .build();
 

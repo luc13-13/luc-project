@@ -1,6 +1,7 @@
 package com.lc.auth.server.security.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.lc.auth.server.redis.customizer.ObjectMapperCustomizer;
 import com.lc.auth.server.security.authentication.extension.MultiTypeAuthenticationFilter;
 import com.lc.auth.server.security.authentication.extension.RedisSecurityContextRepository;
@@ -220,6 +221,7 @@ public class LucAuthenticationConfiguration {
     @Bean
     public ObjectMapperCustomizer<ObjectMapper> redisSerializerCustomizer() {
         return objectMapper -> objectMapper
+                .registerModules(new JavaTimeModule())
                 .registerModules(SecurityJackson2Modules.getModules(getClass().getClassLoader()))
                 .registerModules(new OAuth2ClientJackson2Module())
                 .registerModules(new CoreJackson2Module());
