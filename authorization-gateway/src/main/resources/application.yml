@@ -1,0 +1,16 @@
+server:
+  port: 8809
+spring:
+  application:
+    name: authorization-gateway
+  profiles:
+    active: dev
+
+# 日志配置
+logging:
+  level:
+    com.lc.authorization.gateway: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.cloud.gateway: DEBUG
+
+

@@ -1,0 +1,59 @@
+spring:
+  cloud:
+    gateway:
+      # 全局CORS配置
+      server:
+        webflux:
+          routes:
+            # 认证服务路由
+            - id: auth-server
+              uri: http://127.0.0.1:8889
+              predicates:
+                - Path=/auth-server/**
+              filters:
+                - StripPrefix=1
+
+            # 业务服务路由示例（可根据实际需要配置）
+            - id: luc-system
+              uri: http://127.0.0.1:19003
+              predicates:
+                - Path=/luc-system/**
+              filters:
+                - StripPrefix=1
+                # 添加用户信息到请求头
+                - AddRequestHeader=X-Gateway, authorization-gateway
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowedOriginPatterns: "*"
+                allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowedHeaders: "*"
+                allowCredentials: true
+                maxAge: 3600
+
+# 认证服务配置
+auth:
+  service:
+    url: http://127.0.0.1:8889
+
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    oauth:
+      client-id: gateway-client
+      client-secret: secret
+      use-pkce-with-authorization-code-grant: false
+  api-docs:
+    enabled: true
+  info:
+    title: "LUC项目API文档"
+    version: "1.0.0"
+    description: "基于SpringBoot3、Spring Authorization Server的企业级后台管理系统API文档"
+    # 确保授权URL通过网关访问
+    authorization-url: http://localhost:8809/auth-server/oauth2/authorize
+    token-uri: http://localhost:8809/auth-server/oauth2/token
