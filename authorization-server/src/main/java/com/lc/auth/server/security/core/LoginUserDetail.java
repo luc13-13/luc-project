@@ -1,8 +1,10 @@
 package com.lc.auth.server.security.core;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +27,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 public class LoginUserDetail implements OAuth2AuthenticatedPrincipal, UserDetails, CredentialsContainer {
 

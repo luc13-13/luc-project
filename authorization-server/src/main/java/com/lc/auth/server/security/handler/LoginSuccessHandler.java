@@ -57,7 +57,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         if (acceptHeader != null && acceptHeader.contains("application/json")) {
             // 返回 JSON 响应
             response.setCharacterEncoding(StandardCharsets.UTF_8.name());
-            WebUtil.makeResponse(response, MediaType.APPLICATION_JSON_VALUE, SUCCESS, authentication);
+            WebUtil.makeResponse(response, MediaType.APPLICATION_JSON_VALUE, SUCCESS, tokenKey);
         } else {
             // 获取原始请求的redirect参数
             String redirectUrl = request.getParameter("redirect");
