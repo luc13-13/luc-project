@@ -36,6 +36,7 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
+import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.web.authentication.AuthenticationConverter;
@@ -223,6 +224,7 @@ public class LucAuthenticationConfiguration {
         return objectMapper -> objectMapper
                 .registerModules(new JavaTimeModule())
                 .registerModules(SecurityJackson2Modules.getModules(getClass().getClassLoader()))
+                .registerModules(new OAuth2AuthorizationServerJackson2Module())
                 .registerModules(new OAuth2ClientJackson2Module())
                 .registerModules(new CoreJackson2Module());
     }

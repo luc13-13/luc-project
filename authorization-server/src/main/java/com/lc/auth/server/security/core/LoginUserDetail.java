@@ -1,6 +1,7 @@
 package com.lc.auth.server.security.core;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,7 +15,6 @@ import org.springframework.util.Assert;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * <pre>
@@ -30,6 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginUserDetail implements OAuth2AuthenticatedPrincipal, UserDetails, CredentialsContainer {
 
     /**
@@ -112,17 +113,7 @@ public class LoginUserDetail implements OAuth2AuthenticatedPrincipal, UserDetail
      */
     private String grantType;
 
-    /**
-     * 账号锁定状态
-     */
-    private final AtomicBoolean nonLocked = new AtomicBoolean(true);
-
     private final Map<String, Object> attributes = new HashMap<>();
-
-
-    public boolean lock() {
-        return nonLocked.compareAndSet(true, false);
-    }
 
     @Override
     public Map<String, Object> getAttributes() {

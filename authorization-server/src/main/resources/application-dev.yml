@@ -107,7 +107,6 @@ sys:
       - "/actuator/**"
       - "/health"
       # 认证相关
-      - "/oauth2/**"
       - "/login/**"
       - "/register/**"
       - "/sms/**"

@@ -61,7 +61,8 @@ public class SecurityAutoConfiguration {
      */
     @Bean
     @Order(1)
-    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http,
+                                                                      ObjectProvider<SecurityContextRepository> securityContextRepositoryProvider) throws Exception {
 
         OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
                 OAuth2AuthorizationServerConfigurer.authorizationServer();
@@ -79,6 +80,13 @@ public class SecurityAutoConfiguration {
                                 new MediaTypeRequestMatcher(MediaType.TEXT_HTML)
                         )
                 )
+                .securityContext(context -> context
+                        .securityContextRepository(securityContextRepositoryProvider.getIfAvailable(
+                                        () -> new DelegatingSecurityContextRepository(
+                                                new RequestAttributeSecurityContextRepository(),
+                                                new HttpSessionSecurityContextRepository())
+                                )
+                        ))
                 // Accept access tokens for User Info and/or Client Registration
                 .oauth2ResourceServer((resourceServer) -> resourceServer
                         .jwt(Customizer.withDefaults()));
