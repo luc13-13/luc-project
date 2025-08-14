@@ -20,18 +20,13 @@ import java.util.Map;
 @RequestMapping
 public class UserController {
 
-    @GetMapping("codes")
-    public WebResult<List<String>> codes() {
-        return WebResult.success();
-    }
-
     @GetMapping("/user/info")
     public WebResult<Map<String, Object>> userInfo() {
         Map<String, Object> result = new HashMap<>();
         result.put("id", 1);
         result.put("realName", "Admin");
         result.put("roles", List.of("admin"));
-        result.put("homePath", "/index");
+        result.put("homePath", "/analytics");
         return WebResult.success(result);
     }
 }

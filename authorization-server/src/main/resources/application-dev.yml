@@ -83,7 +83,7 @@ sys:
     enable-redis: true
     # 登录配置
     login:
-      login-page: http://127.0.0.1/login #/login
+      login-page: http://127.0.0.1/auth/login #/login
       always-use-default-success-url: false
       enable-sms-login: true
     # 白名单路径
