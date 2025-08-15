@@ -23,7 +23,12 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
-
+        <!--兼容macos arm架构-->
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-resolver-dns-native-macos</artifactId>
+            <classifier>osx-aarch_64</classifier>
+        </dependency>
         <!-- web应用规范 -->
         <dependency>
             <groupId>com.lc</groupId>

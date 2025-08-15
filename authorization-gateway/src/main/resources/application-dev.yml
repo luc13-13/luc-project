@@ -35,7 +35,12 @@ spring:
                 allowedHeaders: "*"
                 allowCredentials: true
                 maxAge: 3600
-
+  # Resource Server JWT 验证配置（通过 issuer 自动发现 JWK Set）
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://127.0.0.1:8889
 # 认证服务配置
 auth:
   service:
