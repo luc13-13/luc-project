@@ -28,7 +28,6 @@
         <!--开发脚手架-->
         <module>luc-framework</module>
         <!--应用服务-->
-        <module>auth-gateway</module>
         <module>luc-system</module>
         <module>authorization-server</module>
         <module>authorization-gateway</module>
