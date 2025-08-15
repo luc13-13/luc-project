@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.system.mapper.MenuMapper">
+
+    <!-- MenuDTO 结果映射 -->
+    <resultMap id="MenuDTOResultMap" type="com.lc.system.domain.dto.MenuDTO">
+        <id property="menuId" column="menu_id"/>
+        <result property="parentMenuId" column="parent_menu_id"/>
+        <result property="name" column="name"/>
+        <result property="path" column="path"/>
+        <result property="component" column="component"/>
+        <result property="redirect" column="redirect"/>
+        <result property="menuType" column="menu_type"/>
+        <result property="status" column="status"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="createdBy" column="created_by"/>
+        <result property="dtCreated" column="dt_created"/>
+        <result property="modifiedBy" column="modified_by"/>
+        <result property="dtModified" column="dt_modified"/>
+        
+        <!-- 嵌套的 MenuMetaDTO -->
+        <association property="meta" javaType="com.lc.system.domain.dto.MenuMetaDTO">
+            <result property="title" column="meta_title"/>
+            <result property="icon" column="meta_icon"/>
+            <result property="activeIcon" column="meta_active_icon"/>
+            <result property="activePath" column="meta_active_path"/>
+            <result property="authority" column="meta_authority"/>
+            <result property="ignoreAccess" column="meta_ignore_access"/>
+            <result property="menuVisibleWithForbidden" column="meta_menu_visible_with_forbidden"/>
+            <result property="hideInMenu" column="meta_hide_in_menu"/>
+            <result property="hideInTab" column="meta_hide_in_tab"/>
+            <result property="hideInBreadcrumb" column="meta_hide_in_breadcrumb"/>
+            <result property="hideChildrenInMenu" column="meta_hide_children_in_menu"/>
+            <result property="affixTab" column="meta_affix_tab"/>
+            <result property="affixTabOrder" column="meta_affix_tab_order"/>
+            <result property="maxNumOfOpenTab" column="meta_max_num_of_open_tab"/>
+            <result property="keepAlive" column="meta_keep_alive"/>
+            <result property="noBasicLayout" column="meta_no_basic_layout"/>
+            <result property="link" column="meta_link"/>
+            <result property="iframeSrc" column="meta_iframe_src"/>
+            <result property="openInNewWindow" column="meta_open_in_new_window"/>
+            <result property="badge" column="meta_badge"/>
+            <result property="badgeType" column="meta_badge_type"/>
+            <result property="badgeVariants" column="meta_badge_variants"/>
+            <result property="queryParams" column="meta_query_params"/>
+        </association>
+    </resultMap>
+
+    <!-- 根据用户ID查询用户有权限的菜单 -->
+    <select id="selectMenusByUserId" resultMap="MenuDTOResultMap">
+        SELECT DISTINCT m.menu_id,
+                        m.parent_menu_id,
+                        m.name,
+                        m.path,
+                        m.component,
+                        m.redirect,
+                        m.menu_type,
+                        m.status,
+                        m.sort_order,
+                        m.created_by,
+                        m.dt_created,
+                        m.modified_by,
+                        m.dt_modified,
+
+                        -- meta 信息
+                        meta.title                       as meta_title,
+                        meta.icon                        as meta_icon,
+                        meta.active_icon                 as meta_active_icon,
+                        meta.active_path                 as meta_active_path,
+                        meta.authority                   as meta_authority,
+                        meta.ignore_access               as meta_ignore_access,
+                        meta.menu_visible_with_forbidden as meta_menu_visible_with_forbidden,
+                        meta.hide_in_menu                as meta_hide_in_menu,
+                        meta.hide_in_tab                 as meta_hide_in_tab,
+                        meta.hide_in_breadcrumb          as meta_hide_in_breadcrumb,
+                        meta.hide_children_in_menu       as meta_hide_children_in_menu,
+                        meta.affix_tab                   as meta_affix_tab,
+                        meta.affix_tab_order             as meta_affix_tab_order,
+                        meta.max_num_of_open_tab         as meta_max_num_of_open_tab,
+                        meta.keep_alive                  as meta_keep_alive,
+                        meta.no_basic_layout             as meta_no_basic_layout,
+                        meta.link                        as meta_link,
+                        meta.iframe_src                  as meta_iframe_src,
+                        meta.open_in_new_window          as meta_open_in_new_window,
+                        meta.badge                       as meta_badge,
+                        meta.badge_type                  as meta_badge_type,
+                        meta.badge_variants              as meta_badge_variants,
+                        meta.query_params                as meta_query_params
+        FROM menu m
+                 LEFT JOIN menu_meta meta ON m.menu_id = meta.menu_id AND meta.deleted = 0
+                 INNER JOIN sys_role_menu rm ON m.menu_id = rm.menu_id
+                 INNER JOIN sys_user_role ur ON rm.role_id = ur.role_id
+        WHERE ur.user_id = #{userId}
+          AND m.status = 1
+          AND m.deleted = 0
+        ORDER BY m.sort_order
+    </select>
+
+    <!-- 查询所有菜单（包含meta信息） -->
+    <select id="selectAllMenusWithMeta" resultMap="MenuDTOResultMap">
+        SELECT m.menu_id,
+               m.parent_menu_id,
+               m.name,
+               m.path,
+               m.component,
+               m.redirect,
+               m.menu_type,
+               m.status,
+               m.sort_order,
+               m.created_by,
+               m.dt_created,
+               m.modified_by,
+               m.dt_modified,
+
+               -- meta 信息
+               meta.title                       as meta_title,
+               meta.icon                        as meta_icon,
+               meta.active_icon                 as meta_active_icon,
+               meta.active_path                 as meta_active_path,
+               meta.authority                   as meta_authority,
+               meta.ignore_access               as meta_ignore_access,
+               meta.menu_visible_with_forbidden as meta_menu_visible_with_forbidden,
+               meta.hide_in_menu                as meta_hide_in_menu,
+               meta.hide_in_tab                 as meta_hide_in_tab,
+               meta.hide_in_breadcrumb          as meta_hide_in_breadcrumb,
+               meta.hide_children_in_menu       as meta_hide_children_in_menu,
+               meta.affix_tab                   as meta_affix_tab,
+               meta.affix_tab_order             as meta_affix_tab_order,
+               meta.max_num_of_open_tab         as meta_max_num_of_open_tab,
+               meta.keep_alive                  as meta_keep_alive,
+               meta.no_basic_layout             as meta_no_basic_layout,
+               meta.link                        as meta_link,
+               meta.iframe_src                  as meta_iframe_src,
+               meta.open_in_new_window          as meta_open_in_new_window,
+               meta.badge                       as meta_badge,
+               meta.badge_type                  as meta_badge_type,
+               meta.badge_variants              as meta_badge_variants,
+               meta.query_params                as meta_query_params
+        FROM menu m
+                 LEFT JOIN menu_meta meta ON m.menu_id = meta.menu_id AND meta.deleted = 0
+        WHERE m.deleted = 0
+        ORDER BY m.sort_order
+    </select>
+
+</mapper>

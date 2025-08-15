@@ -1,111 +1,110 @@
 package com.lc.system.domain.dto;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
 /**
- * <pre>
- * </pre>
+ * 系统菜单表(luc_system.menu)表数据传输类
  *
- * @author Lu Cheng
- * @date 2023/12/20 15:31
+ * @author lucheng
+ * @since 2025-08-15
  */
 @Data
 @Builder
-@Schema(name = "MenuDTO", description = "封装用户菜单数据", $id = "MenuDTO")
 @AllArgsConstructor
 @NoArgsConstructor
-public class MenuDTO {
-    private String redirect;
-
-    private MenuMeta meta;
-    /**
-     * 菜单ID
-     */
-    @Schema(name = "menuId", title = "菜单id")
-    private Long menuId;
+@Schema(name = "MenuDTO")
+public class MenuDTO implements Serializable {
 
     /**
-     * 菜单名称
+     * 菜单唯一标识
      */
-    @Schema(name = "menuName", title = "菜单名")
+    @Schema(name = "menuId", title = "菜单唯一标识")
+    private String menuId;
+
+    /**
+     * 父级菜单ID
+     */
+    @Schema(name = "parentMenuId", title = "父级菜单ID")
+    private String parentMenuId;
+
+    /**
+     * 路由名称(必须唯一)
+     */
+    @Schema(name = "name", title = "路由名称(必须唯一)")
     private String name;
 
     /**
-     * 父菜单ID
+     * 路由路径
      */
-    @Schema(name = "parentId", title = "父级菜单")
-    private Long parentId;
-
-    /**
-     * 显示顺序
-     */
-    @TableField("order_num")
-    @Schema(name = "orderNum", title = "菜单序号")
-    private Integer orderNum;
-
-    /**
-     * 路由地址
-     */
-    @TableField("path")
-    @Schema(name = "path", title = "菜单对应的访问路径")
+    @Schema(name = "path", title = "路由路径")
     private String path;
 
     /**
-     * 组件路径
+     * 组件路径(字符串)
      */
-    @TableField("component")
-    @Schema(name = "component", title = "菜单对应的组件路径")
+    @Schema(name = "component", title = "组件路径(字符串)")
     private String component;
 
     /**
-     * 路由参数
+     * 重定向路径
      */
-    @TableField("query")
-    @Schema(name = "query", title = "访问菜单携带的路由参数")
-    private String query;
+    @Schema(name = "redirect", title = "重定向路径")
+    private String redirect;
 
     /**
-     * 是否为外链（0是 1否）
+     * 菜单类型(catalog/menu/button/embedded/link)
      */
-    @Schema(name = "isFrame", title = "是否为外链（0是 1否）")
-    private Boolean isFrame;
-
-    /**
-     * 是否缓存（0缓存 1不缓存）
-     */
-    @Schema(name = "isCache", title = "是否缓存（0缓存 1不缓存）")
-    private Boolean isCache;
-
-    /**
-     * 菜单类型（M目录 C菜单 F按钮）
-     */
-    @Schema(name = "menuType", title = "菜单类型（M目录 C菜单 F按钮）")
+    @Schema(name = "menuType", title = "菜单类型(catalog/menu/button/embedded/link)")
     private String menuType;
 
     /**
-     * 菜单状态（0显示 1隐藏）
+     * 状态(0:禁用 1:启用)
      */
-    @Schema(name = "visible", title = "菜单状态（0显示 1隐藏）")
-    private Boolean visible;
+    @Schema(name = "status", title = "状态(0:禁用 1:启用)")
+    private Short status;
 
     /**
-     * 权限标识
+     * 排序号
      */
-    @Schema(name = "permissions", title = "权限标识")
-    private String permissions;
+    @Schema(name = "sortOrder", title = "排序号")
+    private Integer sortOrder;
 
     /**
-     * 菜单图标
+     * 创建者
      */
-    @Schema(name = "icon", title = "菜单图标")
-    private String icon;
+    @Schema(name = "createdBy", title = "创建者")
+    private String createdBy;
 
-    @Schema(name = "children", title = "子菜单列表")
+    /**
+     * 创建时间
+     */
+    @Schema(name = "dtCreated", title = "创建时间")
+    private Date dtCreated;
+
+    /**
+     * 更新者
+     */
+    @Schema(name = "modifiedBy", title = "更新者")
+    private String modifiedBy;
+
+    /**
+     * 更新时间
+     */
+    @Schema(name = "dtModified", title = "更新时间")
+    private Date dtModified;
+
+    @Schema(name = "meta", title = "菜单元数据")
+    private MenuMetaDTO meta;
+
+    @Schema(name = "children", title = "子菜单")
     private List<MenuDTO> children;
 }
+
