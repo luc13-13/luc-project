@@ -34,6 +34,7 @@ public class TestUserDetailsService implements LoginUserDetailService {
             log.info("用户 admin 找到，编码后密码: {}", encodedPassword);
 
             LoginUserDetail user = LoginUserDetail.builder()
+                    .id("admin001")
                     .username("admin")
                     .password(encodedPassword)
                     .authorities(Set.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")))

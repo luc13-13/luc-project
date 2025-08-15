@@ -112,7 +112,8 @@ sys:
       - "/sms/**"
       # 开发相关
       - "/.well-known/appspecific/com.chrome.devtools.json"
-    # cors配置
+      - "/.well-known/**"
+      - "/oauth2/jwks"    # cors配置
     cors:
       enabled: true
       allowed-origins:

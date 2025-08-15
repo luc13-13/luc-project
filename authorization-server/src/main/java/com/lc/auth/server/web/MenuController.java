@@ -45,18 +45,25 @@ public class MenuController {
     private List<Map<String, Object>> getMenusByUsername(String username) {
         // 基础仪表板菜单（所有用户都有）
         List<Map<String, Object>> dashboardMenus = createDashboardMenus();
-        
+
+        // 产品管理菜单（所有用户都有）
+        List<Map<String, Object>> productMenus = createProductMenus();
+
         // 根据用户角色返回不同的菜单
         if ("admin".equals(username)) {
             List<Map<String, Object>> result = new ArrayList<>(dashboardMenus);
+            result.addAll(productMenus);
             result.addAll(createSuperMenus());
+            result.addAll(createDemosMenus(username));
             return result;
         } else if ("vben".equals(username)) {
             List<Map<String, Object>> result = new ArrayList<>(dashboardMenus);
+            result.addAll(productMenus);
             result.addAll(createSuperMenus());
             return result;
         } else {
             List<Map<String, Object>> result = new ArrayList<>(dashboardMenus);
+            result.addAll(productMenus);
 //            result.addAll(createDemosMenus("user"));
             return result;
         }
@@ -169,8 +176,7 @@ public class MenuController {
         Map<String, Object> demos = new HashMap<>();
         demos.put("name", "Demos");
         demos.put("path", "/demos");
-        demos.put("redirect", "/demos/access");
-        
+
         Map<String, Object> meta = new HashMap<>();
         meta.put("icon", "ic:baseline-view-in-ar");
         meta.put("keepAlive", true);
@@ -179,50 +185,19 @@ public class MenuController {
         demos.put("meta", meta);
         
         List<Map<String, Object>> children = new ArrayList<>();
-        
-        // Access Demos
-        Map<String, Object> accessDemos = new HashMap<>();
-        accessDemos.put("name", "AccessDemos");
-        accessDemos.put("path", "/demos/access");
-        accessDemos.put("redirect", "/demos/access/page-control");
-        Map<String, Object> accessMeta = new HashMap<>();
-        accessMeta.put("icon", "mdi:cloud-key-outline");
-        accessMeta.put("title", "demos.access.backendPermissions");
-        accessDemos.put("meta", accessMeta);
-        
-        List<Map<String, Object>> accessChildren = new ArrayList<>();
-        
-        // Page Control
-        Map<String, Object> pageControl = new HashMap<>();
-        pageControl.put("name", "AccessPageControlDemo");
-        pageControl.put("path", "/demos/access/page-control");
-        pageControl.put("component", "/demos/access/index");
-        Map<String, Object> pageControlMeta = new HashMap<>();
-        pageControlMeta.put("icon", "mdi:page-previous-outline");
-        pageControlMeta.put("title", "demos.access.pageAccess");
-        pageControl.put("meta", pageControlMeta);
-        accessChildren.add(pageControl);
-        
-        // Button Control
-        Map<String, Object> buttonControl = new HashMap<>();
-        buttonControl.put("name", "AccessButtonControlDemo");
-        buttonControl.put("path", "/demos/access/button-control");
-        buttonControl.put("component", "/demos/access/button-control");
-        Map<String, Object> buttonControlMeta = new HashMap<>();
-        buttonControlMeta.put("icon", "mdi:button-cursor");
-        buttonControlMeta.put("title", "demos.access.buttonControl");
-        buttonControl.put("meta", buttonControlMeta);
-        accessChildren.add(buttonControl);
-        
-        // Role specific menu
-        Map<String, Object> roleSpecific = createRoleSpecificMenu(role);
-        if (roleSpecific != null) {
-            accessChildren.add(roleSpecific);
-        }
-        
-        accessDemos.put("children", accessChildren);
-        children.add(accessDemos);
-        
+
+        // 菜单管理
+        Map<String, Object> form = new HashMap<>();
+        form.put("name", "FormDemos");
+        form.put("path", "/demos/form");
+        form.put("component", "/demos/form/basic");
+        Map<String, Object> menuMeta = new HashMap<>();
+        menuMeta.put("icon", "mdi:page-previous-outline");
+        menuMeta.put("title", "page.demos.form");
+        menuMeta.put("order", 1);
+        form.put("meta", menuMeta);
+        children.add(form);
+
         demos.put("children", children);
         
         return Arrays.asList(demos);
@@ -261,5 +236,57 @@ public class MenuController {
         
         menu.put("meta", meta);
         return menu;
+    }
+
+    /**
+     * 创建产品管理菜单
+     */
+    private List<Map<String, Object>> createProductMenus() {
+        List<Map<String, Object>> productMenus = new ArrayList<>();
+
+        // 产品管理父菜单
+        Map<String, Object> productManagement = new HashMap<>();
+        productManagement.put("name", "ProductManagement");
+        productManagement.put("path", "/product");
+
+        Map<String, Object> productMeta = new HashMap<>();
+        productMeta.put("title", "产品管理");
+        productMeta.put("icon", "carbon:product");
+        productMeta.put("order", 2);
+        productManagement.put("meta", productMeta);
+
+        // 子菜单列表
+        List<Map<String, Object>> children = new ArrayList<>();
+
+        // 服务目录子菜单
+        Map<String, Object> serviceCatalog = new HashMap<>();
+        serviceCatalog.put("name", "ServiceCatalog");
+        serviceCatalog.put("path", "/product/service-catalog");
+        serviceCatalog.put("component", "/product/service-catalog/index");
+
+        Map<String, Object> serviceMeta = new HashMap<>();
+        serviceMeta.put("title", "服务目录");
+        serviceMeta.put("icon", "carbon:catalog");
+        serviceMeta.put("order", 1);
+        serviceCatalog.put("meta", serviceMeta);
+        children.add(serviceCatalog);
+
+        // 售卖池子菜单
+        Map<String, Object> salesPool = new HashMap<>();
+        salesPool.put("name", "SalesPool");
+        salesPool.put("path", "/product/sales-pool");
+        salesPool.put("component", "/product/sales-pool/index");
+
+        Map<String, Object> salesMeta = new HashMap<>();
+        salesMeta.put("title", "售卖池");
+        salesMeta.put("icon", "carbon:pool");
+        salesMeta.put("order", 2);
+        salesPool.put("meta", salesMeta);
+        children.add(salesPool);
+
+        productManagement.put("children", children);
+        productMenus.add(productManagement);
+
+        return productMenus;
     }
 }

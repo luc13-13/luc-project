@@ -41,10 +41,34 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: http://127.0.0.1:8889
+          # JWK Set URI（可选，如果不设置会自动从 issuer-uri 发现）
+          jwk-set-uri: http://127.0.0.1:8889/oauth2/jwks
 # 认证服务配置
 auth:
   service:
     url: http://127.0.0.1:8889
+
+# 网关安全配置
+gateway:
+  security:
+    white-paths:
+      - "/health"
+      - "/actuator/**"
+      - "/gateway/health"
+      - "/auth-server/login"
+      - "/auth-server/register"
+      - "/auth-server/oauth2/**"
+      - "/auth-server/.well-known/**"
+      - "/auth-server/jwks"
+      - "/swagger-ui/**"
+      - "/v3/api-docs/**"
+      - "/webjars/**"
+      - "/favicon.ico"
+    jwt:
+      issuer-uri: http://127.0.0.1:8889
+      log-failures: true
+      clock-skew-enabled: true
+      clock-skew-seconds: 60
 
 springdoc:
   swagger-ui:
@@ -62,3 +86,11 @@ springdoc:
     # 确保授权URL通过网关访问
     authorization-url: http://localhost:8809/auth-server/oauth2/authorize
     token-uri: http://localhost:8809/auth-server/oauth2/token
+
+# 日志配置
+logging:
+  level:
+    com.lc.authorization.gateway: debug
+    org.springframework.security: debug
+    org.springframework.security.oauth2: debug
+    org.springframework.cloud.gateway: info

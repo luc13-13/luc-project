@@ -8,6 +8,7 @@ import com.lc.auth.server.security.authentication.extension.RedisSecurityContext
 import com.lc.auth.server.security.authentication.extension.sms.SmsAuthenticationConverter;
 import com.lc.auth.server.security.authentication.extension.sms.SmsAuthenticationProvider;
 import com.lc.auth.server.security.authentication.extension.sms.SmsCodeService;
+import com.lc.auth.server.security.core.LoginUserDetail;
 import com.lc.auth.server.security.core.LoginUserDetailService;
 import com.lc.auth.server.security.properties.LoginProperties;
 import com.lc.auth.server.security.properties.SysCorsProperties;
@@ -22,6 +23,7 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
@@ -39,6 +41,8 @@ import org.springframework.security.oauth2.server.authorization.client.Registere
 import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
+import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
+import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenCustomizer;
 import org.springframework.security.web.authentication.AuthenticationConverter;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
@@ -180,6 +184,17 @@ public class LucAuthenticationConfiguration {
         return new RedisSecurityContextRepository(redisTemplate, sysSecurityProperties.getTokenTimeToLive().toSeconds());
     }
 
+    @Bean
+    public OAuth2TokenCustomizer<JwtEncodingContext> accessTokenCustomizer() {
+        return context -> {
+            log.info("触发OAuth2TokenCustomizer");
+            Authentication authentication = context.getPrincipal();
+            if (authentication.getPrincipal() instanceof LoginUserDetail userDetail) {
+                log.info("放入userId: {}", userDetail.getId());
+                context.getClaims().claim("user_id", userDetail.getId());
+            }
+        };
+    }
     /**
      * 开启拓展认证方式
      *
