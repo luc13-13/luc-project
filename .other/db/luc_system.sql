@@ -150,7 +150,7 @@ VALUES ('system', NULL, 'System', '/system', NULL, NULL, 'catalog', 1, 9997, 'sy
         NOW()),
        ('system-role', 'system', 'SystemRole', '/system/role', '/system/role/index', NULL, 'menu', 1, 3, 'system',
         NOW()),
-       ('system-user', 'system', 'SystemUser', '/system/user', '/system/user/index', NULL, 'menu', 1, 4, 'system',
+       ('system-tenant', 'system', 'SystemTenant', '/system/tenant', '/system/tenant/index', NULL, 'menu', 1, 4, 'system',
         NOW());
 
 -- 系统管理按钮权限
@@ -167,13 +167,9 @@ VALUES ('system-menu-create', 'system-menu', 'SystemMenuCreate', '', NULL, NULL,
 INSERT INTO menu (menu_id, parent_menu_id, name, path, component, redirect, menu_type, status, sort_order, created_by,
                   dt_created)
 VALUES ('demos', NULL, 'Demos', '/demos', NULL, NULL, 'catalog', 1, 1000, 'system', NOW()),
-       ('demos-access', 'demos', 'DemosAccess', '/demos/access', NULL, NULL, 'catalog', 1, 1, 'system', NOW()),
-       ('demos-access-admin', 'demos-access', 'AccessAdminVisibleDemo', '/demos/access/admin-visible',
-        '/demos/access/admin-visible', NULL, 'menu', 1, 1, 'system', NOW()),
-       ('demos-access-super', 'demos-access', 'AccessSuperVisibleDemo', '/demos/access/super-visible',
-        '/demos/access/super-visible', NULL, 'menu', 1, 2, 'system', NOW()),
-       ('demos-access-user', 'demos-access', 'AccessUserVisibleDemo', '/demos/access/user-visible',
-        '/demos/access/user-visible', NULL, 'menu', 1, 3, 'system', NOW());
+       ('demos-element', 'demos', 'DemosElement', '/demos/element', '/demos/element/index', NULL, 'menu', 1, 10, 'system', NOW()),
+       ('demos-form-basic', 'demos', 'DemosFormBasic', '/demos/form/basic', '/demos/form/basic', NULL, 'menu', 1, 20, 'system', NOW());
+
 
 
 drop table if exists menu_meta;
@@ -228,12 +224,12 @@ VALUES ('product', '产品管理', 'carbon:product', NULL, 0, 'system', NOW()),
 INSERT INTO menu_meta (menu_id, title, icon, authority, badge, badge_type, badge_variants, hide_in_menu, created_by,
                        dt_created)
 VALUES ('system', 'page.system.title', 'carbon:settings', NULL, 'new', 'normal', 'primary', 0, 'system', NOW()),
-       ('system-menu', 'page.system.menu.title', 'carbon:menu', 'system:menu', NULL, NULL, NULL, 0, 'system', NOW()),
-       ('system-dept', 'page.system.dept.title', 'carbon:tree-view-alt', 'system:dept', NULL, NULL, NULL, 0, 'system',
+       ('system-menu', 'page.system.menu', 'carbon:menu', 'system:menu', NULL, NULL, NULL, 0, 'system', NOW()),
+       ('system-dept', 'page.system.dept', 'carbon:tree-view-alt', 'system:dept', NULL, NULL, NULL, 0, 'system',
         NOW()),
-       ('system-role', 'page.system.role.title', 'carbon:user-role', 'system:role', NULL, NULL, NULL, 0, 'system',
+       ('system-role', 'page.system.role', 'carbon:user-role', 'system:role', NULL, NULL, NULL, 0, 'system',
         NOW()),
-       ('system-user', 'page.system.user.title', 'carbon:user', 'system:user', NULL, NULL, NULL, 0, 'system', NOW());
+       ('system-tenant', 'page.system.tenant', 'carbon:user', 'system:tenant', NULL, NULL, NULL, 0, 'system', NOW());
 
 -- 系统管理按钮权限 meta
 INSERT INTO menu_meta (menu_id, title, authority, hide_in_menu, created_by, dt_created)
@@ -247,10 +243,8 @@ VALUES ('system-menu-create', 'common.create', 'system:menu:create', 1, 'system'
 -- 演示菜单 meta
 INSERT INTO menu_meta (menu_id, title, icon, authority, hide_in_menu, created_by, dt_created)
 VALUES ('demos', 'page.demos.title', 'carbon:chemistry', NULL, 0, 'system', NOW()),
-       ('demos-access', 'page.demos.access.title', 'carbon:security', NULL, 0, 'system', NOW()),
-       ('demos-access-admin', 'demos.access.adminVisible', NULL, 'demos:access:admin-visible', 0, 'system', NOW()),
-       ('demos-access-super', 'demos.access.superVisible', NULL, 'demos:access:super-visible', 0, 'system', NOW()),
-       ('demos-access-user', 'demos.access.userVisible', NULL, 'demos:access:user-visible', 0, 'system', NOW());
+       ('demos-element', 'Element 组件演示', 'lucide:layers', 'demos:element', 0,  'system', NOW()),
+       ('demos-form-basic', '基础表单', 'lucide:edit-3', 'demos:form:basic', 0, 'system', NOW());
 
 drop table if exists sys_role;
 create table sys_role (
@@ -330,7 +324,7 @@ INSERT INTO sys_role_menu (role_id, menu_id, created_by, dt_created) VALUES
 ('admin', 'system-menu', 'system', NOW()),
 ('admin', 'system-dept', 'system', NOW()),
 ('admin', 'system-role', 'system', NOW()),
-('admin', 'system-user', 'system', NOW()),
+('admin', 'system-tenant', 'system', NOW()),
 
 -- 系统管理按钮权限
 ('admin', 'system-menu-create', 'system', NOW()),
@@ -342,10 +336,10 @@ INSERT INTO sys_role_menu (role_id, menu_id, created_by, dt_created) VALUES
 
 -- 演示模块
 ('admin', 'demos', 'system', NOW()),
-('admin', 'demos-access', 'system', NOW()),
-('admin', 'demos-access-admin', 'system', NOW()),
-('admin', 'demos-access-super', 'system', NOW()),
-('admin', 'demos-access-user', 'system', NOW());
+-- admin 角色
+('admin', 'demos-element', 'system', NOW()),
+('admin', 'demos-form-basic', 'system', NOW());
+
 
 -- =============================================
 -- manager 角色：业务管理员 - 拥有业务管理权限
@@ -368,8 +362,8 @@ INSERT INTO sys_role_menu (role_id, menu_id, created_by, dt_created) VALUES
 
 -- 演示模块
 ('manager', 'demos', 'system', NOW()),
-('manager', 'demos-access', 'system', NOW()),
-('manager', 'demos-access-user', 'system', NOW());
+('manager', 'demos-element', 'system', NOW()),
+('manager', 'demos-form-basic', 'system', NOW());
 
 -- =============================================
 -- user 角色：普通用户 - 拥有基础查看权限
@@ -386,8 +380,8 @@ INSERT INTO sys_role_menu (role_id, menu_id, created_by, dt_created) VALUES
 
 -- 演示模块
 ('user', 'demos', 'system', NOW()),
-('user', 'demos-access', 'system', NOW()),
-('user', 'demos-access-user', 'system', NOW());
+('user', 'demos-element', 'system', NOW()),
+('user', 'demos-form-basic', 'system', NOW());
 
 -- =============================================
 -- guest 角色：访客用户 - 只能查看仪表板
@@ -395,4 +389,6 @@ INSERT INTO sys_role_menu (role_id, menu_id, created_by, dt_created) VALUES
 INSERT INTO sys_role_menu (role_id, menu_id, created_by, dt_created) VALUES
 -- 仪表板模块（只能查看分析页）
 ('guest', 'dashboard', 'system', NOW()),
-('guest', 'analytics', 'system', NOW());
+('admin', 'demos', 'system', NOW()),
+('guest', 'analytics', 'system', NOW()),
+('guest', 'demos-element', 'system', NOW());
