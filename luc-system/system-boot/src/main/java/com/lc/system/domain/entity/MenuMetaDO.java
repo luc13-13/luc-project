@@ -63,43 +63,43 @@ public class MenuMetaDO implements Serializable {
      * 忽略权限验证(0:否 1:是)
      */
     @TableField("ignore_access")
-    private Short ignoreAccess;
+    private Boolean ignoreAccess;
 
     /**
      * 菜单可见但访问受限(0:否 1:是)
      */
     @TableField("menu_visible_with_forbidden")
-    private Short menuVisibleWithForbidden;
+    private Boolean menuVisibleWithForbidden;
 
     /**
      * 在菜单中隐藏(0:否 1:是)
      */
     @TableField("hide_in_menu")
-    private Short hideInMenu;
+    private Boolean hideInMenu;
 
     /**
      * 在标签页中隐藏(0:否 1:是)
      */
     @TableField("hide_in_tab")
-    private Short hideInTab;
+    private Boolean hideInTab;
 
     /**
      * 在面包屑中隐藏(0:否 1:是)
      */
     @TableField("hide_in_breadcrumb")
-    private Short hideInBreadcrumb;
+    private Boolean hideInBreadcrumb;
 
     /**
      * 隐藏子菜单(0:否 1:是)
      */
     @TableField("hide_children_in_menu")
-    private Short hideChildrenInMenu;
+    private Boolean hideChildrenInMenu;
 
     /**
      * 固定标签页(0:否 1:是)
      */
     @TableField("affix_tab")
-    private Short affixTab;
+    private Boolean affixTab;
 
     /**
      * 固定标签页顺序
@@ -117,13 +117,13 @@ public class MenuMetaDO implements Serializable {
      * 页面缓存(0:否 1:是)
      */
     @TableField("keep_alive")
-    private Short keepAlive;
+    private Boolean keepAlive;
 
     /**
      * 不使用基础布局(0:否 1:是)
      */
     @TableField("no_basic_layout")
-    private Short noBasicLayout;
+    private Boolean noBasicLayout;
 
     /**
      * 外链地址
@@ -141,7 +141,7 @@ public class MenuMetaDO implements Serializable {
      * 新窗口打开(0:否 1:是)
      */
     @TableField("open_in_new_window")
-    private Short openInNewWindow;
+    private Boolean openInNewWindow;
 
     /**
      * 徽标内容

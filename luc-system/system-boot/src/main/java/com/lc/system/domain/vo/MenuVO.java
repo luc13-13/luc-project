@@ -1,29 +1,29 @@
-package com.lc.system.domain.dto;
+package com.lc.system.domain.vo;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
- * 系统菜单表(luc_system.menu)表数据传输类
- *
- * @author lucheng
- * @since 2025-08-15
+ * <pre>
+ *     前端路由信息
+ * <pre/>
+ * @author : Lu Cheng
+ * @date : 2025/8/18 10:54
+ * @version : 1.0
  */
 @Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@Schema(name = "MenuDTO")
-public class MenuDTO implements Serializable {
+@Schema(description = "前端信息")
+public class MenuVO {
 
-    private String userId;
+    @JsonSerialize(using = ToStringSerializer.class)
+    @Schema(name = "id", title = "uid")
+    private Long id;
     /**
      * 菜单唯一标识
      */
@@ -67,45 +67,14 @@ public class MenuDTO implements Serializable {
     private String menuType;
 
     /**
-     * 状态(0:禁用 1:启用)
-     */
-    @Schema(name = "status", title = "状态(0:禁用 1:启用)")
-    private Short status;
-
-    /**
      * 排序号
      */
     @Schema(name = "sortOrder", title = "排序号")
     private Integer sortOrder;
 
-    /**
-     * 创建者
-     */
-    @Schema(name = "createdBy", title = "创建者")
-    private String createdBy;
-
-    /**
-     * 创建时间
-     */
-    @Schema(name = "dtCreated", title = "创建时间")
-    private Date dtCreated;
-
-    /**
-     * 更新者
-     */
-    @Schema(name = "modifiedBy", title = "更新者")
-    private String modifiedBy;
-
-    /**
-     * 更新时间
-     */
-    @Schema(name = "dtModified", title = "更新时间")
-    private Date dtModified;
-
     @Schema(name = "meta", title = "菜单元数据")
-    private MenuMetaDTO meta;
+    private MenuMetaVO meta;
 
     @Schema(name = "children", title = "子菜单")
-    private List<MenuDTO> children;
+    private List<MenuVO> children;
 }
-

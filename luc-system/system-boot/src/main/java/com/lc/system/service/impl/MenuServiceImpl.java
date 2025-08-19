@@ -1,18 +1,19 @@
 package com.lc.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lc.system.converter.MenuConverter;
+import com.lc.system.domain.bo.MenuBO;
 import com.lc.system.domain.dto.MenuDTO;
 import com.lc.system.domain.entity.MenuDO;
+import com.lc.system.domain.vo.MenuVO;
 import com.lc.system.mapper.MenuMapper;
 import com.lc.system.service.MenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
-import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 系统菜单表(luc_system.menu)表服务实现类
@@ -24,87 +25,31 @@ import java.util.stream.Collectors;
 @Service("menuService")
 public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements MenuService {
 
+    private final MenuConverter menuConverter;
+
+    public MenuServiceImpl(MenuConverter menuConverter) {
+        this.menuConverter = menuConverter;
+    }
+
     @Override
-    public List<MenuDTO> getMenuTreeByUserId(String userId) {
+    public List<MenuBO> getMenuList(MenuDTO dto) {
         // 1. 通过SQL直接查询用户有权限的菜单（包含meta信息）
-        List<MenuDTO> menuDTOs = this.baseMapper.selectMenusByUserId(userId);
+        List<MenuBO> menuDTOs = this.baseMapper.selectMenusByDTO(dto);
 
         if (CollectionUtils.isEmpty(menuDTOs)) {
             return new ArrayList<>();
         }
-
-        // 2. 构建树形结构
-        return buildMenuTree(menuDTOs);
+        return menuDTOs;
     }
 
     @Override
-    public List<MenuDTO> getAllMenuTree() {
-        // 1. 通过SQL直接查询所有菜单（包含meta信息）
-        List<MenuDTO> menuDTOs = this.baseMapper.selectAllMenusWithMeta();
-
-        if (CollectionUtils.isEmpty(menuDTOs)) {
-            return new ArrayList<>();
-        }
-
-        // 2. 构建树形结构
-        return buildMenuTree(menuDTOs);
+    public List<MenuVO> getRouteTreeByUserId(MenuDTO dto) {
+        return menuConverter.convertBOList2VOTree(getMenuList(dto));
     }
 
-
-
-    /**
-     * 构建菜单树
-     */
-    private List<MenuDTO> buildMenuTree(List<MenuDTO> menus) {
-        if (CollectionUtils.isEmpty(menus)) {
-            return new ArrayList<>();
-        }
-
-        Map<String, MenuDTO> menuMap = menus.stream()
-                .collect(Collectors.toMap(MenuDTO::getMenuId, Function.identity()));
-
-        List<MenuDTO> rootMenus = new ArrayList<>();
-
-        for (MenuDTO menu : menus) {
-            if (!StringUtils.hasText(menu.getParentMenuId())) {
-                // 根菜单
-                rootMenus.add(menu);
-            } else {
-                // 子菜单
-                MenuDTO parent = menuMap.get(menu.getParentMenuId());
-                if (parent != null) {
-                    if (parent.getChildren() == null) {
-                        parent.setChildren(new ArrayList<>());
-                    }
-                    parent.getChildren().add(menu);
-                }
-            }
-        }
-
-        // 递归排序
-        sortMenuTree(rootMenus);
-        return rootMenus;
-    }
-
-    /**
-     * 递归排序菜单树
-     */
-    private void sortMenuTree(List<MenuDTO> menus) {
-        if (CollectionUtils.isEmpty(menus)) {
-            return;
-        }
-
-        // 按 sortOrder 排序
-        menus.sort(Comparator.comparing(
-                menu -> menu.getSortOrder() != null ? menu.getSortOrder() : 999
-        ));
-
-        // 递归排序子菜单
-        for (MenuDTO menu : menus) {
-            if (!CollectionUtils.isEmpty(menu.getChildren())) {
-                sortMenuTree(menu.getChildren());
-            }
-        }
+    @Override
+    public List<MenuVO> getMenuVOList(MenuDTO dto) {
+        return menuConverter.convertBOList2VOList(getMenuList(dto));
     }
 }
 

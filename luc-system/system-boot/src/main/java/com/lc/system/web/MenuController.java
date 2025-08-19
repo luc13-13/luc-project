@@ -2,6 +2,7 @@ package com.lc.system.web;
 
 import com.lc.framework.core.mvc.WebResult;
 import com.lc.system.domain.dto.MenuDTO;
+import com.lc.system.domain.vo.MenuVO;
 import com.lc.system.service.MenuService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+
+import static com.lc.framework.core.constants.NumberConstants.STATUS_TRUE;
 
 /**
  * 菜单相关接口
@@ -28,16 +31,21 @@ public class MenuController {
     private final MenuService menuService;
 
     @Operation(summary = "获取用户菜单树")
-    @GetMapping("/all")
-    public WebResult<List<MenuDTO>> getAllMenus(HttpServletRequest request) {
-        List<MenuDTO> menuTree = menuService.getMenuTreeByUserId(request.getHeader("X-User-Id"));
+    @GetMapping("/tree/available")
+    public WebResult<List<MenuVO>> getMenuTreeAvailable(HttpServletRequest request) {
+        MenuDTO queryDTO = MenuDTO.builder()
+                .userId(request.getHeader("X-User-Id"))
+                .status(STATUS_TRUE)
+                .build();
+        List<MenuVO> menuTree = menuService.getRouteTreeByUserId(queryDTO);
         return WebResult.success(menuTree);
     }
 
-    @Operation(summary = "获取所有菜单树（管理后台使用）")
-    @GetMapping("/admin/tree")
-    public WebResult<List<MenuDTO>> getAllMenuTree() {
-        List<MenuDTO> menuTree = menuService.getAllMenuTree();
+    @Operation(summary = "获取用户菜单列表（前端路由使用）")
+    @GetMapping("/list")
+    public WebResult<List<MenuVO>> getMenuList(HttpServletRequest request) {
+        MenuDTO queryDTO = MenuDTO.builder().userId(request.getHeader("X-User-Id")).build();
+        List<MenuVO> menuTree = menuService.getMenuVOList(queryDTO);
         return WebResult.success(menuTree);
     }
 }
