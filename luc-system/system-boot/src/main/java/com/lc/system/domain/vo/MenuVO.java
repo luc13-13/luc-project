@@ -1,7 +1,5 @@
 package com.lc.system.domain.vo;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
@@ -21,7 +19,6 @@ import java.util.List;
 @Schema(description = "前端信息")
 public class MenuVO {
 
-    @JsonSerialize(using = ToStringSerializer.class)
     @Schema(name = "id", title = "uid")
     private Long id;
     /**
@@ -65,6 +62,9 @@ public class MenuVO {
      */
     @Schema(name = "menuType", title = "菜单类型(catalog/menu/button/embedded/link)")
     private String menuType;
+
+    @Schema(name = "status", title = "菜单状态，0禁用，1启用")
+    private Short status;
 
     /**
      * 排序号

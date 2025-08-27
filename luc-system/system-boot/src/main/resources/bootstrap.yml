@@ -1,8 +1,0 @@
-server:
-  port: 19003
-spring:
-  application:
-    name:
-      luc-system
-  profiles:
-    active: dev

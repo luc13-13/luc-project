@@ -30,6 +30,7 @@ public class MenuConverterImpl implements MenuConverter {
     public MenuVO convertBO2RouteVO(@NotNull MenuBO menuBO) {
         MenuVO vo = MenuVO.builder().build();
         if (menuBO.getMenuDO() != null) {
+            vo.setId(menuBO.getMenuDO().getId());
             vo.setMenuId(menuBO.getMenuDO().getMenuId());
             vo.setParentMenuId(menuBO.getMenuDO().getParentMenuId());
             vo.setName(menuBO.getMenuDO().getName());
@@ -38,6 +39,7 @@ public class MenuConverterImpl implements MenuConverter {
             vo.setRedirect(menuBO.getMenuDO().getRedirect());
             vo.setMenuType(menuBO.getMenuDO().getMenuType());
             vo.setSortOrder(menuBO.getMenuDO().getSortOrder());
+            vo.setStatus(menuBO.getMenuDO().getStatus());
         }
         if (menuBO.getMenuMetaDO() != null) {
             MenuMetaVO metaVO = MenuMetaVO.builder().build();
