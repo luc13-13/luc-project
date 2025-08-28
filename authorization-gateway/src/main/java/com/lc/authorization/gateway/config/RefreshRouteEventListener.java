@@ -10,7 +10,10 @@ import org.springframework.cloud.gateway.route.RouteDefinitionLocator;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import reactor.core.publisher.Mono;
 
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static org.springdoc.core.utils.Constants.DEFAULT_API_DOCS_URL;
@@ -42,17 +45,31 @@ public class RefreshRouteEventListener {
     @EventListener(RefreshRoutesEvent.class)
     public void onApplicationEvent() {
         routeDefinitionLocator.getRouteDefinitions()
-                .filter(definition -> "lb".equals(definition.getUri().getScheme()))
+//                .filter(definition -> "lb".equals(definition.getUri().getScheme()))
                 .map(RouteDefinition::getId)
                 .collect(Collectors.toSet())
-                .subscribe(routeDefinitions -> reactiveDiscoveryClient.getServices()
-                        .filter(StringUtils::hasText)
-                        .filter(routeDefinitions::contains)
-                        .map(service -> new AbstractSwaggerUiConfigProperties.SwaggerUrl(service, service + DEFAULT_API_DOCS_URL, service))
-                        .collect(Collectors.toSet())
-                        .subscribe(urls -> {
-                            log.info("refresh swagger services：{}", urls);
-                            swaggerUiConfigProperties.setUrls(urls);
-                        }));
+                .defaultIfEmpty(Objects.requireNonNull(routeDefinitionLocator.getRouteDefinitions().map(RouteDefinition::getId).collect(Collectors.toSet()).block()))
+                .subscribe(routeDefinitions -> {
+                        log.info("subscribe reactive discovery client route definitions: {}", routeDefinitions);
+                        Mono<Set<AbstractSwaggerUiConfigProperties.SwaggerUrl>> defaultSwaggerUris = Mono.just(routeDefinitions.stream().map(it -> new AbstractSwaggerUiConfigProperties.SwaggerUrl(it, it + DEFAULT_API_DOCS_URL, it)).collect(Collectors.toSet()));
+                        reactiveDiscoveryClient.getServices()
+                                .defaultIfEmpty("default")
+                                .filter(StringUtils::hasText)
+                                .filter(routeDefinitions::contains)
+                                .map(service -> new AbstractSwaggerUiConfigProperties.SwaggerUrl(service, service + DEFAULT_API_DOCS_URL, service))
+                                .collect(Collectors.toSet())
+                                .flatMapMany(set -> {
+                                    if (set.isEmpty()) {
+                                        return defaultSwaggerUris;
+                                    } else {
+                                        return  Mono.just(set);
+                                    }
+                                })
+                                .subscribe(urls -> {
+                                    log.info("refresh swagger services：{}", urls);
+                                    swaggerUiConfigProperties.setUrls(urls);
+                                });
+
+                });
     }
 }

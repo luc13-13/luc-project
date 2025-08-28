@@ -2,7 +2,7 @@ server:
   port: 8809
 spring:
   application:
-    name: authorization-gateway
+    name: ${artifactId}
   profiles:
     active: dev
 
