@@ -119,6 +119,8 @@ sys:
       allowed-origins:
         - http://localhost
         - http://127.0.0.1
+        - http://127.0.0.1:8809
+        - http://localhost:8809
       allowed-methods: "*"
       allow-credentials: true
       allowed-headers: "*"

@@ -9,7 +9,6 @@ import com.lc.auth.server.security.handler.SpaCsrfTokenRequestHandler;
 import com.lc.auth.server.security.jwt.JwtConfiguration;
 import com.lc.auth.server.security.properties.LoginProperties;
 import com.lc.auth.server.security.properties.SysSecurityProperties;
-import jakarta.servlet.Filter;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
@@ -89,7 +88,9 @@ public class SecurityAutoConfiguration {
                         ))
                 // Accept access tokens for User Info and/or Client Registration
                 .oauth2ResourceServer((resourceServer) -> resourceServer
-                        .jwt(Customizer.withDefaults()));
+                        .jwt(Customizer.withDefaults()))
+                // 配置cors，允许跨域访问授权端口(token/authorization code)
+                .cors(Customizer.withDefaults());
 
         return http.build();
     }
@@ -175,7 +176,7 @@ public class SecurityAutoConfiguration {
                 .cors(Customizer.withDefaults());
 
         // 添加拓展的登陆过滤器
-        multiTypeAuthenticationFilters.ifAvailable(filter -> http.addFilterBefore((Filter) filter, (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class));
+        multiTypeAuthenticationFilters.ifAvailable(filter -> http.addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class));
         // 添加拓展的认证提供者
         authenticationProviders.forEach(http::authenticationProvider);
         return http.build();
