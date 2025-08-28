@@ -54,6 +54,10 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
+  messages:
+    basename: classpath:i18n/messages
+  web:
+    locale: zh_CN
 
 # mybatis-plus配置
 mybatis-plus:

@@ -19,62 +19,62 @@ import java.util.List;
 @Schema(description = "前端信息")
 public class MenuVO {
 
-    @Schema(name = "id", title = "uid")
+    @Schema(name = "id", description = "uid")
     private Long id;
     /**
      * 菜单唯一标识
      */
-    @Schema(name = "menuId", title = "菜单唯一标识")
+    @Schema(name = "menuId", title = "菜单唯一标识", description = "菜单唯一标识")
     private String menuId;
 
     /**
      * 父级菜单ID
      */
-    @Schema(name = "parentMenuId", title = "父级菜单ID")
+    @Schema(name = "parentMenuId", description = "父级菜单ID")
     private String parentMenuId;
 
     /**
      * 路由名称(必须唯一)
      */
-    @Schema(name = "name", title = "路由名称(必须唯一)")
+    @Schema(name = "name", description = "路由名称(必须唯一)")
     private String name;
 
     /**
      * 路由路径
      */
-    @Schema(name = "path", title = "路由路径")
+    @Schema(name = "path", description = "路由路径")
     private String path;
 
     /**
      * 组件路径(字符串)
      */
-    @Schema(name = "component", title = "组件路径(字符串)")
+    @Schema(name = "component", description = "组件路径(字符串)")
     private String component;
 
     /**
      * 重定向路径
      */
-    @Schema(name = "redirect", title = "重定向路径")
+    @Schema(name = "redirect", description = "重定向路径")
     private String redirect;
 
     /**
      * 菜单类型(catalog/menu/button/embedded/link)
      */
-    @Schema(name = "menuType", title = "菜单类型(catalog/menu/button/embedded/link)")
+    @Schema(name = "menuType", description = "菜单类型(catalog/menu/button/embedded/link)")
     private String menuType;
 
-    @Schema(name = "status", title = "菜单状态，0禁用，1启用")
+    @Schema(name = "status", description = "菜单状态，0禁用，1启用")
     private Short status;
 
     /**
      * 排序号
      */
-    @Schema(name = "sortOrder", title = "排序号")
+    @Schema(name = "sortOrder", description = "排序号")
     private Integer sortOrder;
 
-    @Schema(name = "meta", title = "菜单元数据")
+    @Schema(name = "meta", description = "菜单元数据")
     private MenuMetaVO meta;
 
-    @Schema(name = "children", title = "子菜单")
+    @Schema(name = "children", description = "子菜单")
     private List<MenuVO> children;
 }
