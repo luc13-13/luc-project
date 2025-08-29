@@ -24,6 +24,6 @@ public class LoginFailureHandler implements AuthenticationFailureHandler {
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         log.info("登陆失败");
-        WebUtil.makeResponse(response, MediaType.APPLICATION_JSON_VALUE, StatusConstants.CODE_LOGIN_FAILURE, WebResult.bizError(exception.getMessage()));
+        WebUtil.makeResponse(response, MediaType.APPLICATION_JSON_VALUE, StatusConstants.CODE_LOGIN_FAILURE, WebResult.error(exception.getMessage()));
     }
 }

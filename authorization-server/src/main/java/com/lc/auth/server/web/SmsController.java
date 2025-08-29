@@ -41,7 +41,7 @@ public class SmsController {
 //        @Pattern(regexp = "^1[3-9]\\d{9}$", message = "手机号格式不正确")
         log.info("发送短信验证码，手机号: {}", phone);
         if (!StringUtils.hasText(phone)) {
-            return WebResult.bizError("手机号不能为空");
+            return WebResult.error("手机号不能为空");
         }
         try {
             String code = smsCodeService.generateAndStoreCode(phone);
@@ -52,7 +52,7 @@ public class SmsController {
 
         } catch (Exception e) {
             log.error("发送短信验证码失败", e);
-            return WebResult.bizError("验证码发送失败，请稍后重试");
+            return WebResult.error("验证码发送失败，请稍后重试");
         }
     }
 
