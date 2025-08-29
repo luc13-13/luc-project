@@ -2,11 +2,15 @@ package com.lc.framework.web.excp;
 
 import com.lc.framework.core.mvc.BizException;
 import com.lc.framework.core.mvc.WebResult;
+import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 import static com.lc.framework.core.mvc.StatusConstants.CODE_BIZ_ERROR;
 
@@ -22,14 +26,21 @@ import static com.lc.framework.core.mvc.StatusConstants.CODE_BIZ_ERROR;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(BizException.class)
-    public <T> WebResult<T> handlerException(BizException e) {
+    public <T> WebResult<T> handlerBizException(BizException e) {
         log.error("BizException:{}", e.getMessage(), e);
         return WebResult.error(e.getCode(), e.getMessage());
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public <T> WebResult<T> handlerException(MethodArgumentNotValidException e) {
+    @ExceptionHandler(ValidationException.class)
+    public <T> WebResult<T> handlerValidationException(ValidationException e) {
         log.error("MethodArgumentNotValidException:{}", e.getMessage(), e);
-        return WebResult.error(CODE_BIZ_ERROR, e.getBody().toString());
+        return WebResult.error(CODE_BIZ_ERROR, e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public <T> WebResult<T> handlerArgumentException(MethodArgumentNotValidException e) {
+        log.error("Exception:{}", e.getMessage(), e);
+        String message = e.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining("; "));
+        return WebResult.error(CODE_BIZ_ERROR, message);
     }
 }
