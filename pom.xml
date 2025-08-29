@@ -44,7 +44,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--spring boot-->
-        <spring-boot.version>3.5.4</spring-boot.version>
+        <spring-boot.version>3.5.5</spring-boot.version>
 
         <!--spring cloud-->
         <spring-cloud.version>2025.0.0</spring-cloud.version>
@@ -306,6 +306,7 @@
                     <include>**/*.xml</include>
                     <include>**/*.html</include>
                     <include>META-INF/**</include>
+                    <include>i18n/**</include>
                 </includes>
             </resource>
             <resource>
@@ -317,6 +318,7 @@
                     <include>**/application*.properties</include>
                     <include>**/*.xml</include>
                     <include>META-INF/**</include>
+                    <include>i18n/**</include>
                 </includes>
             </resource>
         </resources>
