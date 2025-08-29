@@ -1,15 +1,17 @@
 package com.lc.framework.core.mvc;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 
 /**
+ * REST响应封装
  * @author : Lu Cheng
  * @version : 1.0
- * @desc :
  * @date : 2023/4/15 13:38
  */
 @Data
@@ -38,36 +40,32 @@ public class WebResult<S> implements Serializable {
         return webResp;
     }
 
+    public static <S> WebResult<S> success() {
+        return success(null, StatusConstants.SUCCESS, null);
+    }
+
+    public static <S> WebResult<S> success(S data) {
+        return success(data, StatusConstants.SUCCESS, null);
+    }
+
     public static <S> WebResult<S> success(S data, Integer code, String msg) {
         return response(data, code, msg);
     }
 
-    public static <S> WebResult<S> success() {
-        return success(null, StatusConstants.SUCCESS, StatusConstants.SUCCESS_MSG);
+    public static <S> WebResult<S> error(S data) {
+        return error(data, StatusConstants.CODE_BIZ_ERROR, null);
     }
 
-    public static <S> WebResult<S> success(S data) {
-        return success(data, StatusConstants.SUCCESS, StatusConstants.SUCCESS_MSG);
+    public static <S> WebResult<S> error(String msg) {
+        return error(StatusConstants.CODE_BIZ_ERROR, msg);
+    }
+
+    public static <S> WebResult<S> error(Integer code, String msg) {
+        return error(null, code, msg);
     }
 
     public static <S> WebResult<S> error(S data, Integer code, String msg) {
         return response(data, code, msg);
-    }
-
-    public static <S> WebResult<S> error(Integer code, String msg) {
-        return response(null, code, msg);
-    }
-
-    public static <S> WebResult<S> error(Status status) {
-        return response(null, status.getCode(), status.getDesc());
-    }
-
-    public static <S> WebResult<S> error(S data,  Status status) {
-        return response(data, status.getCode(), status.getDesc());
-    }
-
-    public static <S> WebResult<S> bizError(String msg) {
-        return response(null, StatusConstants.CODE_BIZ_ERROR, msg);
     }
 
     public static <S> boolean isSuccess(WebResult<S> result) {

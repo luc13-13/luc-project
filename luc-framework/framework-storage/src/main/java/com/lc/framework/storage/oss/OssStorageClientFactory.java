@@ -1,6 +1,6 @@
 package com.lc.framework.storage.oss;
 
-import com.lc.framework.core.utils.ValidatorUtil;
+import com.lc.framework.core.utils.validator.ValidatorUtil;
 import com.lc.framework.storage.adaptor.StoragePlatformAdaptor;
 import com.lc.framework.storage.client.StorageClientFactory;
 import com.lc.framework.storage.client.StorageClientTemplate;

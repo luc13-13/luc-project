@@ -1,4 +1,4 @@
-package com.lc.framework.core.utils;
+package com.lc.framework.core.utils.validator;
 
 import com.lc.framework.core.mvc.BizException;
 import jakarta.validation.ConstraintViolation;
