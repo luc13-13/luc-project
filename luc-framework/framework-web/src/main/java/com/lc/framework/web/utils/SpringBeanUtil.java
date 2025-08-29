@@ -1,9 +1,9 @@
 package com.lc.framework.web.utils;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
 
 /**
@@ -15,17 +15,12 @@ import org.springframework.stereotype.Component;
  * @date 2023-08-04 16:04
  */
 @Component
-@Lazy
 public class SpringBeanUtil implements ApplicationContextAware {
     private static ApplicationContext applicationContext;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@Nonnull ApplicationContext applicationContext) throws BeansException {
         SpringBeanUtil.applicationContext = applicationContext;
-    }
-
-    public static ApplicationContext getApplicationContext() {
-        return applicationContext;
     }
 
     @SuppressWarnings("unchecked")

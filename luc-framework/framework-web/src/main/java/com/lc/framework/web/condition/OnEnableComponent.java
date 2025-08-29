@@ -1,5 +1,6 @@
 package com.lc.framework.web.condition;
 
+import jakarta.annotation.Nonnull;
 import org.springframework.boot.autoconfigure.condition.ConditionMessage;
 import org.springframework.boot.autoconfigure.condition.ConditionOutcome;
 import org.springframework.boot.autoconfigure.condition.SpringBootCondition;
@@ -18,16 +19,19 @@ import static org.springframework.boot.autoconfigure.condition.ConditionMessage.
 import static org.springframework.context.annotation.ConfigurationCondition.ConfigurationPhase.REGISTER_BEAN;
 
 /**
- * <pre>
+ * <p>
  * 条件抽象类，为配置类创建Bean提供判断条件
  * Example：
  * 需要配置判断是否创建AbstractClient实现类
+ * <pre>
  *     {@code
  *     public abstract class AbstractClient {}
  *     public class ClientA extends AbstractClient {}
  *     public class ClientB extends AbstractClient {}
  *     }
+ * </pre>
  * （1）继承抽象类，重写方法
+ * <pre>
  *      {@code
  *     public final class OnEnableClient extends OnEnableComponent<AbstractClient> {
  *       @Override
@@ -58,7 +62,9 @@ import static org.springframework.context.annotation.ConfigurationCondition.Conf
  *       }
  *     }
  * }
+ * </pre>
  * （2）创建条件注解
+ * <pre>
  *     {@code
  *        @Retention(RetentionPolicy.RUNTIME)
  *        @Conditional(OnEnableTceClient.class)
@@ -68,7 +74,9 @@ import static org.springframework.context.annotation.ConfigurationCondition.Conf
  *          Class<?extends AbstractClient> value()default OnEnableClient.DefaultClient.class;
  *        }
  *     }
+ * </pre>
  * （3）配置类中应用条件注解
+ * <pre>
  *      {@code
  *      @Configuration
  *      public class TceClientAutoConfiguration implements InitializingBean {
@@ -85,8 +93,8 @@ import static org.springframework.context.annotation.ConfigurationCondition.Conf
  *          }
  *      }
  * }
- *
  * </pre>
+ * </p>
  *
  * @author Lu Cheng
  * @date 2024/6/26 11:21
@@ -142,6 +150,7 @@ public abstract class OnEnableComponent<T>  extends SpringBootCondition implemen
         return SUFFIX;
     }
 
+    @Nonnull
     @Override
     public ConfigurationPhase getConfigurationPhase() {
         return REGISTER_BEAN;

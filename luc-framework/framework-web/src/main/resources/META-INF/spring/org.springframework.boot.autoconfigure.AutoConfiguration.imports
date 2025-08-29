@@ -1,3 +1,5 @@
 com.lc.framework.web.config.FeignConfig
 com.lc.framework.web.config.FeignDecoderConfig
 com.lc.framework.web.config.ControllerAdviceAutoConfig
+com.lc.framework.web.utils.SpringBeanUtil
+com.lc.framework.web.utils.MessageUtils
