@@ -1,10 +1,8 @@
 package com.lc.system.domain.dto;
 
-import com.lc.framework.core.utils.AddGroup;
-import com.lc.framework.core.utils.DeleteGroup;
-import com.lc.framework.core.utils.UpdateGroup;
+import com.lc.framework.core.utils.validator.Groups.*;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,8 +26,8 @@ import java.util.List;
 @Schema(name = "MenuDTO")
 public class MenuDTO implements Serializable {
 
-    @NotBlank(message = "menu.dto.id.notBlank", groups =  {UpdateGroup.class, DeleteGroup.class})
-    @Null(message = "menu.dto.id.null", groups =  AddGroup.class)
+    @NotNull(message = "{menu.dto.id.notBlank}", groups =  {UpdateGroup.class, DeleteGroup.class})
+    @Null(message = "{menu.dto.id.null}", groups =  AddGroup.class)
     private Long id;
 
     private String userId;

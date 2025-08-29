@@ -4,6 +4,9 @@ spring:
   application:
     name:
       luc-system
+  devtools:
+    restart:
+      enabled: true
   profiles:
     active: dev
 

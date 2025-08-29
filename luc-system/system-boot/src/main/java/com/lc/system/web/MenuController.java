@@ -1,8 +1,7 @@
 package com.lc.system.web;
 
 import com.lc.framework.core.mvc.WebResult;
-import com.lc.framework.core.utils.AddGroup;
-import com.lc.framework.core.utils.UpdateGroup;
+import com.lc.framework.core.utils.validator.Groups;
 import com.lc.framework.web.utils.MessageUtils;
 import com.lc.system.domain.dto.MenuDTO;
 import com.lc.system.domain.vo.MenuVO;
@@ -53,13 +52,13 @@ public class MenuController {
 
     @Operation(summary = "保存菜单")
     @PostMapping("/save")
-    public WebResult<String> saveMenu(@RequestBody @Validated(AddGroup.class) MenuDTO dto) {
+    public WebResult<String> saveMenu(@RequestBody @Validated(Groups.AddGroup.class) MenuDTO dto) {
         return WebResult.success(MessageUtils.getMessage("menu.api.save.success"));
     }
 
     @Operation(summary = "更新菜单")
     @PostMapping("/update")
-    public WebResult<String> updateMenu(@RequestBody @Validated(UpdateGroup.class) MenuDTO dto) {
+    public WebResult<String> updateMenu(@RequestBody @Validated(Groups.UpdateGroup.class) MenuDTO dto) {
         return WebResult.success(MessageUtils.getMessage("menu.api.update.success"));
     }
 }

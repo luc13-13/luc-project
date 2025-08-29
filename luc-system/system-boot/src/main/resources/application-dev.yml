@@ -55,9 +55,10 @@ spring:
     serialization:
       fail-on-empty-beans: false
   messages:
-    basename: classpath:i18n/messages
-  web:
-    locale: zh_CN
+    basename: i18n/messages
+    fallback-to-system-locale: false
+    always-use-message-format: true
+    encoding: UTF-8
 
 # mybatis-plus配置
 mybatis-plus:
@@ -112,8 +113,8 @@ springdoc:
     version: "1.0.0"
     description: "系统用户权限管理相关接口"
     # 关键配置：通过网关访问认证服务器
-    authorization-url: http://localhost:8809/auth-server/oauth2/authorize
-    token-uri: http://localhost:8809/auth-server/oauth2/token
+    authorization-url: http://127.0.0.1:8889/oauth2/authorize
+    token-uri: http://127.0.0.1:8889/oauth2/token
 
 
 # 存储工具配置示例
