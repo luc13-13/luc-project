@@ -76,6 +76,8 @@ springdoc:
     title: "LUC认证中心 API文档"
     version: "1.0.0"
     description: "基于Spring Authorization Server构建的认证授权中心服务API文档"
+    token-url: http://127.0.0.1:8889/oauth2/token
+    authorization-url: http://127.0.0.1:8889/oauth2/authorize
 
 # 系统配置
 sys:

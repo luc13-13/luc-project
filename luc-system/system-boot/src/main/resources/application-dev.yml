@@ -92,30 +92,11 @@ data-scope:
 
 # framework-apidoc 日志设置，后续迁移到nacos中，各服务使用share-configs引入springdoc:
 springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-    tags-sorter: alpha
-    operations-sorter: alpha
-    show-extensions: true
-  #    default-model-expand-depth:
-  #    enabled: false
-  api-docs:
-    path: /v3/api-docs
-  #    enabled: false
-  group-configs:
-    - group: "default"
-      paths-to-match: '/**'
-      packages-to-scan: com.lc
-  default-flat-param-object: true
-  # OAuth2 配置 - 指向网关地址
   info:
-    title: "系统服务API文档"
+    title: "luc-system 系统服务中心 API文档"
     version: "1.0.0"
-    description: "系统用户权限管理相关接口"
-    # 关键配置：通过网关访问认证服务器
+    token-url: http://127.0.0.1:8889/oauth2/token
     authorization-url: http://127.0.0.1:8889/oauth2/authorize
-    token-uri: http://127.0.0.1:8889/oauth2/token
-
 
 # 存储工具配置示例
 file:
