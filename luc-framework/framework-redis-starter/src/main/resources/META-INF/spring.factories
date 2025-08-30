@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.lc.framework.redis.starter.config.LucRedisAutoConfig
+com.lc.framework.redis.starter.LucRedisAutoConfiguration

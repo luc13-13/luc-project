@@ -2,6 +2,7 @@ package com.lc.framework.redis.starter.customizer;
 
 /**
  * <pre>
+ *     RedisTemplate创建过程可以通过改类来定制化
  * </pre>
  *
  * @author Lu Cheng
@@ -10,9 +11,4 @@ package com.lc.framework.redis.starter.customizer;
 @FunctionalInterface
 public interface ObjectMapperCustomizer<T> {
     void customize(T t);
-
-    static <T> ObjectMapperCustomizer<T> withDefaults() {
-        return t -> {
-        };
-    }
 }
