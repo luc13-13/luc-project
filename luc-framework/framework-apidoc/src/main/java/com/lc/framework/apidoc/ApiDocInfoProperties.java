@@ -16,11 +16,11 @@ public class ApiDocInfoProperties {
 
     private boolean discoverEnabled = false;
 
-    private String authorizationUrl = "http://127.0.0.1:8889/oauth2/authorize";
+    private String authorizationUrl;
     /**
      * 鉴权地址
      */
-    private String tokenUri = "http://127.0.0.1:8889/oauth2/token";
+    private String tokenUrl;
 
     /**
      * API文档标题

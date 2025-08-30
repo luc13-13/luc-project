@@ -13,7 +13,6 @@ import io.swagger.v3.oas.models.security.OAuthFlow;
 import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-import io.swagger.v3.oas.models.servers.Server;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springdoc.core.customizers.GlobalOpenApiCustomizer;
@@ -25,8 +24,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -84,7 +81,7 @@ public class OpenApiConfig {
      */
     @Bean
     public OpenAPI apiInfo(SpringDocConfigProperties properties) {
-        log.info("apidoc自动装配, 扫描路径：{}, tokenUrl: {}", properties.getGroupConfigs().stream().map(SpringDocConfigProperties.GroupConfig::getPackagesToScan).collect(Collectors.toList()), apiDocInfoProperties.getTokenUri());
+        log.info("apidoc自动装配, 扫描路径：{}, tokenUrl: {}", properties.getGroupConfigs().stream().map(SpringDocConfigProperties.GroupConfig::getPackagesToScan).collect(Collectors.toList()), apiDocInfoProperties.getTokenUrl());
 
         OpenAPI openAPI = new OpenAPI();
         Info info = new Info().title(apiDocInfoProperties.getTitle())
@@ -102,7 +99,7 @@ public class OpenApiConfig {
                     .url(apiDocInfoProperties.getLicense().getUrl()));
         }
         Components components = null;
-        if (StringUtils.hasText(apiDocInfoProperties.getTokenUri())) {
+        if (StringUtils.hasText(apiDocInfoProperties.getTokenUrl())) {
             log.info("framework-apidoc开启Authorization");
             openAPI = openAPI.addSecurityItem(new SecurityRequirement().addList(HttpHeaders.AUTHORIZATION));
             components = new Components()
@@ -111,23 +108,22 @@ public class OpenApiConfig {
                             new SecurityScheme()
                                     // OAuth2 授权模式
                                     .type(SecurityScheme.Type.OAUTH2)
+                                    // SecuritySchema名称: Authorization
                                     .name(HttpHeaders.AUTHORIZATION)
+                                    // SecuritySchema携带方式: 请求头
+                                    .in(SecurityScheme.In.HEADER)
+                                    // SecuritySchema类型: Bearer
+                                    .scheme("Bearer")
+                                    // Bearer格式: JWT
+                                    .bearerFormat("JWT")
+                                    // SecuritySchema获取流程: OAuth方式，获取授权码->授权码获取token
                                     .flows(new OAuthFlows()
                                             .authorizationCode(new OAuthFlow()
                                                     .authorizationUrl(apiDocInfoProperties.getAuthorizationUrl())
-                                                    .tokenUrl(apiDocInfoProperties.getTokenUri())
+                                                    .tokenUrl(apiDocInfoProperties.getTokenUrl())
+                                                    .refreshUrl(apiDocInfoProperties.getTokenUrl())
                                             )
-//                                            .clientCredentials(
-//                                                    new OAuthFlow()
-//                                                            .authorizationUrl(apiDocInfoProperties.getAuthorizationUrl())
-//                                                            .tokenUrl(apiDocInfoProperties.getTokenUri())
-//                                                            .refreshUrl(apiDocInfoProperties.getTokenUri())
-//                                            )
                                     )
-                                    // 安全模式使用Bearer令牌（即JWT）
-                                    .in(SecurityScheme.In.HEADER)
-                                    .scheme("Bearer")
-                                    .bearerFormat("JWT")
                     )
                     .addParameters("myHeader1", new Parameter().in("header").schema(new StringSchema()).name("myHeader1")).addHeaders("myHeader2", new Header().description("myHeader2 header").schema(new StringSchema()));
         }
