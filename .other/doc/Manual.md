@@ -354,7 +354,52 @@ sequenceDiagram
 
 ## 四、账号体系
 
-## 五、脚手架核心功能
+## 五、luc-framework脚手架核心功能
+
+### 5.1 framework-apidoc
+
+日志依赖，向外暴露/v3/api-doc接口，提供日志信息，支持配置鉴权接口（指向认证服务器）
+
+（1）服务日志配置方式：
+```yaml
+springdoc:
+  info:
+    title: "XXX服务 API文档"
+    version: "版本号"
+    description: "服务描述"
+    authorization-url: "获取授权的接口（至支持授权码）"
+    token-url: "获取access token和refresh token"
+    contract:
+      name: "联系人姓名"
+      url: "联系人主页"
+      email: "联系人邮箱"
+    license: 
+      name: "许可证名称(MIT、Apache等)"
+      url: "许可证地址"
+```
+
+（2）网关聚合服务API文档方式：
+```xml
+<!--添加依赖-->
+<dependencies>
+    <dependency>
+        <groupId>org.springdoc</groupId>
+        <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+    </dependency>
+</dependencies>
+```
+```yaml
+# 增加配置
+springdoc:
+  swagger-ui:
+    use-root-path: true
+    oauth:
+      client-id: "已注册的客户端id"
+      client-secret: "密钥"
+      scopes: "权限范围"
+```
+通过 [RefreshRouteEventListener.java](../../authorization-gateway/src/main/java/com/lc/authorization/gateway/config/RefreshRouteEventListener.java)
+监听服务变化，聚合各服务API文档，访问<http://网关服务地址/swagger-ui/index.html>
 
 ## 六、其他配置
 
