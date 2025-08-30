@@ -2,7 +2,7 @@ package com.lc.auth.server.security.authentication;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lc.auth.server.redis.customizer.ObjectMapperCustomizer;
+import com.lc.framework.redis.starter.customizer.ObjectMapperCustomizer;
 import com.lc.auth.server.security.authentication.extension.MultiTypeAuthenticationFilter;
 import com.lc.auth.server.security.authentication.extension.RedisSecurityContextRepository;
 import com.lc.auth.server.security.authentication.extension.sms.SmsAuthenticationConverter;
