@@ -28,9 +28,10 @@
         <!--开发脚手架-->
         <module>luc-framework</module>
         <!--应用服务-->
-        <module>luc-system</module>
-        <module>authorization-server</module>
         <module>authorization-gateway</module>
+        <module>authorization-server</module>
+        <module>luc-system</module>
+        <module>product-center</module>
     </modules>
 
     <properties>
@@ -303,10 +304,11 @@
                     <include>**/application*.yml</include>
                     <include>**/application*.yaml</include>
                     <include>**/application*.properties</include>
+                    <include>**/messages*.properties</include>
                     <include>**/*.xml</include>
                     <include>**/*.html</include>
                     <include>META-INF/**</include>
-                    <include>i18n/**</include>
+<!--                    <include>i18n/**</include>-->
                 </includes>
             </resource>
             <resource>
@@ -316,9 +318,10 @@
                     <include>**/application*.yml</include>
                     <include>**/application*.yaml</include>
                     <include>**/application*.properties</include>
+                    <include>**/messages*.properties</include>
                     <include>**/*.xml</include>
                     <include>META-INF/**</include>
-                    <include>i18n/**</include>
+<!--                    <include>i18n/**</include>-->
                 </includes>
             </resource>
         </resources>

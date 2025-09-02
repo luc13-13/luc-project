@@ -1,13 +1,22 @@
 # 系统部署手册
 
-## 一、项目结构
+## 一、项目规范
 ### 1、项目命名规则
 
-（1）脚手架项目——framework-【功能简写】，例如</br>
-（2）基础服务——【系统】-system，例如</br>
-（3）认证服务——auth-【功能】，例如</br>
-（4）核心业务服务——【服务】-center，例如</br>
-（5）小程序服务——mini-app-【小程序名称】，例如</br>
+（1）脚手架项目：framework-【功能简写】，例如</br>
+（2）基础服务：【系统】-system，例如</br>luc-system
+（3）认证服务：authorization-【功能】，例如</br>authorization-server
+（4）核心业务服务：【服务】-center，例如</br>product-center
+（5）小程序服务：mini-app-【小程序名称】，例如</br>mini-app-cookbook
+
+### 2、数据库规范
+（1）表规范
+
+| column | type   | default        | comment |
+|--------|--------|----------------|---------|
+| id     | bigint | auto increment | 自增主键    |
+｜dt_created｜｜｜
+
 
 ## 二、快速启动
 
