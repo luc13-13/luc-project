@@ -22,6 +22,16 @@ spring:
                 - StripPrefix=1
                 # 添加用户信息到请求头
                 - AddRequestHeader=X-Gateway, authorization-gateway
+
+            # 业务服务路由示例（可根据实际需要配置）
+            - id: product-center
+              uri: http://127.0.0.1:19004
+              predicates:
+                - Path=/product-center/**
+              filters:
+                - StripPrefix=1
+                # 添加用户信息到请求头
+                - AddRequestHeader=X-Gateway, authorization-gateway
           globalcors:
             cors-configurations:
               '[/**]':
