@@ -10,6 +10,7 @@ spring:
   jackson:
     serialization:
       fail-on-empty-beans: false
+    date-format: yyyy-MM-dd HH:mm:ss
   messages:
     basename: i18n/messages
     fallback-to-system-locale: true
