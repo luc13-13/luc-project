@@ -36,4 +36,11 @@ public interface Groups {
      */
     interface UpdateGroup {
     }
+
+    /**
+     * 分页查询操作
+     */
+    interface PageGroup {
+
+    }
 }

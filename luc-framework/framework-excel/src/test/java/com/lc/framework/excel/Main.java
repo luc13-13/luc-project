@@ -43,7 +43,7 @@ public class Main {
                         .flavorId("flavor-" + (j / 2))
                         .operateProperty("property-" + (j / 2))
                         .source("source")
-                        .current("current")
+                        .current("pageIndex")
                         .build());
             }
         }

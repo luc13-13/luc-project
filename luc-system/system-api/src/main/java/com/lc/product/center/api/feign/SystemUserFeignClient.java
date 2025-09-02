@@ -1,4 +1,4 @@
-package com.lc.system.api.feign;
+package com.lc.product.center.api.feign;
 
 import com.lc.framework.core.mvc.WebResult;
 import org.springframework.cloud.openfeign.FeignClient;
