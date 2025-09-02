@@ -1,0 +1,35 @@
+spring:
+  # 数据源配置
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/product_center?useSSL=false&useUnicode=true&allowPublicKeyRetrieval=true&serverTimezone=Asia/Shanghai&characterEncoding=UTF-8
+    username: root
+    password: luc123456
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+  messages:
+    basename: i18n/messages
+    fallback-to-system-locale: true
+    always-use-message-format: true
+    encoding: UTF-8
+# MyBatis-Plus 配置
+mybatis-plus:
+  mapper-locations: classpath*:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+# SpringDoc OpenAPI 配置
+springdoc:
+  info:
+    title: "product-center API文档"
+    version: "1.0.0"
+    description: "基于LUC框架的framework-archetype服务API文档"
+
+# 日志配置
+logging:
+  level:
+    root: info
+  config: classpath:logback-spring.xml

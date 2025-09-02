@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.lc</groupId>
+        <artifactId>product-center</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <artifactId>product-center-boot</artifactId>
+
+    <name>product-center-boot</name>
+    <description>产品管理中心，基于LUC框架的Spring Boot项目</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-core</artifactId>
+        </dependency>
+        <!--web依赖-->
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-web</artifactId>
+        </dependency>
+
+        <!--data scope-->
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-datascope</artifactId>
+        </dependency>
+
+        <!--api文档-->
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-apidoc</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
