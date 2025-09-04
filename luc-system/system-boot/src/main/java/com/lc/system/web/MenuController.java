@@ -1,5 +1,6 @@
 package com.lc.system.web;
 
+import com.lc.framework.core.constants.RequestHeaderConstants;
 import com.lc.framework.core.mvc.WebResult;
 import com.lc.framework.core.utils.validator.Groups;
 import com.lc.framework.web.utils.MessageUtils;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.lc.framework.core.constants.NumberConstants.STATUS_TRUE;
+import static com.lc.framework.core.constants.RequestHeaderConstants.USER_ID;
 
 /**
  * 菜单相关接口
@@ -35,7 +37,7 @@ public class MenuController {
     @GetMapping("/tree/available")
     public WebResult<List<MenuVO>> getMenuTreeAvailable(HttpServletRequest request) {
         MenuDTO queryDTO = MenuDTO.builder()
-                .userId(request.getHeader("X-User-Id"))
+                .userId(request.getHeader(RequestHeaderConstants.USER_ID))
                 .status(STATUS_TRUE)
                 .build();
         List<MenuVO> menuTree = menuService.getRouteTreeByUserId(queryDTO);
@@ -45,7 +47,7 @@ public class MenuController {
     @Operation(summary = "获取用户菜单列表（前端路由使用）")
     @GetMapping("/list")
     public WebResult<List<MenuVO>> getMenuList(HttpServletRequest request) {
-        MenuDTO queryDTO = MenuDTO.builder().userId(request.getHeader("X-User-Id")).build();
+        MenuDTO queryDTO = MenuDTO.builder().userId(request.getHeader(USER_ID)).build();
         List<MenuVO> menuTree = menuService.getMenuVOList(queryDTO);
         return WebResult.success(menuTree);
     }
@@ -53,6 +55,7 @@ public class MenuController {
     @Operation(summary = "保存菜单")
     @PostMapping("/save")
     public WebResult<String> saveMenu(@RequestBody @Validated(Groups.AddGroup.class) MenuDTO dto) {
+        menuService.saveMenu(dto);
         return WebResult.success(MessageUtils.getMessage("menu.api.save.success"));
     }
 

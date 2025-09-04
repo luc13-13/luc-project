@@ -2,6 +2,8 @@ package com.lc.system.converter.impl;
 
 import com.lc.system.converter.MenuConverter;
 import com.lc.system.domain.bo.MenuBO;
+import com.lc.system.domain.dto.MenuDTO;
+import com.lc.system.domain.entity.MenuDO;
 import com.lc.system.domain.vo.MenuMetaVO;
 import com.lc.system.domain.vo.MenuVO;
 import jakarta.validation.constraints.NotNull;
@@ -71,6 +73,23 @@ public class MenuConverterImpl implements MenuConverter {
             return List.of();
         }
         return menuBOList.stream().filter(bo -> bo.getMenuDO() != null).map(this::convertBO2RouteVO).toList();
+    }
+
+    @Override
+    public MenuDO convertDTO2DO(MenuDTO menuDTO) {
+        MenuDO menuDO = new MenuDO();
+        menuDO.setMenuId(menuDTO.getMenuId());
+        menuDO.setParentMenuId(StringUtils.hasText(menuDTO.getParentMenuId()) ? menuDTO.getParentMenuId() : null);
+        menuDO.setName(menuDTO.getName());
+        menuDO.setPath(menuDTO.getPath());
+        menuDO.setComponent(StringUtils.hasText(menuDTO.getComponent()) ? menuDTO.getComponent() : null);
+        menuDO.setRedirect(StringUtils.hasText(menuDTO.getRedirect()) ? menuDTO.getRedirect() : null);
+        menuDO.setMenuType(menuDTO.getMenuType());
+        menuDO.setStatus(menuDTO.getStatus());
+        menuDO.setSortOrder(menuDTO.getSortOrder());
+        menuDO.setCreatedBy(menuDTO.getCreatedBy());
+        menuDO.setModifiedBy(menuDTO.getModifiedBy());
+        return menuDO;
     }
 
     /**

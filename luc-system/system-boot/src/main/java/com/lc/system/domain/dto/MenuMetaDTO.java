@@ -1,6 +1,8 @@
 package com.lc.system.domain.dto;
 
+import com.lc.framework.core.utils.validator.Groups;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,13 +26,14 @@ public class MenuMetaDTO implements Serializable {
     /**
      * 菜单标题
      */
+    @NotBlank(groups =  Groups.AddGroup.class)
     @Schema(name = "title", description = "菜单标题")
     private String title;
 
     /**
      * 菜单图标
      */
-    @Schema(name = "icon", description = "菜单图标")
+    @NotBlank(groups =  Groups.AddGroup.class)
     private String icon;
 
     /**
@@ -55,43 +58,43 @@ public class MenuMetaDTO implements Serializable {
      * 忽略权限验证(0:否 1:是)
      */
     @Schema(name = "ignoreAccess", description = "忽略权限验证(0:否 1:是)")
-    private Short ignoreAccess;
+    private Boolean ignoreAccess;
 
     /**
      * 菜单可见但访问受限(0:否 1:是)
      */
     @Schema(name = "menuVisibleWithForbidden", description = "菜单可见但访问受限(0:否 1:是)")
-    private Short menuVisibleWithForbidden;
+    private Boolean menuVisibleWithForbidden;
 
     /**
      * 在菜单中隐藏(0:否 1:是)
      */
     @Schema(name = "hideInMenu", description = "在菜单中隐藏(0:否 1:是)")
-    private Short hideInMenu;
+    private Boolean hideInMenu;
 
     /**
      * 在标签页中隐藏(0:否 1:是)
      */
     @Schema(name = "hideInTab", description = "在标签页中隐藏(0:否 1:是)")
-    private Short hideInTab;
+    private Boolean hideInTab;
 
     /**
      * 在面包屑中隐藏(0:否 1:是)
      */
     @Schema(name = "hideInBreadcrumb", description = "在面包屑中隐藏(0:否 1:是)")
-    private Short hideInBreadcrumb;
+    private Boolean hideInBreadcrumb;
 
     /**
      * 隐藏子菜单(0:否 1:是)
      */
     @Schema(name = "hideChildrenInMenu", description = "隐藏子菜单(0:否 1:是)")
-    private Short hideChildrenInMenu;
+    private Boolean hideChildrenInMenu;
 
     /**
      * 固定标签页(0:否 1:是)
      */
     @Schema(name = "affixTab", description = "固定标签页(0:否 1:是)")
-    private Short affixTab;
+    private Boolean affixTab;
 
     /**
      * 固定标签页顺序
@@ -109,13 +112,13 @@ public class MenuMetaDTO implements Serializable {
      * 页面缓存(0:否 1:是)
      */
     @Schema(name = "keepAlive", description = "页面缓存(0:否 1:是)")
-    private Short keepAlive;
+    private Boolean keepAlive;
 
     /**
      * 不使用基础布局(0:否 1:是)
      */
     @Schema(name = "noBasicLayout", description = "不使用基础布局(0:否 1:是)")
-    private Short noBasicLayout;
+    private Boolean noBasicLayout;
 
     /**
      * 外链地址
@@ -133,7 +136,7 @@ public class MenuMetaDTO implements Serializable {
      * 新窗口打开(0:否 1:是)
      */
     @Schema(name = "openInNewWindow", description = "新窗口打开(0:否 1:是)")
-    private Short openInNewWindow;
+    private Boolean openInNewWindow;
 
     /**
      * 徽标内容

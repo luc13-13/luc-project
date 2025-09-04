@@ -1,6 +1,8 @@
 package com.lc.system.converter;
 
 import com.lc.system.domain.bo.MenuBO;
+import com.lc.system.domain.dto.MenuDTO;
+import com.lc.system.domain.entity.MenuDO;
 import com.lc.system.domain.vo.MenuVO;
 import jakarta.validation.constraints.NotNull;
 
@@ -20,4 +22,6 @@ public interface MenuConverter {
     List<MenuVO> convertBOList2VOTree(List<MenuBO> menuBOList);
 
     List<MenuVO> convertBOList2VOList(List<MenuBO> menuBOList);
+
+    MenuDO convertDTO2DO(MenuDTO menuDTO);
 }

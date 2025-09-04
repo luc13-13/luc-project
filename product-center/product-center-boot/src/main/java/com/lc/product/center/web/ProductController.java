@@ -2,6 +2,7 @@ package com.lc.product.center.web;
 
 import com.lc.framework.core.mvc.WebResult;
 import com.lc.framework.core.page.PaginationResult;
+import com.lc.framework.core.utils.validator.Groups;
 import com.lc.product.center.domain.dto.ProductInfoDTO;
 import com.lc.product.center.domain.vo.ProductInfoVO;
 import com.lc.product.center.service.ProductInfoService;
@@ -9,6 +10,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,8 +19,8 @@ import java.util.List;
  * 产品管理控制器
  *
  * @author Lu Cheng
- * @date 2025/8/31 15:22
  * @version 1.0
+ * @date 2025/8/31 15:22
  */
 @RestController
 @RequestMapping("/product")
@@ -30,15 +32,15 @@ public class ProductController {
 
     @PostMapping("/list")
     @Operation(summary = "分页查询产品列表", description = "根据查询条件分页查询产品列表")
-    public WebResult<PaginationResult<ProductInfoVO>> list(@RequestBody ProductInfoDTO queryDTO) {
-        PaginationResult<ProductInfoVO> result = productInfoService.queryProductPage(queryDTO);
+    public WebResult<List<ProductInfoVO>> list(@RequestBody ProductInfoDTO queryDTO) {
+        List<ProductInfoVO> result = productInfoService.queryProductList(queryDTO);
         return WebResult.success(result);
     }
 
-    @PostMapping("/all")
+    @PostMapping("/page")
     @Operation(summary = "查询所有产品", description = "查询所有产品列表，不分页")
-    public WebResult<List<ProductInfoVO>> listAll(@RequestBody ProductInfoDTO queryDTO) {
-        List<ProductInfoVO> result = productInfoService.queryProductList(queryDTO);
+    public WebResult<PaginationResult<ProductInfoVO>> listAll(@RequestBody @Validated(Groups.PageGroup.class) ProductInfoDTO queryDTO) {
+        PaginationResult<ProductInfoVO> result = productInfoService.queryProductPage(queryDTO);
         return WebResult.success(result);
     }
 

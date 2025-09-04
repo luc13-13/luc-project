@@ -5,6 +5,7 @@ import com.lc.system.domain.bo.MenuBO;
 import com.lc.system.domain.dto.MenuDTO;
 import com.lc.system.domain.entity.MenuDO;
 import com.lc.system.domain.vo.MenuVO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -32,5 +33,8 @@ public interface MenuService extends IService<MenuDO> {
     List<MenuVO> getRouteTreeByUserId(MenuDTO dto);
 
     List<MenuVO> getMenuVOList(MenuDTO dto);
+
+    @Transactional(rollbackFor = Exception.class)
+    void saveMenu(MenuDTO dto);
 }
 

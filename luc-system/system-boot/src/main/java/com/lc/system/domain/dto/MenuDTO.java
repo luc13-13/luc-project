@@ -1,7 +1,10 @@
 package com.lc.system.domain.dto;
 
-import com.lc.framework.core.utils.validator.Groups.*;
+import com.lc.framework.core.utils.validator.Groups.AddGroup;
+import com.lc.framework.core.utils.validator.Groups.DeleteGroup;
+import com.lc.framework.core.utils.validator.Groups.UpdateGroup;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
@@ -30,10 +33,12 @@ public class MenuDTO implements Serializable {
     @Null(message = "{menu.dto.id.null}", groups =  AddGroup.class)
     private Long id;
 
+    @Schema(name = "userId", description = "可以查看菜单的userId")
     private String userId;
     /**
      * 菜单唯一标识
      */
+    @NotBlank(groups =  AddGroup.class)
     @Schema(name = "menuId", description = "菜单唯一标识")
     private String menuId;
 
@@ -46,6 +51,7 @@ public class MenuDTO implements Serializable {
     /**
      * 路由名称(必须唯一)
      */
+    @NotBlank(groups = AddGroup.class)
     @Schema(name = "name", description = "路由名称(必须唯一)")
     private String name;
 
@@ -70,6 +76,7 @@ public class MenuDTO implements Serializable {
     /**
      * 菜单类型(catalog/menu/button/embedded/link)
      */
+    @NotBlank(groups = AddGroup.class)
     @Schema(name = "menuType", description = "菜单类型(catalog/menu/button/embedded/link)")
     private String menuType;
 
@@ -109,6 +116,7 @@ public class MenuDTO implements Serializable {
     @Schema(name = "dtModified", description = "更新时间")
     private Date dtModified;
 
+    @NotNull(groups =  AddGroup.class)
     @Schema(name = "meta", description = "菜单元数据")
     private MenuMetaDTO meta;
 

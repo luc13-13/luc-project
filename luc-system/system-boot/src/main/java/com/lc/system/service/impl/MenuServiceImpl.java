@@ -1,12 +1,16 @@
 package com.lc.system.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lc.framework.web.utils.WebUtil;
 import com.lc.system.converter.MenuConverter;
+import com.lc.system.converter.MenuMetaConverter;
 import com.lc.system.domain.bo.MenuBO;
 import com.lc.system.domain.dto.MenuDTO;
 import com.lc.system.domain.entity.MenuDO;
+import com.lc.system.domain.entity.MenuMetaDO;
 import com.lc.system.domain.vo.MenuVO;
 import com.lc.system.mapper.MenuMapper;
+import com.lc.system.service.MenuMetaService;
 import com.lc.system.service.MenuService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,8 +31,14 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
 
     private final MenuConverter menuConverter;
 
-    public MenuServiceImpl(MenuConverter menuConverter) {
+    private final MenuMetaConverter menuMetaConverter;
+
+    private final MenuMetaService menuMetaService;
+
+    public MenuServiceImpl(MenuConverter menuConverter, MenuMetaConverter menuMetaConverter, MenuMetaService menuMetaService) {
         this.menuConverter = menuConverter;
+        this.menuMetaConverter = menuMetaConverter;
+        this.menuMetaService = menuMetaService;
     }
 
     @Override
@@ -50,6 +60,20 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
     @Override
     public List<MenuVO> getMenuVOList(MenuDTO dto) {
         return menuConverter.convertBOList2VOList(getMenuList(dto));
+    }
+
+    @Override
+    public void saveMenu(MenuDTO dto) {
+        // 转换为数据库对象
+        MenuDO menuDO = menuConverter.convertDTO2DO(dto);
+        // 提取元数据
+        MenuMetaDO menuMetaDO = menuMetaConverter.convertMenuDTO2DO(dto);
+        // 封装创建人
+        String createBy = WebUtil.getUserId();
+        menuDO.setCreatedBy(createBy);
+        menuMetaDO.setCreatedBy(createBy);
+        this.save(menuDO);
+        menuMetaService.save(menuMetaDO);
     }
 }
 
