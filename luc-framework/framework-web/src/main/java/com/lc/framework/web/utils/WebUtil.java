@@ -2,12 +2,15 @@ package com.lc.framework.web.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.lc.framework.core.constants.RequestHeaderConstants;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.experimental.UtilityClass;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * <pre>
@@ -34,5 +37,16 @@ public class WebUtil {
      */
     public ServletRequestAttributes getRequestAttributes() {
         return (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+    }
+
+    public Optional<HttpServletRequest> getRequest() {
+        return Optional.of(getRequestAttributes().getRequest());
+    }
+
+    public String getUserId() {
+        if (getRequest().isPresent()) {
+            return  getRequest().get().getHeader(RequestHeaderConstants.USER_ID);
+        }
+        return null;
     }
 }

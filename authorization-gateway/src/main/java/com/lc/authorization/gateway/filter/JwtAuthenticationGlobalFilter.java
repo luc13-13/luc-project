@@ -1,5 +1,6 @@
 package com.lc.authorization.gateway.filter;
 
+import com.lc.framework.core.constants.RequestHeaderConstants;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
@@ -25,9 +26,9 @@ import reactor.core.publisher.Mono;
 @Component
 public class JwtAuthenticationGlobalFilter implements GlobalFilter, Ordered {
 
-    private static final String USER_ID_HEADER = "X-User-Id";
-    private static final String USERNAME_HEADER = "X-Username";
-    private static final String USER_AUTHORITIES_HEADER = "X-User-Authorities";
+    private static final String USER_ID_HEADER = RequestHeaderConstants.USER_ID;
+    private static final String USERNAME_HEADER = RequestHeaderConstants.USER_NAME;
+    private static final String USER_AUTHORITIES_HEADER = RequestHeaderConstants.USER_Authorities;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {

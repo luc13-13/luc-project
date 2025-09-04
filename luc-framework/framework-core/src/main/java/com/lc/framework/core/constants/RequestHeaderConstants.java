@@ -32,10 +32,13 @@ public interface RequestHeaderConstants {
      * --------------- 请求头中Cookie名，及其中用户信息相的关字段名 ---------------
      */
     String cookie = "Cookie";
-    String USER_ID = "UserId";
+    String USER_ID = "X-User-Id";
+    String USER_NAME = "X-User-Name";
+    String USER_Authorities = "X-User-Authorities";
 
     /**
      * --------------- 请求属性名，区分请求类型 ---------------
      */
     String ATTRIBUTE_IGNORE_FILTER = "visitor";
+
 }
