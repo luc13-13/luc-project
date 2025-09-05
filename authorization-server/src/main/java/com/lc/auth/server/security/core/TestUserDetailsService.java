@@ -1,14 +1,22 @@
 package com.lc.auth.server.security.core;
 
+import com.lc.framework.core.mvc.WebResult;
+import com.lc.system.api.SysUserDetailDTO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import java.time.Instant;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.lc.framework.core.constants.RequestHeaderConstants.USER_NAME;
 
 /**
  * 测试用户详情服务
@@ -17,37 +25,43 @@ import java.util.Set;
 @Service
 @Slf4j
 public class TestUserDetailsService implements LoginUserDetailService {
-    
+
     private final PasswordEncoder passwordEncoder;
-    
+
     public TestUserDetailsService(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
     }
-    
+
+    private final RestClient restClient = RestClient.builder().baseUrl("http://127.0.0.1:19003").build();
+
     @Override
     public LoginUserDetail loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("尝试加载用户: {}", username);
-        
-        if ("admin".equals(username)) {
-            // 创建 admin 用户，密码为 admin
-            String encodedPassword = passwordEncoder.encode("admin");
-            log.info("用户 admin 找到，编码后密码: {}", encodedPassword);
-
+        // TODO: 引入consul后，利用FeignDecoder特性，可直接返回结果
+        WebResult<SysUserDetailDTO> webResult = restClient.get().uri(UriComponentsBuilder.fromUriString("/user/detail")
+                        .queryParam("username", username).build().toUri())
+                .httpRequest(request -> request.getHeaders().set(USER_NAME, username))
+                .retrieve().body(new ParameterizedTypeReference<>() {
+                });
+        if (webResult != null && webResult.getData() != null) {
+            SysUserDetailDTO sysUserDTO = webResult.getData();
+            log.info("用户加载结果: {}", sysUserDTO);
             LoginUserDetail user = LoginUserDetail.builder()
-                    .id("admin001")
-                    .username("admin")
-                    .password(encodedPassword)
-                    .authorities(Set.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER")))
-                    .accountNonExpired(true)
-                    .accountNonLocked(true)
+                    .id(sysUserDTO.getUserId())
+                    .username(sysUserDTO.getUserName())
+                    .password(sysUserDTO.getPassword())
+                    // 角色记authorities
+                    .authorities(sysUserDTO.getRoleAuthoritiesMap().keySet().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toSet()))
+                    .accountNonExpired(sysUserDTO.getStatus())
+                    .accountNonLocked(sysUserDTO.getStatus())
                     .credentialsIssuedAt(Instant.now())
                     .build();
-                    
+            user.getAttributes().put("role_authorities", sysUserDTO.getRoleAuthoritiesMap());
             log.info("返回用户详情: {}", user);
             return user;
         }
-        
-        log.warn("用户不存在: {}", username);
+
+        log.error("用户不存在: {}", username);
         throw new UsernameNotFoundException("用户不存在: " + username);
     }
 
