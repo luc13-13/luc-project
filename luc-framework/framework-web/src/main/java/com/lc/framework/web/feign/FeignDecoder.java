@@ -5,6 +5,7 @@ import feign.FeignException;
 import feign.Response;
 import feign.codec.DecodeException;
 import feign.codec.Decoder;
+import jakarta.annotation.Nonnull;
 import org.springframework.cloud.openfeign.support.SpringDecoder;
 
 import java.io.IOException;
@@ -32,11 +33,14 @@ public class FeignDecoder implements Decoder {
         boolean notTheSame = method.getReturnType() != WebResult.class;
         if (notTheSame) {
             Type newType = new ParameterizedType() {
+
+                @Nonnull
                 @Override
                 public Type[] getActualTypeArguments() {
                     return new Type[]{type};
                 }
 
+                @Nonnull
                 @Override
                 public Type getRawType() {
                     return WebResult.class;
