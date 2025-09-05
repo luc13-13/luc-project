@@ -18,9 +18,10 @@
         <result property="dtModified" column="dt_modified" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <!-- MenuDTO 结果映射 -->
+    <!-- MenuBO 结果映射 -->
     <resultMap id="MENU_BO_MAP" type="com.lc.system.domain.bo.MenuBO">
         <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="roleId" column="role_id" jdbcType="VARCHAR"/>
         <association property="menuDO" resultMap="BASE_MAP"/>
 
         <!-- 嵌套的 MenuMetaDTO -->
@@ -68,6 +69,7 @@
         m.dt_created,
         m.modified_by,
         m.dt_modified,
+        ur.role_id,
 
         -- meta 信息
         meta.title as meta_title,

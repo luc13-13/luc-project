@@ -13,6 +13,11 @@
     <artifactId>system-boot</artifactId>
 
     <dependencies>
+        <!--系统服务api-->
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>system-api</artifactId>
+        </dependency>
         <!--rest规范及工具类-->
         <dependency>
             <groupId>com.lc</groupId>
@@ -35,12 +40,6 @@
 <!--            <groupId>com.lc</groupId>-->
 <!--            <artifactId>framework-datasource-starter</artifactId>-->
 <!--            <version>1.0.0</version>-->
-<!--        </dependency>-->
-
-        <!--redis-->
-<!--        <dependency>-->
-<!--            <groupId>com.lc</groupId>-->
-<!--            <artifactId>framework-redis-starter</artifactId>-->
 <!--        </dependency>-->
 
         <!--存储-->

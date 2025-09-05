@@ -1,7 +1,10 @@
 package com.lc.system.feign;
 
+import com.lc.framework.core.constants.RequestHeaderConstants;
 import com.lc.framework.core.mvc.WebResult;
+import com.lc.system.api.SysUserDetailDTO;
 import com.lc.system.domain.dto.UserDTO;
+import com.lc.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,17 +30,24 @@ import java.util.List;
 @Slf4j
 public class UserFeignServer {
 
+    private final SysUserService sysUserService;
+
+    public UserFeignServer(SysUserService sysUserService) {
+        this.sysUserService = sysUserService;
+    }
+
     @Operation(summary = "获取用户详情")
     @GetMapping("/detail")
-    public WebResult<String> getUserDetail() {
-        log.info("获取用户详情");
-        return WebResult.success();
+    public WebResult<SysUserDetailDTO> getUserDetail(@RequestParam("username") String username) {
+        SysUserDetailDTO dto = sysUserService.getSysUserDetail(username);
+        log.info("获取用户详情: {}", dto);
+        return WebResult.success(dto);
     }
 
     @Operation(summary = "获取用户信息")
     @GetMapping("/info")
     public WebResult<UserDTO> getUserInfo(HttpServletRequest request) {
-        String username = request.getHeader("X-Username");
+        String username = request.getHeader(RequestHeaderConstants.USER_NAME);
         log.info("获取user信息, {}", username);
         return WebResult.success(UserDTO.builder()
                 .username(username)

@@ -16,6 +16,8 @@ public class MenuBO {
 
     private Long id;
 
+    private String roleId;
+
     private MenuDO menuDO;
 
     private MenuMetaDO menuMetaDO;

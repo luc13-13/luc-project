@@ -87,7 +87,7 @@ public class SysUserDO implements Serializable {
      * 帐号状态（0正常 1停用）
      */
     @TableField("status")
-    private Short status;
+    private Boolean status;
 
     /**
      * 最后登录IP
