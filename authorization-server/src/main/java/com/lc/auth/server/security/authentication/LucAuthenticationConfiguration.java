@@ -188,6 +188,9 @@ public class LucAuthenticationConfiguration {
         return new RedisSecurityContextRepository(redisTemplate, sysSecurityProperties.getTokenTimeToLive().toSeconds());
     }
 
+    /**
+     * 向jwt中增加用户信息
+     */
     @Bean
     public OAuth2TokenCustomizer<JwtEncodingContext> accessTokenCustomizer() {
         return context -> {
