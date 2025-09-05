@@ -20,6 +20,12 @@
             <groupId>com.lc</groupId>
             <artifactId>framework-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-apidoc</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>

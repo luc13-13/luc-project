@@ -1,4 +1,4 @@
-package com.lc.product.center.api.feign;
+package com.lc.system.api;
 
 import com.lc.framework.core.mvc.WebResult;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -19,6 +19,6 @@ public interface SystemUserFeignClient {
     WebResult<String> getUserInfo();
 
     @GetMapping("/user/detail")
-    WebResult<String> getUserDetail(@RequestParam("username") String username);
+    WebResult<SysUserDetailDTO> getUserDetail(@RequestParam("username") String username);
 
 }
