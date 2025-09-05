@@ -14,7 +14,7 @@ create table sys_user (
     phone             varchar(11)     default ''                 comment '手机号码, 用于登陆',
     sex               tinyint         default '2'                comment '用户性别（0男 1女 2未知）',
     avatar            varchar(100)    default ''                 comment '头像地址',
-    password          varchar(100)    default ''                 comment '密码，bcrypt加密后的数据',
+    password          varchar(512)    default ''                 comment '密码，bcrypt加密后的数据',
     status            tinyint         default '1'                comment '帐号状态（0禁用 1正常）',
     login_ip          varchar(128)    default ''                 comment '最后登录IP',
     login_date        datetime                                   comment '最后登录时间',
@@ -36,38 +36,38 @@ VALUES
 -- 系统管理员用户
 ('admin001', 'dept001', 'admin', '系统管理员', '00',
 'admin@example.com', '13800000001', 0, '/avatars/admin.jpg',
- '$2a$10$7JB720yubVSOfvVWbGReyO.ZhMqcpAp5R8.1F.QOKr7Op9VVjraDm', -- 密码: admin123
+ '$2a$10$/6NBLlU3wvJcyn4tfV2e5Ow6OUAENMO644iOaGDCYP2LT/pDVursu', -- 密码: admin123
  1, 'system', NOW(), '系统超级管理员账号'),
 ('admin002', 'dept001', 'superadmin', '超级管理员', '00',
  'superadmin@example.com', '13800000002', 1, '/avatars/superadmin.jpg',
- '$2a$10$7JB720yubVSOfvVWbGReyO.ZhMqcpAp5R8.1F.QOKr7Op9VVjraDm', -- 密码: admin123
+ '$2a$10$/6NBLlU3wvJcyn4tfV2e5Ow6OUAENMO644iOaGDCYP2LT/pDVursu', -- 密码: admin123
  1, 'system', NOW(), '系统超级管理员备用账号'),
 -- 业务管理员用户
 ('manager001', 'dept002', 'manager', '业务经理', '10',
  'manager@example.com', '13800000003', 0, '/avatars/manager.jpg',
- '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKTVl5o/BXjBqcHuC2.yI8hdAoKy', -- 密码: manager123
+ '$2a$10$iw5rtW9TvNeKhkcDtaNm6.NopMDurhsKDHxJOzrocQhcdoqKotdYC', -- 密码: manager123
  1, 'admin001', NOW(), '产品业务管理员'),
 ('manager002', 'dept002', 'manager2', '业务主管', '10',
  'manager2@example.com', '13800000004', 1, '/avatars/manager2.jpg',
- '$2a$10$N.zmdr9k7uOCQb376NoUnuTJ8iKTVl5o/BXjBqcHuC2.yI8hdAoKy', -- 密码: manager123
+ '$2a$10$iw5rtW9TvNeKhkcDtaNm6.NopMDurhsKDHxJOzrocQhcdoqKotdYC', -- 密码: manager123
  1, 'admin001', NOW(), '产品业务主管'),
 -- 普通用户
 ('user001', 'dept003', 'zhangsan', '张三', '20',
  'zhangsan@example.com', '13800000005', 0, '/avatars/zhangsan.jpg',
- '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', -- 密码: user123
+ '$2a$10$TjUaaWtkYhYknvGNrvMf3urWVI1LeLMd6Djcw5OURLyMZzvIX.tBq', -- 密码: user123
  1, 'manager001', NOW(), '普通员工用户'),
 ('user002', 'dept003', 'lisi', '李四', '20',
  'lisi@example.com', '13800000006', 1, '/avatars/lisi.jpg',
- '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', -- 密码: user123
+ '$2a$10$TjUaaWtkYhYknvGNrvMf3urWVI1LeLMd6Djcw5OURLyMZzvIX.tBq', -- 密码: user123
  1, 'manager001', NOW(), '普通员工用户'),
 ('user003', 'dept004', 'wangwu', '王五', '20',
  'wangwu@example.com', '13800000007', 0, '/avatars/wangwu.jpg',
- '$2a$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2uheWG/igi.', -- 密码: user123
+ '$2a$10$TjUaaWtkYhYknvGNrvMf3urWVI1LeLMd6Djcw5OURLyMZzvIX.tBq', -- 密码: user123
  1, 'manager002', NOW(), '普通员工用户'),
 -- 访客用户
 ('guest001', 'dept005', 'guest', '访客用户', '20',
  'guest@example.com', '13800000008', 2, '/avatars/guest.jpg',
- '$2a$10$fFLij9aKIWaQKqkzQup1DOXX.DQ5p8W9W3yyNHkBaYFfd0UYmI9Fm', -- 密码: guest123
+ '$2a$10$IccEwf/fYkLYQ/1H9vEvB./o006kPSnb34ljWI5cbt8XmPLx1vx2S', -- 密码: guest123
  1, 'system', NOW(), '系统访客账号，仅供演示使用');
 
 drop table if exists sys_user_openid;
