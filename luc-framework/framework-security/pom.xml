@@ -10,55 +10,11 @@
     </parent>
 
     <artifactId>framework-security</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+    <modules>
+        <module>framework-security-core</module>
+        <module>framework-security-authorization-server</module>
 
-    <dependencies>
-        <dependency>
-            <groupId>com.lc</groupId>
-            <artifactId>framework-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>io.github.openfeign</groupId>
-            <artifactId>feign-core</artifactId>
-            <optional>true</optional>
-
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-context</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!--oauth2客户端依赖-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!--oauth2资源服务器-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!--oauth2认证服务器-->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-        <!--增加HttpServletRequest类的支持-->
-        <dependency>
-            <groupId>org.apache.tomcat.embed</groupId>
-            <artifactId>tomcat-embed-core</artifactId>
-            <optional>true</optional>
-        </dependency>
-
-    </dependencies>
+    </modules>
 
 </project>

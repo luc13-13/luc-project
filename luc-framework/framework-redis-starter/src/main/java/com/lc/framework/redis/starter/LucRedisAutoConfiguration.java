@@ -53,9 +53,10 @@ public class LucRedisAutoConfiguration {
                 .visibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
                 .serializationInclusion(JsonInclude.Include.NON_NULL)
                 .build();
+        // 注入ObjectMapper配置方法
+        customizerProvider.orderedStream().forEach(customer -> customer.customize(objectMapper));
         objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
         Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
-        customizerProvider.orderedStream().forEach(customer -> customer.customize(objectMapper));
         redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
         redisTemplate.setConnectionFactory(factory);

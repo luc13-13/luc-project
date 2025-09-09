@@ -1,7 +1,9 @@
 package com.lc.authorization.gateway.config;
 
+import com.lc.authorization.gateway.security.RedisServerSecurityContextRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
@@ -21,11 +23,13 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityWebFilterChain securityWebFiltersChain(ServerHttpSecurity http,
-                                                          GatewaySecurityProperties securityProperties) {
+                                                          GatewaySecurityProperties securityProperties,
+                                                          ReactiveRedisTemplate<String, Object> reactiveRedisTemplate) {
         return http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
                 .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
                 .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                .securityContextRepository(new RedisServerSecurityContextRepository(reactiveRedisTemplate))
                 // 使用标准的 OAuth2 Resource Server JWT 认证
                 .oauth2ResourceServer(oAuth2ResourceServer ->
                         oAuth2ResourceServer

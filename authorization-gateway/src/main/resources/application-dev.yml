@@ -53,10 +53,22 @@ spring:
           issuer-uri: http://127.0.0.1:8889
           # JWK Set URI（可选，如果不设置会自动从 issuer-uri 发现）
           jwk-set-uri: http://127.0.0.1:8889/oauth2/jwks
-# 认证服务配置
-auth:
-  service:
-    url: http://127.0.0.1:8889
+  data:
+    redis:
+      database: 0
+      host: 127.0.0.1
+      port: 6379
+      password: luc123456
+      timeout: 5000
+      client-type: lettuce
+      lettuce:
+        pool:
+          min-idle: 8
+          max-idle: 500
+          max-active: 2000
+          max-wait: 10000
+          enabled: true
+
 
 # 网关安全配置
 gateway:
@@ -94,5 +106,4 @@ logging:
   level:
     com.lc.authorization.gateway: debug
     org.springframework.security: debug
-    org.springframework.security.oauth2: debug
     org.springframework.cloud.gateway: info

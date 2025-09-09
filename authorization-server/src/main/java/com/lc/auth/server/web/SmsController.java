@@ -1,6 +1,6 @@
 package com.lc.auth.server.web;
 
-import com.lc.auth.server.security.authentication.extension.sms.SmsCodeService;
+import com.lc.framework.security.auth.server.authentication.extension.sms.SmsCodeService;
 import com.lc.framework.core.mvc.WebResult;
 import jakarta.validation.constraints.Pattern;
 import lombok.extern.slf4j.Slf4j;

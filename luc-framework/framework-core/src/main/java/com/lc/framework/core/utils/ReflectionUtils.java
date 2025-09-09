@@ -66,7 +66,7 @@ public class ReflectionUtils {
 
 
     public static Method getFirstMethod(Class<?> clazz, String name) {
-        return findMethod(clazz, name, null);
+        return findMethod(clazz, name);
     }
 
     /**

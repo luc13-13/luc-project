@@ -11,21 +11,10 @@
     <name>authorization-server</name>
     <description>authorization-server</description>
     <dependencies>
-        <!-- Spring Authorization Server -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-authorization-server</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
-        </dependency>
-
-        <!--redis 依赖-->
         <dependency>
             <groupId>com.lc</groupId>
-            <artifactId>framework-redis-starter</artifactId>
+            <artifactId>framework-security-authorization-server</artifactId>
         </dependency>
 
         <!-- LUC Framework 核心依赖 -->
