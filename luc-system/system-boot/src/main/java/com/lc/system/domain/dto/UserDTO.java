@@ -1,6 +1,6 @@
 package com.lc.system.domain.dto;
 
-import com.lc.framework.datascope.entity.DataScopeEntity;
+import com.lc.framework.data.permission.entity.DataScopeEntity;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

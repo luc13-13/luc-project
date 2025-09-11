@@ -29,10 +29,10 @@
             <artifactId>framework-web</artifactId>
         </dependency>
 
-        <!--datascope-->
+        <!--data-permission-->
         <dependency>
             <groupId>com.lc</groupId>
-            <artifactId>framework-datascope</artifactId>
+            <artifactId>framework-data-permission</artifactId>
         </dependency>
 
         <!--datasource-->

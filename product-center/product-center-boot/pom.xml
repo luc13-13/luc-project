@@ -27,7 +27,7 @@
         <!--data scope-->
         <dependency>
             <groupId>com.lc</groupId>
-            <artifactId>framework-datascope</artifactId>
+            <artifactId>framework-data-permission</artifactId>
         </dependency>
 
         <!--api文档-->
