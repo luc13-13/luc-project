@@ -35,6 +35,7 @@ public interface RequestHeaderConstants {
     String USER_ID = "X-User-Id";
     String USER_NAME = "X-User-Name";
     String USER_Authorities = "X-User-Authorities";
+    String ROLE_ID = "X-Role-Id";
 
     /**
      * --------------- 请求属性名，区分请求类型 ---------------
