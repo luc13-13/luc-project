@@ -43,9 +43,22 @@ public class WebUtil {
         return Optional.of(getRequestAttributes().getRequest());
     }
 
+    /**
+     * 获取当前userId
+     */
     public String getUserId() {
         if (getRequest().isPresent()) {
             return  getRequest().get().getHeader(RequestHeaderConstants.USER_ID);
+        }
+        return null;
+    }
+
+    /**
+     * 获取当前roleId
+     */
+    public String getRoleId() {
+        if (getRequest().isPresent()) {
+            return  getRequest().get().getHeader(RequestHeaderConstants.ROLE_ID);
         }
         return null;
     }
