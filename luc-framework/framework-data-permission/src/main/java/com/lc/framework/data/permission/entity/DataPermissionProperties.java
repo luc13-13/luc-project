@@ -1,5 +1,6 @@
 package com.lc.framework.data.permission.entity;
 
+import com.lc.framework.data.permission.handler.AbstractDataPermissionSqlHandler;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;
@@ -28,7 +29,7 @@ import java.util.List;
 @Data
 @Scope(value = "refresh", proxyMode = ScopedProxyMode.TARGET_CLASS)
 @ConfigurationProperties(prefix = "data-permission")
-public class DataScopeProperties {
+public class DataPermissionProperties {
 
     /**
      * 记录权限的表信息
@@ -39,5 +40,10 @@ public class DataScopeProperties {
      * 是否开启权限拦截器：false不开启， true开启
      */
     private boolean enabled = false;
+
+    /**
+     * 是否忽略数据库名，false不忽略，true忽略。决定了{@link AbstractDataPermissionSqlHandler}中权限表的处理方式
+     */
+    private boolean ignoreDatabaseName = true;
 
 }

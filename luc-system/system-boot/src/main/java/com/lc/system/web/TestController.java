@@ -1,10 +1,15 @@
 package com.lc.system.web;
 
+import com.lc.system.domain.bo.MenuBO;
+import com.lc.system.mapper.MenuMapper;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * @author Lu Cheng
@@ -15,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class TestController {
 
+    @Autowired
+    private MenuMapper menuMapper;
 
 
     @GetMapping("/hello")
@@ -30,5 +37,10 @@ public class TestController {
     @GetMapping("")
     public String index(){
         return "welcome index";
+    }
+
+    @GetMapping("/dataPermission")
+    public List<MenuBO> testDataPermission() {
+        return menuMapper.testMenuDataPermission();
     }
 }

@@ -12,6 +12,7 @@ import lombok.Data;
  */
 @Data
 public class SupportTableDefinition {
+
     private String database;
     /**
      * 需要进行数据过滤的表名

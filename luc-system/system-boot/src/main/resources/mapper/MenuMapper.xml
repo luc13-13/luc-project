@@ -112,4 +112,54 @@
             ORDER BY m.sort_order
         </where>
     </select>
+
+    <select id="testMenuDataPermission" resultMap="MENU_BO_MAP">
+        SELECT
+        m.id,
+        m.menu_id,
+        m.parent_menu_id,
+        m.name,
+        m.path,
+        m.component,
+        m.redirect,
+        m.menu_type,
+        m.status,
+        m.sort_order,
+        m.created_by,
+        m.dt_created,
+        m.modified_by,
+        m.dt_modified,
+        ur.role_id,
+
+        -- meta 信息
+        meta.title as meta_title,
+        meta.icon as meta_icon,
+        meta.active_icon as meta_active_icon,
+        meta.active_path as meta_active_path,
+        meta.authority as meta_authority,
+        meta.ignore_access as meta_ignore_access,
+        meta.menu_visible_with_forbidden as meta_menu_visible_with_forbidden,
+        meta.hide_in_menu as meta_hide_in_menu,
+        meta.hide_in_tab as meta_hide_in_tab,
+        meta.hide_in_breadcrumb as meta_hide_in_breadcrumb,
+        meta.hide_children_in_menu as meta_hide_children_in_menu,
+        meta.affix_tab as meta_affix_tab,
+        meta.affix_tab_order as meta_affix_tab_order,
+        meta.max_num_of_open_tab as meta_max_num_of_open_tab,
+        meta.keep_alive as meta_keep_alive,
+        meta.no_basic_layout as meta_no_basic_layout,
+        meta.link as meta_link,
+        meta.iframe_src as meta_iframe_src,
+        meta.open_in_new_window as meta_open_in_new_window,
+        meta.badge as meta_badge,
+        meta.badge_type as meta_badge_type,
+        meta.badge_variants as meta_badge_variants,
+        meta.query_params as meta_query_params
+        FROM menu m
+        LEFT JOIN menu_meta meta ON m.menu_id = meta.menu_id AND meta.deleted = 0
+        INNER JOIN sys_role_menu rm ON m.menu_id = rm.menu_id
+        INNER JOIN sys_user_role ur ON rm.role_id = ur.role_id
+        LEFT JOIN sys_user su ON su.user_id = ur.user_id
+        ORDER BY m.sort_order
+    </select>
 </mapper>

@@ -1,9 +1,11 @@
 package com.lc.framework.data.permission.handler;
 
-import com.lc.framework.data.permission.entity.DataScopeEntity;
 import com.lc.framework.data.permission.entity.SupportTableDefinition;
 import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.schema.Column;
 import net.sf.jsqlparser.schema.Table;
+
+import java.util.List;
 
 /**
  * <pre>
@@ -16,40 +18,33 @@ import net.sf.jsqlparser.schema.Table;
  * @create 2023-08-01 11:04
  */
 public interface IDataPermissionSqlHandler {
-    String HANDLER_BEAN_SUFFIX = "DataScopeSqlHandler";
+    String HANDLER_BEAN_SUFFIX = "DataPermissionSqlHandler";
 
     /**
-     * 将Table+DataScopeEntity转换为Expression
+     * 将Table转换为Expression
      *
      * @param table           sql语句中需要进行权限过滤的表
-     * @param dataScopeEntity 当前用户的数据权限
      * @author Lu Cheng
      * @date 2023/11/17
      */
-    Expression getExpression(final Table table, DataScopeEntity dataScopeEntity);
+    Expression getExpression(final Table table);
 
     void bindTable(SupportTableDefinition tableDefinition);
-
-    /**
-     * 判断是否支持为当前数据对象构建过滤条件
-     *
-     * @param dataScopeEntity 用户持有的数据权限对象
-     * @return true表示支持构建， false表示不支持构建
-     * @author Lu Cheng
-     * @date 2023/11/17
-     */
-    boolean supportDataScope(DataScopeEntity dataScopeEntity);
 
 
     /**
      * 判断是否支持为表增加条件，在初始化时通过DataScopeSqlHandlerCustomizer构建
      *
-     * @param tableName 表的全限定名
+     * @param table 表
      * @return true支持， false不支持
      * @author Lu Cheng
      * @date 2023/11/17
      */
-    boolean supportTable(String tableName);
+    boolean supportTable(final Table table);
+
+    default boolean ignoreInsert(List<Column> columns) {
+        return true;
+    }
 
     /**
      * 获取权限处理器名称的默认方法, 例如SysUserDataScopeSqlHandler, 则返回SysUser

@@ -15,9 +15,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Inherited
-public @interface DataScope {
-
-     DataColumn[] value() default {};
+public @interface DataPermission {
 
      /**
       * 数据权限的处理器，同一个方法上支持多个处理器，每个处理器返回的Expression进行拼接

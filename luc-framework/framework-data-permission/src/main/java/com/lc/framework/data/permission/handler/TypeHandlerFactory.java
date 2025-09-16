@@ -15,7 +15,7 @@ import java.util.function.Function;
  * @date : 2023/8/5 17:04
  */
 public class TypeHandlerFactory {
-    private static Map<JdbcType, Function<Object, Expression>> EXPRESSION_JDBCTYPE_HANDLER_MAP = new ConcurrentHashMap<>();
+    private static final Map<JdbcType, Function<Object, Expression>> EXPRESSION_JDBCTYPE_HANDLER_MAP = new ConcurrentHashMap<>();
 
     static{
         EXPRESSION_JDBCTYPE_HANDLER_MAP.put(JdbcType.BIGINT, params -> new LongValue((Long) params));

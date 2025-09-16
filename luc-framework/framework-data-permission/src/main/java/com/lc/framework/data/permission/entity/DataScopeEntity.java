@@ -1,14 +1,13 @@
 package com.lc.framework.data.permission.entity;
 
-import com.lc.framework.data.permission.anno.DataColumn;
-import com.lc.framework.data.permission.anno.DataScope;
+import com.lc.framework.data.permission.anno.DataPermission;
 import com.lc.framework.data.permission.interceptor.LucDataPermissionInterceptor;
 
 import java.util.List;
 
 /**
  * 权限属性
- * 目前支持两种权限校验方式：基于注解{@link DataScope}, {@link DataColumn}和基于mybatis-plus拦截插件的
+ * 目前支持两种权限校验方式：基于注解{@link DataPermission}和基于mybatis-plus拦截插件的
  *
  * @author Lu Cheng
  * @create 2023-07-31 17:01

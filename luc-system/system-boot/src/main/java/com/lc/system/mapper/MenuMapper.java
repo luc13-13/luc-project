@@ -1,6 +1,8 @@
 package com.lc.system.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.lc.framework.data.permission.anno.DataPermission;
+import com.lc.system.config.SysRoleDataPermissionSqlHandler;
 import com.lc.system.domain.bo.MenuBO;
 import com.lc.system.domain.dto.MenuDTO;
 import com.lc.system.domain.entity.MenuDO;
@@ -25,5 +27,8 @@ public interface MenuMapper extends BaseMapper<MenuDO> {
      * @return 菜单列表（包含meta信息）
      */
     List<MenuBO> selectMenusByDTO(@Param("dto") MenuDTO dto);
+
+    @DataPermission(rules = SysRoleDataPermissionSqlHandler.class)
+    List<MenuBO> testMenuDataPermission();
 }
 
