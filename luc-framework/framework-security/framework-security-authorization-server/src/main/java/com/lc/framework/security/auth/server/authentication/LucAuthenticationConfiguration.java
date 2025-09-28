@@ -1,5 +1,6 @@
 package com.lc.framework.security.auth.server.authentication;
 
+import cn.hutool.crypto.asymmetric.RSA;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.lc.framework.redis.starter.customizer.ObjectMapperCustomizer;
@@ -7,6 +8,7 @@ import com.lc.framework.security.auth.server.authentication.extension.MultiTypeA
 import com.lc.framework.security.auth.server.authentication.extension.sms.SmsAuthenticationConverter;
 import com.lc.framework.security.auth.server.authentication.extension.sms.SmsAuthenticationProvider;
 import com.lc.framework.security.auth.server.authentication.extension.sms.SmsCodeService;
+import com.lc.framework.security.auth.server.handler.LoginFailureHandler;
 import com.lc.framework.security.auth.server.handler.LoginSuccessHandler;
 import com.lc.framework.security.core.properties.LoginProperties;
 import com.lc.framework.security.core.properties.SysCorsProperties;
@@ -15,15 +17,14 @@ import com.lc.framework.security.core.user.LoginUserDetail;
 import com.lc.framework.security.core.user.LoginUserDetailService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.autoconfigure.condition.*;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.encrypt.RsaRawEncryptor;
+import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.jackson2.CoreJackson2Module;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
@@ -52,6 +53,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.time.Duration;
 import java.util.List;
 
+import static com.lc.framework.security.core.constants.OAuth2ParameterConstants.JWT_CLAIM_AUTHORITY;
+
 /**
  * <pre>
  * <pre/>
@@ -65,11 +68,24 @@ import java.util.List;
 public class LucAuthenticationConfiguration {
 
     @Bean
+    @ConditionalOnMissingBean(LoginFailureHandler.class)
+    public LoginFailureHandler loginFailureHandler() {
+        return new LoginFailureHandler();
+    }
+
+    @Bean
     @ConditionalOnMissingBean(LoginSuccessHandler.class)
     public LoginSuccessHandler loginSuccessHandler() {
         return new LoginSuccessHandler();
     }
 
+    @Bean
+    @ConditionalOnExpression("!'${sys.security.privateKey}'.isBlank()")
+    public TextEncryptor textEncryptor(SysSecurityProperties sysSecurityProperties) {
+        log.info("enable rsa encrypt with private key {}", sysSecurityProperties.getPrivateKey());
+        RSA rsa = new RSA(sysSecurityProperties.getPrivateKey(), sysSecurityProperties.getPublicKey());
+        return new RsaRawEncryptor("UTF-8", rsa.getPublicKey(), rsa.getPrivateKey());
+    }
     /**
      * 注册客户端仓库
      */
@@ -204,7 +220,10 @@ public class LucAuthenticationConfiguration {
             Authentication authentication = context.getPrincipal();
             if (authentication.getPrincipal() instanceof LoginUserDetail userDetail) {
                 log.info("放入userId: {}", userDetail.getId());
-                context.getClaims().claim("user_id", userDetail.getId());
+                context.getClaims()
+                        .claim("user_id", userDetail.getId())
+                        .claim(JWT_CLAIM_AUTHORITY, userDetail.getAttributes().get(JWT_CLAIM_AUTHORITY))
+                ;
             }
         };
     }

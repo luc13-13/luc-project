@@ -17,12 +17,15 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
@@ -54,6 +57,13 @@ public class SecurityAutoConfiguration {
     private final SysSecurityProperties sysSecurityProperties;
 
     private final LoginProperties loginProperties;
+
+    @Bean
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider(userDetailsService);
+        authenticationProvider.setPasswordEncoder(passwordEncoder);
+        return new ProviderManager(authenticationProvider);
+    }
 
     /**
      * Spring Authorization Server 安全接口过滤器链。
@@ -108,6 +118,7 @@ public class SecurityAutoConfiguration {
     public SecurityFilterChain authenticationSecurityFilterChain(HttpSecurity http,
                                                                  UserDetailsService userDetailsService,
                                                                  LoginSuccessHandler loginSuccessHandler,
+                                                                 LoginFailureHandler loginFailureHandler,
                                                                  ObjectProvider<SecurityContextRepository> securityContextRepositoryProvider,
                                                                  ObjectProvider<AuthenticationProvider> authenticationProviders,
                                                                  ObjectProvider<MultiTypeAuthenticationFilter> multiTypeAuthenticationFilters) throws Exception {
@@ -140,7 +151,7 @@ public class SecurityAutoConfiguration {
                         .loginPage(loginProperties.getLoginPage())
                         .loginProcessingUrl("/login")
                         .successHandler(loginSuccessHandler)
-                        .failureHandler(new LoginFailureHandler())
+                        .failureHandler(loginFailureHandler)
                         .permitAll()
                 )
 //                 OAuth2第三方登录配置
