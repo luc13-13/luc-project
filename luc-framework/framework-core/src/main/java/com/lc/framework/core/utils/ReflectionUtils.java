@@ -29,7 +29,7 @@ public class ReflectionUtils {
      * @create 2023/8/3
      */
     public static <T extends Annotation> T getAnnotation(Member member, Class<T> annoClass) {
-        return ((AccessibleObject) member).getAnnotation(annoClass);
+        return member == null ? null : ((AccessibleObject) member).getAnnotation(annoClass);
     }
 
     public static Object getFieldValue(Object obj, Field field) {
