@@ -99,6 +99,21 @@ create table tenant (
     unique key (tenant_id)
 ) engine=innodb auto_increment=1 comment = '租户表';
 
+drop table if exists app_menu;
+create table app_menu (
+                          id                bigint          not null auto_increment    comment '主键ID',
+                          menu_id           varchar(50)     not null                   comment '菜单唯一标识',
+                          app_id            varchar(100)    not null                   comment '应用id',
+                          created_by        varchar(64)     default ''                 comment '创建者',
+                          dt_created        datetime        default current_timestamp  comment '创建时间',
+                          modified_by       varchar(64)     default ''                 comment '更新者',
+                          dt_modified       datetime        default null               comment '更新时间',
+                          deleted           tinyint         default 0                  comment '逻辑删除(0:未删除 1:已删除)',
+                          primary key (id),
+                          key idx_app (app_id),
+                          key idx_menu (menu_id)
+) engine=innodb auto_increment=1 comment = '应用和菜单关联表';
+
 drop table if exists  menu;
 create table menu (
                           id                bigint          not null auto_increment    comment '主键ID',
