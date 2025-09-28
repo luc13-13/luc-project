@@ -9,7 +9,6 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -19,6 +18,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.lc.framework.core.constants.RequestHeaderConstants.USER_NAME;
+import static com.lc.framework.security.core.constants.OAuth2ParameterConstants.JWT_CLAIM_AUTHORITY;
 
 /**
  * 测试用户详情服务
@@ -52,7 +52,8 @@ public class TestUserDetailsService implements LoginUserDetailService {
                     .accountNonLocked(sysUserDTO.getStatus())
                     .credentialsIssuedAt(Instant.now())
                     .build();
-            user.getAttributes().put("role_authorities", sysUserDTO.getRoleAuthoritiesMap());
+            // 放入权限字段
+            user.getAttributes().put(JWT_CLAIM_AUTHORITY, sysUserDTO.getRoleAuthoritiesMap());
             log.info("返回用户详情: {}", user);
             return user;
         }
