@@ -21,7 +21,7 @@ spring:
               filters:
                 - StripPrefix=1
                 # 添加用户信息到请求头
-                - AddRequestHeader=X-Gateway, authorization-gateway
+                - AddRequestHeader=X-App, luc-system
 
             # 业务服务路由示例（可根据实际需要配置）
             - id: product-center
@@ -31,7 +31,7 @@ spring:
               filters:
                 - StripPrefix=1
                 # 添加用户信息到请求头
-                - AddRequestHeader=X-Gateway, authorization-gateway
+                - AddRequestHeader=X-App, product-center
           globalcors:
             cors-configurations:
               '[/**]':
@@ -78,6 +78,7 @@ gateway:
       - "/actuator/**"
       - "/gateway/health"
       - "/auth-server/login"
+      - "/auth-server/auth/login"
       - "/auth-server/register"
       - "/auth-server/oauth2/**"
       - "/auth-server/.well-known/**"
@@ -87,6 +88,7 @@ gateway:
       - "/*/v3/api-docs/**"
       - "/webjars/**"
       - "/favicon.ico"
+      - "/luc-system/**"
     jwt:
       issuer-uri: http://127.0.0.1:8889
       log-failures: true
