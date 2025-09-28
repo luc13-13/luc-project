@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.lc.framework.core.constants.NumberConstants.STATUS_TRUE;
@@ -43,7 +44,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         // 查询权限信息
         Map<String, List<String>> roleMenuMap = menuService.getMenuList(MenuDTO.builder().userId(userDO.getUserId()).status(STATUS_TRUE).build())
                 .stream().collect(Collectors.groupingBy(MenuBO::getRoleId,
-                        Collectors.mapping(menuBO -> menuBO.getMenuMetaDO().getAuthority(), Collectors.toList())));
+                        Collectors.mapping(menuBO -> menuBO.getMenuMetaDO().getAuthority(), Collectors.filtering(Objects::nonNull, Collectors.toList()))));
         // 数据转换
         SysUserDetailDTO sysUserDetailDTO = sysUserConverter.convertDO2DetailDTO(userDO);
         sysUserDetailDTO.setRoleAuthoritiesMap(roleMenuMap);

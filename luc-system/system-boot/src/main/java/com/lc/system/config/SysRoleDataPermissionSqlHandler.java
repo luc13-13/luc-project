@@ -1,5 +1,7 @@
 package com.lc.system.config;
 
+import com.lc.framework.core.system.RoleEnum;
+import com.lc.framework.data.permission.entity.SupportTableDefinition;
 import com.lc.framework.data.permission.handler.AbstractDataPermissionSqlHandler;
 import com.lc.framework.web.utils.WebUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -13,9 +15,12 @@ import net.sf.jsqlparser.schema.Table;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 /**
  * <pre>
@@ -29,18 +34,31 @@ import java.util.Set;
 @Component
 public class SysRoleDataPermissionSqlHandler extends AbstractDataPermissionSqlHandler {
 
+    /**
+     * {@link SupportTableDefinition#getProperties()}中，角色信息
+     */
+    private final String ROLE_PROPERTIES_KEY = "role";
+
+    /**
+     * 角色和表的绑定关系
+     */
+    private final Map<String, String> roleTableMap = new ConcurrentHashMap<>();
+    @Override
+    public void bindTable(SupportTableDefinition tableDefinition) {
+        super.bindTable(tableDefinition);
+        // 绑定每张表的角色
+        if (!CollectionUtils.isEmpty(tableDefinition.getProperties()) && tableDefinition.getProperties().containsKey(ROLE_PROPERTIES_KEY)) {
+            String role = tableDefinition.getProperties().get(ROLE_PROPERTIES_KEY);
+            RoleEnum roleEnum = RoleEnum.valueOf(role);
+            roleTableMap.put(getTableName(tableDefinition), roleEnum.getRoleId());
+        }
+    }
+
     @Override
     public boolean supportTable(Table table) {
         // 根据角色判断是否拦截表格
         String roleId = WebUtil.getRoleId();
-        boolean roleSupported = switch (roleId) {
-            case "productManager" -> "product_catalog".equals(table.getUnquotedName());
-            case "customerManager" -> "customer".equals(table.getUnquotedName());
-            case "regionManager" -> "region".equals(table.getUnquotedName());
-            case "user" -> "sys_user".equals(table.getUnquotedName());
-            default ->  false;
-        };
-        return roleSupported && super.supportTable(table);
+        return getTableName(table).equals(roleTableMap.get(roleId));
     }
 
     @Override
@@ -51,26 +69,22 @@ public class SysRoleDataPermissionSqlHandler extends AbstractDataPermissionSqlHa
         }
         // 获取当前用户角色
         String roleId = WebUtil.getRoleId();
-        List<Expression>  expressionList = new ArrayList<>();
-        for (String column : columns) {
-            Expression columnExpression = switch (roleId) {
-                // 产品经理只能查看负责产品的数据
-                case "productManager" -> new InExpression(getAliasColumn(table, column), new ParenthesedExpressionList<>(
-                        new StringValue("productA"),
-                        new StringValue("productB"))
-                );
-                // 客户经理只能查看负责客户的数据
-                case "customerManager" -> new EqualsTo(getAliasColumn(table, column), new StringValue(WebUtil.getUserId()));
-                // 区域经理只能查看负责区域的数据
-                case "regionManager" -> new InExpression(getAliasColumn(table, column), new ParenthesedExpressionList<>(
-                        new StringValue("regionA"),
-                        new StringValue("regionB")));
-                case "user" -> new EqualsTo(getAliasColumn(table, column), new StringValue(WebUtil.getUserId()));
-                default -> null;
-            };
-            if (columnExpression != null) expressionList.add(columnExpression);
-        }
-        if (CollectionUtils.isEmpty(expressionList)) {
+        List<Expression>  expressionList = columns.stream().map(column -> switch (roleId) {
+            // 产品经理只能查看负责产品的数据
+            case "productManager" -> new InExpression(getAliasColumn(table, column), new ParenthesedExpressionList<>(
+                    new StringValue("productA"),
+                    new StringValue("productB"))
+            );
+            // 客户经理只能查看负责客户的数据
+            case "customerManager" -> new EqualsTo(getAliasColumn(table, column), new StringValue(WebUtil.getUserId()));
+            // 区域经理只能查看负责区域的数据
+            case "regionManager" -> new InExpression(getAliasColumn(table, column), new ParenthesedExpressionList<>(
+                    new StringValue("regionA"),
+                    new StringValue("regionB")));
+            case "user" -> new EqualsTo(getAliasColumn(table, column), new StringValue(WebUtil.getUserId()));
+            default -> null;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(expressionList)) {
             return null;
         }
         Expression injectedExpression = expressionList.getFirst();

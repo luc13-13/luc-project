@@ -69,7 +69,7 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
-# framework-datascope数据权限配置
+# framework-data-permission数据权限配置
 data-permission:
   enabled: true
   ## 支持两种方式定义DataScopeSqlHandler
@@ -81,12 +81,18 @@ data-permission:
           - table-name: sys_user
             column-name: user_id
             column-type: varchar
+            properties:
+              role: Admin
           - table-name: sys_role
             column-name: role_id
             column-type: varchar
           - table-name: sys_user_role
             column-name: user_id
             column-type: varchar
+          - table-name: tenant
+            column-name: tenant_id
+            properties:
+              role: Tenant
     ## 2、配置文件只声明bean的创建，使用DataScopeSqlHandlerCustomizer在代码中对bean进行定制化开发
 #    - id: Tenant
 
