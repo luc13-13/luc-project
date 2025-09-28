@@ -28,4 +28,6 @@ public final class OAuth2ParameterConstants {
      */
     public static final String BEARER_TOKEN_PREFIX = "Bearer ";
 
+    public static final String JWT_CLAIM_AUTHORITY = "role_authorities";
+
 }
