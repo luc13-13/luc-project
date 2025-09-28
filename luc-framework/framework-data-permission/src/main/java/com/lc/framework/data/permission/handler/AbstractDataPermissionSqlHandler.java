@@ -32,7 +32,7 @@ public abstract class AbstractDataPermissionSqlHandler implements IDataPermissio
     @Override
     public void bindTable(SupportTableDefinition tableDefinition) {
         // 兼容不指定数据库名称的情况
-        String fullyQualifiedName = StringUtils.isNotEmpty(tableDefinition.getDatabase()) ? (tableDefinition.getDatabase() + StringConstants.DOT + tableDefinition.getTableName()) : tableDefinition.getTableName();
+        String fullyQualifiedName = getTableName(tableDefinition);
         if (supportedTableMap.containsKey(fullyQualifiedName)) {
             supportedTableMap.get(fullyQualifiedName).add(tableDefinition.getColumnName());
         } else  {
@@ -40,6 +40,10 @@ public abstract class AbstractDataPermissionSqlHandler implements IDataPermissio
             columnSet.add(tableDefinition.getColumnName());
             supportedTableMap.put(fullyQualifiedName, columnSet);
         }
+    }
+
+    protected String getTableName(SupportTableDefinition tableDefinition) {
+        return StringUtils.isNotEmpty(tableDefinition.getDatabase()) ? (tableDefinition.getDatabase() + StringConstants.DOT + tableDefinition.getTableName()) : tableDefinition.getTableName();
     }
 
     /**

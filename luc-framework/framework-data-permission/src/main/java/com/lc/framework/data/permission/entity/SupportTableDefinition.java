@@ -2,6 +2,8 @@ package com.lc.framework.data.permission.entity;
 
 import lombok.Data;
 
+import java.util.Map;
+
 /**
  * <pre>
  *
@@ -28,4 +30,9 @@ public class SupportTableDefinition {
      * 列数据类型, 默认为VARCHAR
      */
     private String columnType = "VARCHAR";
+
+    /**
+     * 其他属性：例如该表的角色
+     */
+    private Map<String, String> properties;
 }

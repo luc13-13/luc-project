@@ -61,14 +61,12 @@ public class LucDataPermissionInterceptor extends BaseMultiTableInnerInterceptor
 
     @Override
     public void beforeQuery(Executor executor, MappedStatement ms, Object parameter, RowBounds rowBounds, ResultHandler resultHandler, BoundSql boundSql) {
-        if (DataPermissionContextHolder.isNotAnnotated(ms)) {
-            log.info("beforeQuery: cached not annotated method, {}", ms.getId());
+        if (DataPermissionContextHolder.willIgnored(ms.getId())) {
+            log.debug("beforeQuery: cached not annotated method, {}", ms.getId());
             return;
         }
         // 从方法参数中获取权限属性，并像缓存中放入DataScope
         DataPermission dataPermissionAnno = getAnnotation(ms);
-        // 获取注解声明的权限处理器
-        List<IDataPermissionSqlHandler> requiredHandlers = getRequiredHandlers(dataPermissionAnno);
         if (skip(ms, dataPermissionAnno)) {
             return;
         }
@@ -77,8 +75,6 @@ public class LucDataPermissionInterceptor extends BaseMultiTableInnerInterceptor
             DataPermissionContextHolder.setDataPermissionLocal(dataPermissionAnno);
             mpBs.sql(parserSingle(mpBs.sql(), ms.getId()));
         } finally {
-            // 根据本地线程中的REWRITE状态，判断当前sql是否被重写，如果没被重写，则放入缓存中，下次无需进行解析
-            DataPermissionContextHolder.addIgnoredMapStatement(ms, requiredHandlers);
             // 解析方法执行完毕，清理本地缓存，避免OOM
             DataPermissionContextHolder.clear();
         }
@@ -90,28 +86,23 @@ public class LucDataPermissionInterceptor extends BaseMultiTableInnerInterceptor
         PluginUtils.MPStatementHandler mpSh = PluginUtils.mpStatementHandler(sh);
         // 获取mybatis对执行sql的解析结果
         MappedStatement ms = mpSh.mappedStatement();
-        // 从方法参数中获取权限属性，并向缓存中放入DataScope
-        DataPermission dataPermissionAnno = getAnnotation(ms);
-        if (skip(ms, dataPermissionAnno)) {
+        if (DataPermissionContextHolder.willIgnored(ms.getId())) {
+            // 如果sql不在handler的处理范围内， 则直接返回
             return;
         }
-        // 获取权限处理器
-        List<IDataPermissionSqlHandler> requiredHandlers = getRequiredHandlers(dataPermissionAnno);
-
         SqlCommandType sct = ms.getSqlCommandType();
         if (sct == SqlCommandType.UPDATE || sct == SqlCommandType.DELETE) {
-            if (DataPermissionContextHolder.willIgnored(ms, requiredHandlers)) {
-                // 如果sql不在handler的处理范围内， 则直接返回
-                return;
-            }
             // 将当前线程的DataScope与DataScopeEntity进行封装并缓存，供后续方法调用
             try {
+                // 从方法参数中获取权限属性，并向放入本地缓存
+                DataPermission dataPermissionAnno = getAnnotation(ms);
+                if (skip(ms, dataPermissionAnno)) {
+                    return;
+                }
                 DataPermissionContextHolder.setDataPermissionLocal(dataPermissionAnno);
                 PluginUtils.MPBoundSql mpBs = mpSh.mPBoundSql();
                 mpBs.sql(parserMulti(mpBs.sql(), ms.getId()));
             } finally {
-                // 根据本地线程中的REWRITE状态，判断当前sql是否被重写，如果没被重写，则放入缓存中，下次无需进行解析
-                DataPermissionContextHolder.addIgnoredMapStatement(ms, requiredHandlers);
                 // 解析方法执行完毕，清理本地缓存，避免OOM
                 DataPermissionContextHolder.clear();
             }

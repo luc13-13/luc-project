@@ -1,15 +1,10 @@
 package com.lc.framework.data.permission.interceptor;
 
 import com.alibaba.ttl.TransmittableThreadLocal;
-import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.lc.framework.data.permission.anno.DataPermission;
-import com.lc.framework.data.permission.handler.IDataPermissionSqlHandler;
 import org.apache.ibatis.mapping.MappedStatement;
 
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
@@ -40,11 +35,6 @@ public class DataPermissionContextHolder {
      */
     private static final Map<String, String> NOT_ANNOTATED_MAP_STATEMENT = new ConcurrentHashMap<>();
 
-    /**
-     * 有权限注解，但是解析后未对SQL进行修改的方法
-     */
-    private static final Map<Class<? extends IDataPermissionSqlHandler>, Set<String>> NO_REWRITE_MAP_STATEMENTS = new ConcurrentHashMap<>();
-
     public static void setDataPermissionLocal(DataPermission dataPermission) {
         DATA_PERMISSION_ANNO_LOCAL.set(dataPermission);
     }
@@ -55,10 +45,6 @@ public class DataPermissionContextHolder {
 
     public static void rewrite() {
         REWRITE.set(Boolean.TRUE);
-    }
-
-    public static boolean isRewrite() {
-        return REWRITE.get();
     }
 
     /**
@@ -84,39 +70,12 @@ public class DataPermissionContextHolder {
         return DATA_PERMISSION_ANNO_CACHE.get(id);
     }
 
-    public static boolean isNotAnnotated(MappedStatement ms) {
-        return NOT_ANNOTATED_MAP_STATEMENT.containsKey(ms.getId());
-    }
-
     public static void addNotAnnotatedMapStatement(MappedStatement ms) {
         NOT_ANNOTATED_MAP_STATEMENT.putIfAbsent(ms.getId(), ms.getId());
-    }
+    }/**/
 
-    public static void addIgnoredMapStatement(MappedStatement ms, List<IDataPermissionSqlHandler> handlers) {
-        if (DataPermissionContextHolder.isRewrite()) {
-            return;
-        }
-        for (IDataPermissionSqlHandler handler : handlers) {
-            if (NO_REWRITE_MAP_STATEMENTS.containsKey(handler.getClass())) {
-                NO_REWRITE_MAP_STATEMENTS.get(handler.getClass()).add(ms.getId());
-            } else {
-                Set<String> set = new HashSet<>();
-                set.add(ms.getId());
-                NO_REWRITE_MAP_STATEMENTS.put(handler.getClass(), set);
-            }
-        }
-    }
-
-    public static boolean willIgnored(MappedStatement ms, List<IDataPermissionSqlHandler> handlers) {
-        if (CollectionUtils.isEmpty(handlers)) {
-            return true;
-        }
-        for (IDataPermissionSqlHandler handler : handlers) {
-            if (NO_REWRITE_MAP_STATEMENTS.containsKey(handler.getClass()) && NO_REWRITE_MAP_STATEMENTS.get(handler.getClass()).contains(ms.getId())) {
-                return true;
-            }
-        }
-        return false;
+    public static boolean willIgnored(String id) {
+        return NOT_ANNOTATED_MAP_STATEMENT.containsKey(id);
     }
 
     /**
