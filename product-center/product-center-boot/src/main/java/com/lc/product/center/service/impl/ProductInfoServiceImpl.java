@@ -75,8 +75,6 @@ public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, Produ
         // 设置创建时间和更新时间
         Date now = new Date();
         productDO.setDtCreated(now);
-        productDO.setDtModified(now);
-        productDO.setDeleted((short) 0);
 
         this.save(productDO);
         return convertToVO(productDO);

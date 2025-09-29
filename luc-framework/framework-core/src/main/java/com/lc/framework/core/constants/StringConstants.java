@@ -20,27 +20,18 @@ public interface StringConstants {
     String WHITE_SPACE = " ";
 
     String WHITE_TABLE = "    ";
+
     String COLON = ":";
 
     String ASTERISK = "*";
+
+    String SEMICOLON = ";";
+
+    String COMMA = ",";
 
     String SLASH = "/";
 
     String HTTPS = "https";
 
     String HTTP = "http";
-    /**
-     * ============ session 相关常量 START ============
-     */
-    String SESSIONS = "SESSIONS";
-
-    String CURRENT_USER = "CURRENT_USER";
-
-    String JSESSIONID = "JSESSIONID";
-
-
-    /**
-     * ============ redis中key的前缀 ============
-     */
-    String PREFIX_CAPTCHA = "CAPTCHA";
 }

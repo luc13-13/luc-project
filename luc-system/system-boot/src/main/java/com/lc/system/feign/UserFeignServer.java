@@ -51,7 +51,7 @@ public class UserFeignServer {
         log.info("获取user信息, {}", username);
         return WebResult.success(UserDTO.builder()
                 .username(username)
-                .permissions(Arrays.asList("system:user:query", "system:menu:query", "system:menu:add", "system:menu:edit"))
+                .permissions(Arrays.asList("system:user:query", "system:menu:query", "system:menu:add", "system:menu:edit", "system:menu:delete"))
                 .build());
     }
 
@@ -59,6 +59,6 @@ public class UserFeignServer {
     @GetMapping("/permissions")
     public WebResult<List<String>> getUserPermissions(@RequestParam("username") String username) {
         log.info("获取用户权限：{}", username);
-        return WebResult.success(Arrays.asList("system:user:query", "system:menu:query", "system:menu:add", "system:menu:edit"));
+        return WebResult.success(Arrays.asList("system:user:query", "system:menu:query", "system:menu:add", "system:menu:edit", "system:menu:delete"));
     }
 }

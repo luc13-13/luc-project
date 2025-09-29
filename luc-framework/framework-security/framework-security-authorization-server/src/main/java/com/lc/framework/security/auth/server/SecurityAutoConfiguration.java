@@ -30,6 +30,7 @@ import org.springframework.security.oauth2.server.authorization.config.annotatio
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.CookieClearingLogoutHandler;
 import org.springframework.security.web.context.DelegatingSecurityContextRepository;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
@@ -38,6 +39,10 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 import org.springframework.util.CollectionUtils;
+
+import static com.lc.framework.core.constants.RequestHeaderConstants.JSESSIONID;
+import static com.lc.framework.core.constants.RequestHeaderConstants.XSRF_TOKEN;
+import static com.lc.framework.security.core.constants.OAuth2ParameterConstants.AUTH_KEY;
 
 /**
  * <pre>
@@ -168,6 +173,7 @@ public class SecurityAutoConfiguration {
                 .logout(logout -> logout
                         .logoutUrl(loginProperties.getLogoutUrl())
                         .logoutSuccessUrl(loginProperties.getLogoutSuccessUrl())
+                        .addLogoutHandler(new CookieClearingLogoutHandler(AUTH_KEY, JSESSIONID, XSRF_TOKEN))
                         .invalidateHttpSession(true)
                         .permitAll()
                 )

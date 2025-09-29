@@ -68,6 +68,7 @@ mybatis-plus:
       logic-delete-field: deleted
       logic-delete-value: 1
       logic-not-delete-value: 0
+      id-type: auto
 
 # framework-data-permission数据权限配置
 data-permission:

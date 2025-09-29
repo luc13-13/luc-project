@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 import static com.lc.framework.core.constants.NumberConstants.STATUS_TRUE;
-import static com.lc.framework.core.constants.RequestHeaderConstants.USER_ID;
 
 /**
  * 菜单相关接口
@@ -44,11 +43,10 @@ public class MenuController {
         return WebResult.success(menuTree);
     }
 
-    @Operation(summary = "获取用户菜单列表（前端路由使用）")
+    @Operation(summary = "获取所有菜单列表")
     @GetMapping("/list")
-    public WebResult<List<MenuVO>> getMenuList(HttpServletRequest request) {
-        MenuDTO queryDTO = MenuDTO.builder().userId(request.getHeader(USER_ID)).build();
-        List<MenuVO> menuTree = menuService.getMenuVOList(queryDTO);
+    public WebResult<List<MenuVO>> getMenuList() {
+        List<MenuVO> menuTree = menuService.getMenuVOList(MenuDTO.builder().build());
         return WebResult.success(menuTree);
     }
 
@@ -62,6 +60,12 @@ public class MenuController {
     @Operation(summary = "更新菜单")
     @PostMapping("/update")
     public WebResult<String> updateMenu(@RequestBody @Validated(Groups.UpdateGroup.class) MenuDTO dto) {
+        return WebResult.success(MessageUtils.getMessage("menu.api.update.success"));
+    }
+
+    @Operation(summary = "删除菜单")
+    @PostMapping("/delete")
+    public WebResult<String> deleteMenu(@RequestBody @Validated(Groups.DeleteGroup.class) MenuDTO dto) {
         return WebResult.success(MessageUtils.getMessage("menu.api.update.success"));
     }
 }

@@ -82,4 +82,8 @@ public class AuthController {
             loginFailureHandler.onAuthenticationFailure(request, response, new SessionAuthenticationException("登陆失败"));
         }
     }
+
+    @PostMapping("/logout")
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    }
 }

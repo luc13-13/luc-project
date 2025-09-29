@@ -38,7 +38,7 @@ public class MenuDTO implements Serializable {
     /**
      * 菜单唯一标识
      */
-    @NotBlank(groups =  AddGroup.class)
+    @NotBlank(message = "{menu.dto.menuId.notBlank}", groups =  {AddGroup.class, DeleteGroup.class})
     @Schema(name = "menuId", description = "菜单唯一标识")
     private String menuId;
 

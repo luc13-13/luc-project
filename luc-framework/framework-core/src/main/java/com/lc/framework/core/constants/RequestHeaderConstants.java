@@ -37,6 +37,8 @@ public interface RequestHeaderConstants {
     String USER_Authorities = "X-User-Authorities";
     String ROLE_ID = "X-Role-Id";
 
+    String XSRF_TOKEN = "XSRF-Token";
+
     /**
      * --------------- 请求属性名，区分请求类型 ---------------
      */

@@ -69,7 +69,10 @@
         m.dt_created,
         m.modified_by,
         m.dt_modified,
-        ur.role_id,
+        <if test='dto.userId != null and dto.userId != ""'>
+        # 限制userId时再查询role_id, 防止INNER JOIN数据翻倍
+            ur.role_id,
+        </if>
 
         -- meta 信息
         meta.title as meta_title,
