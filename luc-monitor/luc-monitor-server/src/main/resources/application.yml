@@ -1,0 +1,10 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: monitor-server
+  cloud:
+    consul:
+      discovery:
+        ip-address:
+        port:
