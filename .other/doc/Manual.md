@@ -447,15 +447,141 @@ jdk、仓库、sonar
 
 ### 3、Mysql
 
-### 4、Nacos Cluster
+### 4、Consul Cluster
 
-### 3、Redis Cluster
+## Windows安装
 
-### 4、Kafka based on Kraft Cluster
+* 官网下载压缩包[下载地址](https://developer.hashicorp.com/consul/install#windows)，解压至安装目录
+* 创建配置目录conf、数据目录data
+* 进入conf目录下，创建consul server配置文件
 
-### 3、Docker
+```hcl
+# consul_server.conf
+# 基础配置
+## 数据中心名称，必填
+datacenter = "dc1"
+## 数据文件目录，必填
+data_dir = "D:\\tools\\consul_1.21.2_windows_386\\data"
+## 以服务端模式运行，必填
+server = true
+## 集群节点数
+bootstrap_expect = 1
 
-### 4、Kubernetes
+# 日志级别
+log_level = "INFO"
+log_file = "/home/consul/consul.log"
+# ACL配置
+acl {
+  enabled = true                       # 开启ACL
+  default_policy = "deny"              # 默认拒绝所有请求
+  enable_token_persistence = true      # 持久化
+  # 注意，初次启动时，没有token配置，需要启动后通过命令生成token， consul acl bootstrap
+  tokens = {
+    initial_management = "858aaefb-0edd-d788-c4bb-63ac4fb233f1"  # 初始管理端token，启动后需要给该token配置policy
+    agent = "809c1cb4-b1e5-ce46-c904-17ebf6bfd21d"   # 客户端token，初次启动时不需要设置
+  }
+}
+
+# UI配置
+ui_config {
+  enabled = true
+}
+
+
+# 网络配置
+bind_addr = "127.0.0.1"
+advertise_addr = "127.0.0.1"
+client_addr = "0.0.0.0"             # 允许远程访问UI、API
+```
+
+* 启动consul
+
+```shell
+consul.exe agent -config-file=.\conf\server_conf.hcl 
+```
+
+* 创建token
+
+```shell
+# 生成初始管理员token，该token拥有所有权限，不可对外暴露，
+# 需要配置policies、roles之后再创建token
+consul.exe acl bootstrap 
+```
+
+## Consul权限管理
+
+![角色-策略-token关系](images/springcloud/consul_policy.png)
+（1）配置访问策略
+（2）配置角色，绑定访问策略
+（3）配置token，绑定角色和访问策略
+（4）客户端使用token登录
+
+## Consul备份迁移
+
+（1）创建快照
+consul snapshot save -token="" backup.snap
+
+（2）恢复配置与快照
+consul snapshot restore -token="" backup.snap
+
+## 服务注册与发现
+
+* 引入依赖（版本取决于spring-cloud-dependencies的版本）
+
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-consul-discovery</artifactId>
+</dependency>
+```
+
+* 配置文件application.yml
+
+```yaml
+spring:
+  cloud:
+    consul:
+      # consul server地址
+      host: 127.0.0.1
+      # consul server默认端口
+      port: 8500
+      # 客户端acl token，需要有service:write、node:read、key:read权限
+      token: 928495bb-2ebb-8728-26df-d52e691d157b
+      discovery:
+        service-name: ${spring.application.name}
+        instance-group: com-lc-dev
+        heartbeat:
+          enabled: true
+        instance-id: ${spring.application.name}-${server.port}-${spring.cloud.client.ip-address}
+      config:
+        # 配置文件匹配规则，consul中的key/value绝对路径 folder1/folder2,{profile}/data
+        # ConsulPropertySources会根据spring.cloud.consul.config.prefixes、spring.profiles.active、spring.application.name
+        # 自动组装key进行查询
+        # {spring.cloud.consul.config.prefixes}/{spring.application.name},{spring.profiles.active}/data
+        # {spring.cloud.consul.config.prefixes}/{spring.application.name}/data
+        # config/application,dev/data
+        # config/application/data
+        format: yaml
+        prefixes: com-lc
+```
+
+### 5、Redis Cluster
+
+### 6、Kafka based on Kraft Cluster
+
+### 7、Docker
+
+### 8、Multipass创建虚拟机
+
+```shell
+# 查看镜像
+multipass find
+# 创建实例
+multipass launch 22.04 -n instance-name -c 2 -m 2G -d 40G
+# 
+``` 
+
+### 9、Kubernetes
 
 ```css
 .circle-number::before {
