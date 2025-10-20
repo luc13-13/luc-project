@@ -1,6 +1,5 @@
 server:
   port: 19004
-
 spring:
   application:
     name: product-center
@@ -9,3 +8,26 @@ spring:
       enabled: true
   profiles:
     active: dev
+  config:
+    import: 'optional:consul:'
+  cloud:
+    consul:
+      host: consul-server
+      port: 8500
+      token: fe02b6d5-2e93-17cd-dc2b-cdf5f3abbe0e
+      discovery:
+        service-name: ${spring.application.name}
+        instance-group: com-lc-dev
+        instance-id: ${spring.application.name}-${server.port}-${spring.cloud.client.ip-address}
+        heartbeat:
+          enabled: true
+      config:
+        # 配置文件匹配规则，consul中的key/value绝对路径 folder1/folder2,{profile}/data
+        # ConsulPropertySources会根据spring.cloud.consul.config.prefixes、spring.profiles.active、spring.application.name
+        # 自动组装key进行查询
+        # {spring.cloud.consul.config.prefixes}/{spring.application.name},{spring.profiles.active}/data
+        # {spring.cloud.consul.config.prefixes}/{spring.application.name}/data
+        # config/application,dev/data
+        # config/application/data
+        format: yaml
+        prefixes: com-lc

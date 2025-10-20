@@ -1,0 +1,10 @@
+{
+  "properties": [
+    {
+      "name": "spring.cloud.consul.token",
+      "type": "java.lang.String",
+      "description": "consul acl token to use for config and discovery."
+    }
+  ],
+  "hints": []
+}
