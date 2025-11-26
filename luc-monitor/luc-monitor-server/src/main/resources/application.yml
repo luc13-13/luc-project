@@ -5,6 +5,17 @@ spring:
     name: monitor-server
   cloud:
     consul:
+      host: consul-server
+      port: 8500
+      token: fe02b6d5-2e93-17cd-dc2b-cdf5f3abbe0e
       discovery:
-        ip-address:
-        port:
+        service-name: ${spring.application.name}
+        instance-group: com-lc-dev
+        instance-id: ${spring.application.name}-${server.port}-${spring.cloud.client.ip-address}
+        heartbeat:
+          enabled: true
+  boot:
+    admin:
+      discovery:
+        ignored-services:
+          - consul*

@@ -507,6 +507,16 @@ consul.exe agent -config-file=.\conf\server_conf.hcl
 # 需要配置policies、roles之后再创建token
 consul.exe acl bootstrap 
 ```
+* 开放端口
+```shell
+sudo iptables -A INPUT -p tcp --dport 8300 -s 192.168.64.1 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 8301 -s 192.168.64.1 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 8302 -s 192.168.64.1 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 8500 -s 192.168.64.1 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 8600 -s 192.168.64.1 -j ACCEPT
+sudo netfilter-persistent save
+sudo netfilter-persistent reload
+```
 
 ## Consul权限管理
 
