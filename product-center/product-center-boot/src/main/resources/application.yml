@@ -12,6 +12,7 @@ spring:
     import: 'optional:consul:'
   cloud:
     consul:
+      enabled: false
       host: consul-server
       port: 8500
       token: fe02b6d5-2e93-17cd-dc2b-cdf5f3abbe0e

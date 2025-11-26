@@ -1,3 +1,20 @@
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+    shutdown:
+      access: read_only
+  info:
+    env:
+      enabled: true
+  server:
+    ssl:
+      client-auth: need
+      certificate:
 spring:
   # 数据源配置
   datasource:
