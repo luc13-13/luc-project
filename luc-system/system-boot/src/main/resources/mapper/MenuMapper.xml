@@ -73,7 +73,6 @@
         # 限制userId时再查询role_id, 防止INNER JOIN数据翻倍
             ur.role_id,
         </if>
-
         -- meta 信息
         meta.title as meta_title,
         meta.icon as meta_icon,
@@ -110,6 +109,12 @@
             </if>
             <if test="dto.status != null">
                 AND m.status = #{dto.status, jdbcType=TINYINT}
+            </if>
+            <if test="dto.menuTypeNotIn != null and dto.menuTypeNotIn.size > 0">
+                AND m.menu_type not in
+                <foreach collection="dto.menuTypeNotIn" index="index" item="item" open="(" close=")" separator=",">
+                    #{item, jdbcType=VARCHAR}
+                </foreach>
             </if>
             AND m.deleted = 0
             ORDER BY m.sort_order

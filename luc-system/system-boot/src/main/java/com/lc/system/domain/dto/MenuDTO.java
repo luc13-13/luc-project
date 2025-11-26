@@ -122,5 +122,9 @@ public class MenuDTO implements Serializable {
 
     @Schema(name = "children", description = "子菜单")
     private List<MenuDTO> children;
+
+
+    @Schema(name = "menuTypeNotIn", description = "菜单类型条件")
+    private List<String> menuTypeNotIn;
 }
 

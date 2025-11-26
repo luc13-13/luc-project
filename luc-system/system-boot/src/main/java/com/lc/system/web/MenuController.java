@@ -4,6 +4,7 @@ import com.lc.framework.core.constants.RequestHeaderConstants;
 import com.lc.framework.core.mvc.WebResult;
 import com.lc.framework.core.utils.validator.Groups;
 import com.lc.framework.web.utils.MessageUtils;
+import com.lc.system.constants.MenuEnum;
 import com.lc.system.domain.dto.MenuDTO;
 import com.lc.system.domain.vo.MenuVO;
 import com.lc.system.service.MenuService;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 
 import static com.lc.framework.core.constants.NumberConstants.STATUS_TRUE;
@@ -38,6 +40,7 @@ public class MenuController {
         MenuDTO queryDTO = MenuDTO.builder()
                 .userId(request.getHeader(RequestHeaderConstants.USER_ID))
                 .status(STATUS_TRUE)
+                .menuTypeNotIn(Collections.singletonList(MenuEnum.BUTTON.getMenuType()))
                 .build();
         List<MenuVO> menuTree = menuService.getRouteTreeByUserId(queryDTO);
         return WebResult.success(menuTree);
