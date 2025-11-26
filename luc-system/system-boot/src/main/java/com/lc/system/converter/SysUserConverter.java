@@ -1,6 +1,7 @@
 package com.lc.system.converter;
 
 import com.lc.system.api.SysUserDetailDTO;
+import com.lc.system.domain.dto.SysUserInfoDTO;
 import com.lc.system.domain.entity.SysUserDO;
 
 /**
@@ -12,4 +13,6 @@ import com.lc.system.domain.entity.SysUserDO;
  */
 public interface SysUserConverter {
     SysUserDetailDTO convertDO2DetailDTO(SysUserDO sysUserDO);
+
+    SysUserInfoDTO convertDetail2InfoDTO(SysUserDetailDTO dto);
 }

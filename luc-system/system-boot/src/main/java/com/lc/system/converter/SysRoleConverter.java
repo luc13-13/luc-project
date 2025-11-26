@@ -1,4 +1,4 @@
-package com.lc.system.convertor;
+package com.lc.system.converter;
 
 import com.lc.system.domain.entity.SysRoleDO;
 import com.lc.system.domain.dto.SysRoleDTO;
@@ -10,7 +10,7 @@ import com.lc.system.domain.bo.SysRoleBO;
  * @author lucheng
  * @since 2025-09-04
  */
-public interface SysRoleConvertor {
+public interface SysRoleConverter {
 
     /**
      * 转换DTO为数据库对象

@@ -3,7 +3,7 @@ package com.lc.system.feign;
 import com.lc.framework.core.constants.RequestHeaderConstants;
 import com.lc.framework.core.mvc.WebResult;
 import com.lc.system.api.SysUserDetailDTO;
-import com.lc.system.domain.dto.UserDTO;
+import com.lc.system.domain.dto.SysUserInfoDTO;
 import com.lc.system.service.SysUserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -46,13 +46,14 @@ public class UserFeignServer {
 
     @Operation(summary = "获取用户信息")
     @GetMapping("/info")
-    public WebResult<UserDTO> getUserInfo(HttpServletRequest request) {
+    public WebResult<SysUserInfoDTO> getUserInfo(HttpServletRequest request) {
         String username = request.getHeader(RequestHeaderConstants.USER_NAME);
         log.info("获取user信息, {}", username);
-        return WebResult.success(UserDTO.builder()
-                .username(username)
-                .permissions(Arrays.asList("system:user:query", "system:menu:query", "system:menu:add", "system:menu:edit", "system:menu:delete"))
-                .build());
+        return WebResult.success(sysUserService.getSysUserInfo(username));
+//        return WebResult.success(SysUserInfoDTO.builder()
+//                .username(username)
+//                .permissions(Arrays.asList("system:user:query", "system:menu:query", "system:menu:add", "system:menu:edit", "system:menu:delete"))
+//                .build());
     }
 
     @Operation(summary = "获取用户权限")

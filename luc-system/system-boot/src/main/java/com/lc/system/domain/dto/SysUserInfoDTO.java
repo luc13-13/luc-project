@@ -22,7 +22,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Schema(name = "UserDTO", description = "用户信息DTO")
-public class UserDTO implements DataScopeEntity {
+public class SysUserInfoDTO implements DataScopeEntity {
 
     private String username;
 

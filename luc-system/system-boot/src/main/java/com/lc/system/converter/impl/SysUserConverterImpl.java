@@ -2,8 +2,13 @@ package com.lc.system.converter.impl;
 
 import com.lc.system.api.SysUserDetailDTO;
 import com.lc.system.converter.SysUserConverter;
+import com.lc.system.domain.dto.SysUserInfoDTO;
 import com.lc.system.domain.entity.SysUserDO;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  * <pre>
@@ -31,5 +36,17 @@ public class SysUserConverterImpl implements SysUserConverter {
                 .status(sysUserDO.getStatus())
                 .password(sysUserDO.getPassword())
                 .build();
+    }
+
+    @Override
+    public SysUserInfoDTO convertDetail2InfoDTO(SysUserDetailDTO dto) {
+        SysUserInfoDTO result = SysUserInfoDTO.builder()
+                .username(dto.getUserName())
+                .build();
+        if (!CollectionUtils.isEmpty(dto.getRoleAuthoritiesMap())) {
+            result.setRoleIds(dto.getRoleAuthoritiesMap().keySet().stream().toList());
+            result.setPermissions(dto.getRoleAuthoritiesMap().values().stream().flatMap(Collection::stream).collect(Collectors.toList()));
+        }
+        return result;
     }
 }

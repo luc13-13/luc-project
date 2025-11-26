@@ -1,6 +1,6 @@
-package com.lc.system.convertor.impl;
+package com.lc.system.converter.impl;
 
-import com.lc.system.convertor.SysRoleConvertor;
+import com.lc.system.converter.SysRoleConverter;
 import com.lc.system.domain.entity.SysRoleDO;
 import com.lc.system.domain.dto.SysRoleDTO;
 import com.lc.system.domain.bo.SysRoleBO;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  * @since 2025-09-04
  */
 @Service("sysRoleConvertor")
-public class SysRoleConvertorImpl implements SysRoleConvertor {
+public class SysRoleConverterImpl implements SysRoleConverter {
 
     @Override
     public SysRoleDO convertDTO2DO(SysRoleDTO dto) {

@@ -6,6 +6,7 @@ import com.lc.system.api.SysUserDetailDTO;
 import com.lc.system.converter.SysUserConverter;
 import com.lc.system.domain.bo.MenuBO;
 import com.lc.system.domain.dto.MenuDTO;
+import com.lc.system.domain.dto.SysUserInfoDTO;
 import com.lc.system.domain.entity.SysUserDO;
 import com.lc.system.mapper.SysUserMapper;
 import com.lc.system.service.MenuService;
@@ -49,6 +50,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
         SysUserDetailDTO sysUserDetailDTO = sysUserConverter.convertDO2DetailDTO(userDO);
         sysUserDetailDTO.setRoleAuthoritiesMap(roleMenuMap);
         return sysUserDetailDTO;
+    }
+
+    @Override
+    public SysUserInfoDTO getSysUserInfo(String username) {
+        return null;
     }
 }
 
