@@ -54,7 +54,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
 
     @Override
     public SysUserInfoDTO getSysUserInfo(String username) {
-        return null;
+        SysUserDetailDTO  sysUserDetailDTO = this.getSysUserDetail(username);
+        return sysUserConverter.convertDetail2InfoDTO(sysUserDetailDTO);
     }
 }
 
