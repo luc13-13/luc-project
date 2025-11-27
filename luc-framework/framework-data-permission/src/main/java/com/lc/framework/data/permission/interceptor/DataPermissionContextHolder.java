@@ -19,7 +19,7 @@ import java.util.function.Supplier;
 public class DataPermissionContextHolder {
 
     /**
-     * 当前线程执行的方法名，与DATA_SCOPE_ANNO_CACHE中的key匹配
+     * 当前线程执行的方法名，与DATA_PERMISSION_ANNO_CACHE中的key匹配
      */
     private static final ThreadLocal<DataPermission> DATA_PERMISSION_ANNO_LOCAL = new TransmittableThreadLocal<>();
 

@@ -42,10 +42,12 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDO> im
     public SysUserDetailDTO getSysUserDetail(String username) {
         // 查询账号
         SysUserDO userDO = this.getOne(new LambdaQueryWrapper<SysUserDO>().eq(SysUserDO::getUserName, username));
-        // 查询权限信息
+        // 查询菜单权限
         Map<String, List<String>> roleMenuMap = menuService.getMenuList(MenuDTO.builder().userId(userDO.getUserId()).status(STATUS_TRUE).build())
                 .stream().collect(Collectors.groupingBy(MenuBO::getRoleId,
                         Collectors.mapping(menuBO -> menuBO.getMenuMetaDO().getAuthority(), Collectors.filtering(Objects::nonNull, Collectors.toList()))));
+        // 查询数据权限
+
         // 数据转换
         SysUserDetailDTO sysUserDetailDTO = sysUserConverter.convertDO2DetailDTO(userDO);
         sysUserDetailDTO.setRoleAuthoritiesMap(roleMenuMap);

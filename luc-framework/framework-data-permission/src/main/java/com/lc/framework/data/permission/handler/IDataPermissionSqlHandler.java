@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * <pre>
  *     权限条件构造接口，实现该接口可拓展权限表的处理方法。权限处理的方式是与权限模型高度耦合的，要紧密结合自身业务对权限模型的定义
- *     所有实现类的命名规范为XxxxDataScopeSqlHandler
+ *     所有实现类的命名规范为XxxxDataPermissionSqlHandler
  *
  * </pre>
  *
@@ -47,7 +47,7 @@ public interface IDataPermissionSqlHandler {
     }
 
     /**
-     * 获取权限处理器名称的默认方法, 例如SysUserDataScopeSqlHandler, 则返回SysUser
+     * 获取权限处理器名称的默认方法, 例如SysUserDataPermissionSqlHandler, 则返回SysUser
      */
     default String getName() {
         return getClass().getSimpleName().replace(HANDLER_BEAN_SUFFIX, "");

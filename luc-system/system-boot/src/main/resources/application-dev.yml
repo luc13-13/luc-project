@@ -94,6 +94,11 @@ data-permission:
             column-name: tenant_id
             properties:
               role: Tenant
+        product_center:
+          - table-name: product_info
+            column-name: product_code
+            properties:
+              role: productManager
     ## 2、配置文件只声明bean的创建，使用DataScopeSqlHandlerCustomizer在代码中对bean进行定制化开发
 #    - id: Tenant
 

@@ -35,7 +35,7 @@ public abstract class AbstractDataPermissionSqlHandler implements IDataPermissio
         String fullyQualifiedName = getTableName(tableDefinition);
         if (supportedTableMap.containsKey(fullyQualifiedName)) {
             supportedTableMap.get(fullyQualifiedName).add(tableDefinition.getColumnName());
-        } else  {
+        } else {
             Set<String> columnSet = new ConcurrentSkipListSet<>();
             columnSet.add(tableDefinition.getColumnName());
             supportedTableMap.put(fullyQualifiedName, columnSet);
