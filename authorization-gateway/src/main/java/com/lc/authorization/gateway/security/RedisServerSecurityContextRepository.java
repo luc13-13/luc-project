@@ -7,6 +7,8 @@ import org.springframework.security.web.server.context.ServerSecurityContextRepo
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.util.Objects;
+
 /**
  * <pre>
  * <pre/>
@@ -47,6 +49,6 @@ public class RedisServerSecurityContextRepository implements ServerSecurityConte
                 return context;
             }
             return null;
-        }).cast(SecurityContext.class);
+        }).filter(Objects::nonNull).cast(SecurityContext.class);
     }
 }
