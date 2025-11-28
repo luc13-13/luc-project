@@ -1,8 +1,7 @@
 package com.lc.system.converter;
 
-import com.lc.system.domain.entity.SysRoleDO;
 import com.lc.system.domain.dto.SysRoleDTO;
-import com.lc.system.domain.bo.SysRoleBO;
+import com.lc.system.domain.entity.SysRoleDO;
 
 /**
  * 系统角色表(luc_system.sys_role)表对象转换接口
@@ -18,12 +17,5 @@ public interface SysRoleConverter {
      * @return 数据库对象
      */
     SysRoleDO convertDTO2DO(SysRoleDTO dto);
-    
-    /**
-     * 转换BO为数据库对象
-     * @param bo 请求参数
-     * @return 数据库对象
-     */
-    SysRoleDO convertBO2DO(SysRoleBO bo);
 }
 

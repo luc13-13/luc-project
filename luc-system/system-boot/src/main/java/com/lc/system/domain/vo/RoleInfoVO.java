@@ -1,6 +1,8 @@
 package com.lc.system.domain.vo;
 
+import com.lc.framework.core.utils.validator.Groups.*;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Data;
 
@@ -32,5 +34,6 @@ public class RoleInfoVO {
     private Date dtCreated;
 
     @Schema(description = "角色绑定的菜单uid")
+    @NotBlank(message = "", groups = AddGroup.class)
     private List<Long> menuUids;
 }

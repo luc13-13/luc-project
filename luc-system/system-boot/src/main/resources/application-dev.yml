@@ -98,7 +98,7 @@ data-permission:
           - table-name: product_info
             column-name: product_code
             properties:
-              role: productManager
+              role: ProductManager
     ## 2、配置文件只声明bean的创建，使用DataScopeSqlHandlerCustomizer在代码中对bean进行定制化开发
 #    - id: Tenant
 
@@ -118,6 +118,7 @@ file:
     enabled: true
     oss:
       enabled: true
+      use-async: true
       # 存储平台
       platform: qiniu
       # ak
@@ -128,7 +129,6 @@ file:
       default-bucket-name: mini-program-cookbook
       # 默认domain
       default-domain-of-bucket: qiniucs.com
-      use-async: true
       cdn: storage.cloud.ffluc.online
       buckets:
         - name: mini-program-cookbook

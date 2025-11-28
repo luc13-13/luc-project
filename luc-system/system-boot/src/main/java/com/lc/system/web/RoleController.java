@@ -1,12 +1,14 @@
 package com.lc.system.web;
 
 import com.lc.framework.core.mvc.WebResult;
+import com.lc.system.domain.dto.SysRoleDTO;
 import com.lc.system.domain.vo.RoleInfoVO;
 import com.lc.system.service.SysRoleService;
-import jakarta.servlet.http.HttpServletRequest;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,6 +19,7 @@ import java.util.List;
  * @date : 2025/9/4 10:42
  * @version : 1.0
  */
+@Tag(name = "角色")
 @RestController
 @RequestMapping("/role")
 public class RoleController {
@@ -27,8 +30,27 @@ public class RoleController {
         this.sysRoleService = sysRoleService;
     }
 
+    @Operation(summary = "角色列表")
     @GetMapping("/list")
-    public WebResult<List<RoleInfoVO>> list(HttpServletRequest request) {
+    public WebResult<List<RoleInfoVO>> list() {
         return WebResult.success(sysRoleService.getRoleList());
+    }
+
+    @Operation(summary = "新增、更新角色")
+    @PostMapping("/save")
+    public WebResult<String> save(@RequestBody @Validated SysRoleDTO dto) {
+        return WebResult.success(sysRoleService.saveRole(dto));
+    }
+
+    @Operation(summary = "角色详情")
+    @GetMapping("/detail")
+    public WebResult<RoleInfoVO> detail(@RequestParam("roleId") @NotBlank String roleId) {
+        return WebResult.success(sysRoleService.getRoleDetails(roleId));
+    }
+
+    @Operation(summary = "删除角色")
+    @PostMapping("/delete")
+    public WebResult<RoleInfoVO> delete(@RequestParam("roleId") @NotBlank String roleId) {
+        return WebResult.success(sysRoleService.deleteRole(roleId));
     }
 }

@@ -1,5 +1,7 @@
 package com.lc.system.domain.dto;
 
+import com.lc.framework.core.utils.validator.Groups.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,56 +21,59 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SysRoleDTO implements Serializable {
-/**
+    /**
      * 主键ID
-     */     
+     */
+    @NotBlank(message = "", groups = {UpdateGroup.class, DeleteGroup.class})
     private Integer id;
-    
-/**
+
+    /**
      * 角色ID
-     */     
+     */
+    @NotBlank(message = "", groups = {AddGroup.class, UpdateGroup.class, DeleteGroup.class})
     private String roleId;
-    
-/**
+
+    /**
      * 角色名称
-     */     
+     */
+    @NotBlank(message = "", groups = AddGroup.class)
     private String roleName;
-    
-/**
+
+    /**
      * 角色描述
-     */     
+     */
+    @NotBlank(message = "", groups = AddGroup.class)
     private String description;
-    
-/**
+
+    /**
      * 状态(0:禁用 1:启用)
-     */     
+     */
     private Boolean status;
-    
-/**
+
+    /**
      * 创建者
-     */     
+     */
     private String createdBy;
-    
-/**
+
+    /**
      * 创建时间
-     */     
+     */
     private Date dtCreated;
-    
-/**
+
+    /**
      * 更新者
-     */     
+     */
     private String modifiedBy;
-    
-/**
+
+    /**
      * 更新时间
-     */     
+     */
     private Date dtModified;
-    
-/**
+
+    /**
      * 逻辑删除(0:未删除 1:已删除)
-     */     
+     */
     private Boolean deleted;
-    
 
 }
 

@@ -4,8 +4,10 @@ import com.lc.framework.core.mvc.WebResult;
 import com.lc.framework.storage.client.StorageClientTemplate;
 import com.lc.framework.storage.core.StorageResult;
 import com.lc.system.domain.dto.StorageResultDTO;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Objects;
 
 /**
@@ -15,12 +17,14 @@ import java.util.Objects;
  * @date : 2025/1/20 15:03
  * @version : 1.0
  */
+@Tag(name = "云存储")
 @RestController
 @RequestMapping("/storage")
 public class StorageController {
 
     private final StorageClientTemplate storageClientTemplate;
 
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     public StorageController(StorageClientTemplate storageClientTemplate) {
         this.storageClientTemplate = storageClientTemplate;
     }

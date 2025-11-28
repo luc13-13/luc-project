@@ -26,7 +26,7 @@ import static com.lc.framework.core.constants.NumberConstants.STATUS_TRUE;
  * @author Lu Cheng
  * @date 2023/12/27 17:03
  */
-@Tag(name = "菜单相关接口")
+@Tag(name = "菜单")
 @RestController
 @RequestMapping("/menu")
 @RequiredArgsConstructor
