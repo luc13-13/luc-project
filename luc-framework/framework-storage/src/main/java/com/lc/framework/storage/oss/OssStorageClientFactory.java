@@ -74,6 +74,7 @@ public class OssStorageClientFactory implements StorageClientFactory<OssStorageP
         log.info("当前线程池配置: {}", executorService);
         // 转换为OssStorageProperties
         Assert.notNull(properties, "StorageProperties must not be bull");
+        Assert.notNull(executorService, "executorService must not be bull");
         ValidatorUtil.validate(properties);
         // 构建AmazonS3
         Map<String, AmazonS3Wrapper<S3AsyncClient>> s3ClientMap = getS3WrapperMap(properties, this::createS3AsyncClient);

@@ -7,7 +7,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.core.annotation.Order;
 import software.amazon.awssdk.utils.ThreadFactoryBuilder;
 
 import java.util.concurrent.*;
@@ -28,7 +27,7 @@ public class OssStorageAutoConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = StorageProperties.PREFIX + ".oss", name = "use-async", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = StorageProperties.PREFIX + ".oss", name = "use-async", havingValue = "true")
     public ExecutorService ossAsyncExecutor() {
         // 核心线程数
         int corePoolSize = 10;
@@ -53,19 +52,13 @@ public class OssStorageAutoConfiguration {
     }
 
     @Bean
-    @Order
     @ConditionalOnMissingBean(StorageClientTemplate.class)
-    @ConditionalOnProperty(prefix = StorageProperties.PREFIX + ".oss", name = "use-async", havingValue = "false", matchIfMissing = true)
     public StorageClientTemplate storageClientTemplate(OssStorageClientFactory factory) {
-        return factory.newInstance(storageProperties.getOss());
-    }
-
-    @Bean
-    @Order
-    @ConditionalOnMissingBean(StorageClientTemplate.class)
-    @ConditionalOnProperty(prefix = StorageProperties.PREFIX + ".oss", name = "use-async", havingValue = "true")
-    public StorageClientTemplate asyncStorageClientTemplate(OssStorageClientFactory factory) {
-
-        return factory.newAsyncInstance(storageProperties.getOss());
+        // 根据配置动态选择同步或异步客户端
+        if (storageProperties.getOss().isUseAsync()) {
+            return factory.newAsyncInstance(storageProperties.getOss());
+        } else {
+            return factory.newInstance(storageProperties.getOss());
+        }
     }
 }
