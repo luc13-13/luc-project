@@ -44,13 +44,13 @@ public class RoleController {
 
     @Operation(summary = "角色详情")
     @GetMapping("/detail")
-    public WebResult<RoleInfoVO> detail(@RequestParam("roleId") @NotBlank String roleId) {
+    public WebResult<RoleInfoVO> detail(@RequestParam("roleId") @NotBlank(message = "roleId不能为空") String roleId) {
         return WebResult.success(sysRoleService.getRoleDetails(roleId));
     }
 
     @Operation(summary = "删除角色")
     @PostMapping("/delete")
-    public WebResult<RoleInfoVO> delete(@RequestParam("roleId") @NotBlank String roleId) {
+    public WebResult<String> delete(@RequestParam("roleId") @NotBlank(message = "roleId不能为空") String roleId) {
         return WebResult.success(sysRoleService.deleteRole(roleId));
     }
 }

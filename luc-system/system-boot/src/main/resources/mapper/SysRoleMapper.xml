@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.system.mapper.SysRoleMapper">
+
+    <!-- 角色信息 + 菜单ID列表的 resultMap -->
+    <resultMap type="com.lc.system.domain.bo.SysRoleBO" id="RoleWithMenusMap">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+        <result property="roleId" column="role_id" jdbcType="VARCHAR"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="status" column="status" jdbcType="BOOLEAN"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="dtCreated" column="dt_created" jdbcType="TIMESTAMP"/>
+        <result property="modifiedBy" column="modified_by" jdbcType="VARCHAR"/>
+        <result property="dtModified" column="dt_modified" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="BOOLEAN"/>
+        <collection property="menuIds" ofType="java.lang.String">
+            <result column="menu_id"/>
+        </collection>
+    </resultMap>
+
+    <!-- 查询角色列表（含关联菜单ID） -->
+    <select id="selectRoleListWithMenus" resultMap="RoleWithMenusMap">
+        SELECT r.id,
+               r.role_id,
+               r.role_name,
+               r.description,
+               r.status,
+               r.created_by,
+               r.dt_created,
+               r.modified_by,
+               r.dt_modified,
+               r.deleted,
+               rm.menu_id
+        FROM luc_system.sys_role r
+                 LEFT JOIN luc_system.sys_role_menu rm ON r.role_id = rm.role_id
+        WHERE r.deleted = 0
+        ORDER BY r.dt_created DESC
+    </select>
+
+    <!-- 查询单个角色详情（含关联菜单ID） -->
+    <select id="selectRoleDetailWithMenus" resultMap="RoleWithMenusMap">
+        SELECT r.id,
+               r.role_id,
+               r.role_name,
+               r.description,
+               r.status,
+               r.created_by,
+               r.dt_created,
+               r.modified_by,
+               r.dt_modified,
+               r.deleted,
+               rm.menu_id
+        FROM luc_system.sys_role r
+        LEFT JOIN luc_system.sys_role_menu rm ON r.role_id = rm.role_id
+        WHERE r.role_id = #{roleId}
+        AND r.deleted = 0
+    </select>
+
+</mapper>

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 系统角色表(luc_system.sys_role)表业务查询结果封装类
@@ -69,6 +70,9 @@ public class SysRoleBO implements Serializable {
      */
     private Boolean deleted;
 
+    /**
+     * 关联的菜单ID列表
+     */
+    private List<String> menuIds;
 
 }
-

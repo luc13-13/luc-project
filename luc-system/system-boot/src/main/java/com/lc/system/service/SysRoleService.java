@@ -19,7 +19,7 @@ public interface SysRoleService extends IService<SysRoleDO> {
 
     String saveRole(SysRoleDTO dto);
 
-    RoleInfoVO deleteRole(String roleId);
+    String deleteRole(String roleId);
 
     RoleInfoVO getRoleDetails(String roleId);
 }

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 系统角色表(luc_system.sys_role)表数据传输类
@@ -24,19 +25,19 @@ public class SysRoleDTO implements Serializable {
     /**
      * 主键ID
      */
-    @NotBlank(message = "", groups = {UpdateGroup.class, DeleteGroup.class})
+    @NotBlank(message = "id不能为空¬", groups = { UpdateGroup.class, DeleteGroup.class })
     private Integer id;
 
     /**
      * 角色ID
      */
-    @NotBlank(message = "", groups = {AddGroup.class, UpdateGroup.class, DeleteGroup.class})
+    @NotBlank(message = "roleId不能为空", groups = { AddGroup.class, UpdateGroup.class, DeleteGroup.class })
     private String roleId;
 
     /**
      * 角色名称
      */
-    @NotBlank(message = "", groups = AddGroup.class)
+    @NotBlank(message = "roleName不能为空", groups = AddGroup.class)
     private String roleName;
 
     /**
@@ -75,5 +76,9 @@ public class SysRoleDTO implements Serializable {
      */
     private Boolean deleted;
 
-}
+    /**
+     * 关联的菜单ID列表
+     */
+    private List<String> menuIds;
 
+}
