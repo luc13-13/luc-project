@@ -3,6 +3,8 @@ package com.lc.system.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lc.framework.core.mvc.BizException;
+import com.lc.framework.core.utils.validator.Groups;
+import com.lc.framework.core.utils.validator.ValidatorUtil;
 import com.lc.framework.web.utils.WebUtil;
 import com.lc.system.converter.SysRoleConverter;
 import com.lc.system.domain.bo.SysRoleBO;
@@ -51,12 +53,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
         // 使用 converter 转换 DTO 为 DO
         SysRoleDO sysRoleDO = sysRoleConverter.convertDTO2DO(dto);
 
-        if (sysRoleDO.getId() != null) {
-            // 更新操作
-            sysRoleDO.setModifiedBy(WebUtil.getUserId());
-            log.info("更新角色: roleId={}, roleName={}, operator={}",
-                    sysRoleDO.getRoleId(), sysRoleDO.getRoleName(), WebUtil.getUserId());
-        } else {
+        if (sysRoleDO.getId() == null) {
+            ValidatorUtil.validate(dto, Groups.AddGroup.class);
             // 新增操作 - 检查角色ID是否已存在
             if (StringUtils.hasText(dto.getRoleId())) {
                 LambdaQueryWrapper<SysRoleDO> wrapper = new LambdaQueryWrapper<>();
@@ -66,12 +64,12 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
                     throw BizException.exp("角色ID已存在: " + dto.getRoleId());
                 }
             }
-            sysRoleDO.setCreatedBy(WebUtil.getUserId());
             sysRoleDO.setDeleted(false);
             log.info("新增角色: roleId={}, roleName={}, operator={}",
                     sysRoleDO.getRoleId(), sysRoleDO.getRoleName(), WebUtil.getUserId());
+        } else {
+            ValidatorUtil.validate(dto, Groups.UpdateGroup.class);
         }
-
         this.saveOrUpdate(sysRoleDO);
 
         // 处理角色-菜单关联关系

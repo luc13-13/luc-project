@@ -38,7 +38,7 @@ public class RoleController {
 
     @Operation(summary = "新增、更新角色")
     @PostMapping("/save")
-    public WebResult<String> save(@RequestBody @Validated SysRoleDTO dto) {
+    public WebResult<String> save(@RequestBody @Validated() SysRoleDTO dto) {
         return WebResult.success(sysRoleService.saveRole(dto));
     }
 

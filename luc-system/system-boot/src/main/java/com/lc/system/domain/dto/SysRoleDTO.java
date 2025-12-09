@@ -25,7 +25,7 @@ public class SysRoleDTO implements Serializable {
     /**
      * 主键ID
      */
-    @NotBlank(message = "id不能为空¬", groups = { UpdateGroup.class, DeleteGroup.class })
+    @NotBlank(message = "id不能为空", groups = { UpdateGroup.class, DeleteGroup.class })
     private Integer id;
 
     /**

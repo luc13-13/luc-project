@@ -1,10 +1,11 @@
 package com.lc.framework.web.config;
 
 import com.lc.framework.web.mybatis.CreateAndUpdateObjectHandler;
+import com.lc.framework.web.mybatis.MetaObjectHandlerProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,19 +18,14 @@ import org.springframework.context.annotation.Configuration;
  */
 @Slf4j
 @Configuration
+@EnableConfigurationProperties(MetaObjectHandlerProperties.class)
 public class MybatisPlusConfig {
-
-    @Value("${mybatis-plus.auto-fill-dt.insert-field:dtCreated}")
-    private String createTimeField;
-
-    @Value("${mybatis-plus.auto-fill-dt.update-field:dtModified}")
-    private String updateTimeField;
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "mybatis-plus.auto-fill-dt", value = "enabled", havingValue = "true", matchIfMissing = true)
-     public CreateAndUpdateObjectHandler createAndUpdateObjectHandler(){
-        log.info("createAndUpdateObjectHandler with createTimeField:{}, updateTimeField:{}", createTimeField, updateTimeField);
-        return new CreateAndUpdateObjectHandler(createTimeField,  updateTimeField);
+    @ConditionalOnProperty(prefix = "mybatis-plus.auto-fill-handler", value = "enabled", havingValue = "true", matchIfMissing = true)
+     public CreateAndUpdateObjectHandler createAndUpdateObjectHandler(MetaObjectHandlerProperties  metaObjectHandlerProperties){
+        log.info("createAndUpdateObjectHandler with properties:{}", metaObjectHandlerProperties);
+        return new CreateAndUpdateObjectHandler(metaObjectHandlerProperties);
      }
 }
