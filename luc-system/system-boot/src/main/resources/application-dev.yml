@@ -69,6 +69,11 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       id-type: auto
+  auto-fill-dt:
+    enabled: true
+    insert-field: dtCreated
+    update-field: dtModified
+
 
 # framework-data-permission数据权限配置
 data-permission:

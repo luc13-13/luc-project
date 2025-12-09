@@ -50,7 +50,7 @@ public class RoleController {
 
     @Operation(summary = "删除角色")
     @PostMapping("/delete")
-    public WebResult<String> delete(@RequestParam("roleId") @NotBlank(message = "roleId不能为空") String roleId) {
-        return WebResult.success(sysRoleService.deleteRole(roleId));
+    public WebResult<String> delete(@RequestBody @Validated SysRoleDTO dto) {
+        return WebResult.success(sysRoleService.deleteRole(dto.getRoleId()));
     }
 }

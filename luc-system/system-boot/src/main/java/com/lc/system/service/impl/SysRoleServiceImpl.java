@@ -113,7 +113,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
 
         // 逻辑删除角色
         roleDO.setDeleted(true);
-        roleDO.setModifiedBy(WebUtil.getUserId());
         this.updateById(roleDO);
 
         // 删除角色菜单关联关系
