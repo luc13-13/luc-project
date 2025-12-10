@@ -18,9 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 系统角色表(luc_system.sys_role)表服务实现类
@@ -53,43 +55,59 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
 
         if (sysRoleDO.getId() == null) {
             // 新增操作 - 检查角色ID是否已存在
-            if (StringUtils.hasText(dto.getRoleId())) {
-                LambdaQueryWrapper<SysRoleDO> wrapper = new LambdaQueryWrapper<>();
-                wrapper.eq(SysRoleDO::getRoleId, dto.getRoleId())
-                        .eq(SysRoleDO::getDeleted, false);
-                if (this.count(wrapper) > 0) {
-                    throw BizException.exp("角色ID已存在: " + dto.getRoleId());
-                }
+            if (this.count(new LambdaQueryWrapper<SysRoleDO>()
+                    .eq(SysRoleDO::getRoleId, dto.getRoleId())
+                    .eq(SysRoleDO::getDeleted, false)) > 0) {
+                throw BizException.exp("角色ID已存在: " + dto.getRoleId());
             }
-            log.info("新增角色: roleId={}, roleName={}, operator={}",
-                    sysRoleDO.getRoleId(), sysRoleDO.getRoleName(), WebUtil.getUserId());
+            log.info("新增角色: roleId={}, roleName={}, operator={}", sysRoleDO.getRoleId(), sysRoleDO.getRoleName(), WebUtil.getUserId());
         }
         this.saveOrUpdate(sysRoleDO);
 
-        // 处理角色-菜单关联关系
-        String roleId = sysRoleDO.getRoleId();
-        if (StringUtils.hasText(roleId)) {
-            // 先删除原有的关联关系
-            LambdaQueryWrapper<SysRoleMenuDO> deleteWrapper = new LambdaQueryWrapper<>();
-            deleteWrapper.eq(SysRoleMenuDO::getRoleId, roleId);
-            sysRoleMenuMapper.delete(deleteWrapper);
-
-            // 插入新的关联关系
-            List<String> menuIds = dto.getMenuIds();
-            if (!CollectionUtils.isEmpty(menuIds)) {
-                String userId = WebUtil.getUserId();
-                for (String menuId : menuIds) {
-                    SysRoleMenuDO roleMenuDO = new SysRoleMenuDO();
-                    roleMenuDO.setRoleId(roleId);
-                    roleMenuDO.setMenuId(menuId);
-                    roleMenuDO.setCreatedBy(userId);
-                    sysRoleMenuMapper.insert(roleMenuDO);
-                }
-                log.info("保存角色菜单关联: roleId={}, menuIds={}", roleId, menuIds);
-            }
-        }
+        // 处理角色-菜单关联关系（差异更新）
+        updateRoleMenus(sysRoleDO.getRoleId(), dto.getMenuIds());
 
         return sysRoleDO.getRoleId();
+    }
+
+    /**
+     * 差异更新角色菜单关联
+     * 只删除被移除的，只插入新增的，保留未变化的记录
+     */
+    private void updateRoleMenus(String roleId, List<String> newMenuIds) {
+        // 1. 获取当前已有的菜单ID
+        SysRoleBO existedRole = baseMapper.selectRoleDetailWithMenus(roleId);
+
+        // 2. 计算差异
+        Set<String> existedSet = new HashSet<>(existedRole != null && !CollectionUtils.isEmpty(existedRole.getMenuIds()) ? existedRole.getMenuIds() : Collections.emptyList());
+        Set<String> newSet = new HashSet<>(newMenuIds != null ? newMenuIds : Collections.emptyList());
+
+        // 需要删除的 = 旧集合 - 新集合
+        Set<String> toDelete = new HashSet<>(existedSet);
+        toDelete.removeAll(newSet);
+
+        // 需要插入的 = 新集合 - 旧集合
+        Set<String> toInsert = new HashSet<>(newSet);
+        toInsert.removeAll(existedSet);
+
+        // 3. 执行删除
+        if (!toDelete.isEmpty()) {
+            sysRoleMenuMapper.delete(new LambdaQueryWrapper<SysRoleMenuDO>()
+                    .eq(SysRoleMenuDO::getRoleId, roleId)
+                    .in(SysRoleMenuDO::getMenuId, toDelete));
+            log.info("删除角色菜单关联: roleId={}, menuIds={}", roleId, toDelete);
+        }
+
+        // 4. 执行插入
+        if (!toInsert.isEmpty()) {
+            for (String menuId : toInsert) {
+                SysRoleMenuDO roleMenuDO = new SysRoleMenuDO();
+                roleMenuDO.setRoleId(roleId);
+                roleMenuDO.setMenuId(menuId);
+                sysRoleMenuMapper.insert(roleMenuDO);
+            }
+            log.info("新增角色菜单关联: roleId={}, menuIds={}", roleId, toInsert);
+        }
     }
 
     @Override
@@ -108,12 +126,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
         this.updateById(roleDO);
 
         // 删除角色菜单关联关系
-        LambdaQueryWrapper<SysRoleMenuDO> deleteWrapper = new LambdaQueryWrapper<>();
-        deleteWrapper.eq(SysRoleMenuDO::getRoleId, roleId);
-        sysRoleMenuMapper.delete(deleteWrapper);
-
-        log.info("删除角色: roleId={}, roleName={}, operator={}",
-                roleDO.getRoleId(), roleDO.getRoleName(), WebUtil.getUserId());
+        sysRoleMenuMapper.delete(new LambdaQueryWrapper<SysRoleMenuDO>().eq(SysRoleMenuDO::getRoleId, roleId));
+        log.info("删除角色: roleId={}, roleName={}, operator={}", roleDO.getRoleId(), roleDO.getRoleName(), WebUtil.getUserId());
 
         return roleId;
     }
@@ -125,7 +139,6 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
         if (roleBO == null) {
             throw BizException.exp("角色不存在或已被删除: " + roleId);
         }
-
         return sysRoleConverter.convertBO2VO(roleBO);
     }
 }

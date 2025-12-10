@@ -1,9 +1,6 @@
 package com.lc.system.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,12 +13,12 @@ import java.util.Date;
  * @since 2025-09-04
  */
 @Data
-@TableName("luc_system.sys_role_menu")
+@TableName(schema = "luc_system", value = "sys_role_menu")
 public class SysRoleMenuDO implements Serializable {
     /**
      * 主键ID
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -39,7 +36,7 @@ public class SysRoleMenuDO implements Serializable {
     /**
      * 创建者
      */
-    @TableField("created_by")
+    @TableField(value = "created_by", fill = FieldFill.INSERT)
     private String createdBy;
 
     /**
