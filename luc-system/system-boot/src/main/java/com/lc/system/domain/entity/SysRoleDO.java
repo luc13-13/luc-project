@@ -51,7 +51,7 @@ public class SysRoleDO implements Serializable {
     /**
      * 创建者
      */
-    @TableField("created_by")
+    @TableField(value = "created_by", fill = FieldFill.INSERT)
     private String createdBy;
 
     /**
@@ -63,7 +63,7 @@ public class SysRoleDO implements Serializable {
     /**
      * 更新者
      */
-    @TableField("modified_by")
+    @TableField(value = "modified_by", fill = FieldFill.UPDATE)
     private String modifiedBy;
 
     /**

@@ -1,6 +1,7 @@
 package com.lc.system.web;
 
 import com.lc.framework.core.mvc.WebResult;
+import com.lc.framework.core.utils.validator.Groups;
 import com.lc.system.domain.dto.SysRoleDTO;
 import com.lc.system.domain.vo.RoleInfoVO;
 import com.lc.system.service.SysRoleService;
@@ -36,9 +37,15 @@ public class RoleController {
         return WebResult.success(sysRoleService.getRoleList());
     }
 
-    @Operation(summary = "新增、更新角色")
-    @PostMapping("/save")
-    public WebResult<String> save(@RequestBody @Validated() SysRoleDTO dto) {
+    @Operation(summary = "新增角色")
+    @PostMapping("/add")
+    public WebResult<String> add(@RequestBody @Validated(Groups.AddGroup.class) SysRoleDTO dto) {
+        return WebResult.success(sysRoleService.saveRole(dto));
+    }
+
+    @Operation(summary = "更新角色")
+    @PostMapping("/update")
+    public WebResult<String> update(@RequestBody @Validated(Groups.UpdateGroup.class) SysRoleDTO dto) {
         return WebResult.success(sysRoleService.saveRole(dto));
     }
 
