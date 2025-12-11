@@ -2,6 +2,7 @@ package com.lc.framework.web.mybatis;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.lc.framework.web.utils.WebUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.reflection.MetaObject;
 import org.springframework.util.Assert;
 
@@ -15,6 +16,7 @@ import java.util.Date;
  * @date : 8/12/25 11:27
  * @version : 1.0
  */
+@Slf4j
 public class CreateAndUpdateObjectHandler implements MetaObjectHandler {
 
     private final MetaObjectHandlerProperties handlerProperties;
@@ -29,13 +31,16 @@ public class CreateAndUpdateObjectHandler implements MetaObjectHandler {
 
     @Override
     public void insertFill(MetaObject metaObject) {
+        String operator = WebUtil.getUserId();
         this.strictInsertFill(metaObject, handlerProperties.getInsertDateFieldName(), Date.class, new Date());
-        this.strictInsertFill(metaObject, handlerProperties.getInsertUserFieldName(), String.class, WebUtil.getUserId());
+        this.strictInsertFill(metaObject, handlerProperties.getInsertUserFieldName(), String.class, operator);
     }
 
     @Override
     public void updateFill(MetaObject metaObject) {
+        String operator = WebUtil.getUserId();
+        log.info("updateFill before update, operator: {}", operator);
         this.strictUpdateFill(metaObject, handlerProperties.getUpdateDateFieldName(), Date.class, new Date());
-        this.strictUpdateFill(metaObject, handlerProperties.getUpdateUserFieldName(), String.class, WebUtil.getUserId());
+        this.strictUpdateFill(metaObject, handlerProperties.getUpdateUserFieldName(), String.class, operator);
     }
 }

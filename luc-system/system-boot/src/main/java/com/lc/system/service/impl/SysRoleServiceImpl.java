@@ -54,10 +54,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
         SysRoleDO sysRoleDO = sysRoleConverter.convertDTO2DO(dto);
 
         if (sysRoleDO.getId() == null) {
-            // 新增操作 - 检查角色ID是否已存在
-            if (this.count(new LambdaQueryWrapper<SysRoleDO>()
-                    .eq(SysRoleDO::getRoleId, dto.getRoleId())
-                    .eq(SysRoleDO::getDeleted, false)) > 0) {
+            // 新增操作 - 检查角色ID是否已存在(逻辑删除的角色也不能重复)
+            if (this.baseMapper.countAll(dto.getRoleId()) > 0) {
                 throw BizException.exp("角色ID已存在: " + dto.getRoleId());
             }
             log.info("新增角色: roleId={}, roleName={}, operator={}", sysRoleDO.getRoleId(), sysRoleDO.getRoleName(), WebUtil.getUserId());
@@ -121,9 +119,8 @@ public class SysRoleServiceImpl extends ServiceImpl<SysRoleMapper, SysRoleDO> im
             throw BizException.exp("角色不存在或已被删除: " + roleId);
         }
 
-        // 逻辑删除角色
-        roleDO.setDeleted(true);
-        this.updateById(roleDO);
+        // 逻辑删除角色，确保全局或实体类配置了逻辑删除字段
+        this.removeById(roleDO);
 
         // 删除角色菜单关联关系
         sysRoleMenuMapper.delete(new LambdaQueryWrapper<SysRoleMenuDO>().eq(SysRoleMenuDO::getRoleId, roleId));

@@ -2,6 +2,7 @@ package com.lc.system.domain.dto;
 
 import com.lc.framework.core.utils.validator.Groups.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,7 +26,7 @@ public class SysRoleDTO implements Serializable {
     /**
      * 主键ID
      */
-    @NotBlank(message = "id不能为空", groups = { UpdateGroup.class, DeleteGroup.class })
+    @NotNull(message = "id不能为空", groups = { UpdateGroup.class, DeleteGroup.class })
     private Integer id;
 
     /**
@@ -43,7 +44,7 @@ public class SysRoleDTO implements Serializable {
     /**
      * 角色描述
      */
-    @NotBlank(message = "", groups = AddGroup.class)
+    @NotBlank(message = "描述不能为空", groups = AddGroup.class)
     private String description;
 
     /**

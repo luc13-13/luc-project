@@ -5,6 +5,7 @@ import com.lc.system.domain.bo.SysRoleBO;
 import com.lc.system.domain.entity.SysRoleDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -16,6 +17,9 @@ import java.util.List;
  */
 @Mapper
 public interface SysRoleMapper extends BaseMapper<SysRoleDO> {
+
+    @Select("select count(*) from luc_system.sys_role where role_id = #{roleId, jdbcType= VARCHAR}")
+    int countAll(String roleId);
 
     /**
      * 查询角色列表（含关联菜单ID）

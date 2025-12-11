@@ -6,21 +6,9 @@
       "description": "consul acl token to use for config and discovery."
     },
     {
-      "name": "mybatis-plus.auto-fill-dt.enabled",
+      "name": "mybatis-plus.auto-fill-handler.enabled",
       "type": "java.lang.Boolean",
       "description": "Enable meta-object-handler of CreateAndUpdateObjectHandler to auto fill insert and update time."
-    },
-    {
-      "name": "mybatis-plus.auto-fill-dt.insert-field",
-      "type": "java.lang.String",
-      "description": "insert time field in table.",
-      "sourceType": "com.lc.framework.web.mybatis.CreateAndUpdateObjectHandler$insertFieldName"
-    },
-    {
-      "name": "mybatis-plus.auto-fill-dt.update-field",
-      "type": "java.lang.String",
-      "description": "update time field in table.",
-      "sourceType": "com.lc.framework.web.mybatis.CreateAndUpdateObjectHandler$updateFieldName"
     }
   ],
   "hints": []

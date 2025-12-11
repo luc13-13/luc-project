@@ -23,7 +23,7 @@ public class MybatisPlusConfig {
 
     @Bean
     @ConditionalOnMissingBean
-    @ConditionalOnProperty(prefix = "mybatis-plus.auto-fill-handler", value = "enabled", havingValue = "true", matchIfMissing = true)
+    @ConditionalOnProperty(prefix = "mybatis-plus.auto-fill-handler", value = "enabled", havingValue = "true")
      public CreateAndUpdateObjectHandler createAndUpdateObjectHandler(MetaObjectHandlerProperties  metaObjectHandlerProperties){
         log.info("createAndUpdateObjectHandler with properties:{}", metaObjectHandlerProperties);
         return new CreateAndUpdateObjectHandler(metaObjectHandlerProperties);

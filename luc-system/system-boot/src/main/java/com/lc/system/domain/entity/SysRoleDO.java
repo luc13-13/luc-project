@@ -1,9 +1,6 @@
 package com.lc.system.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -75,6 +72,7 @@ public class SysRoleDO implements Serializable {
     /**
      * 逻辑删除(0:未删除 1:已删除)
      */
+    @TableLogic
     @TableField("deleted")
     private Boolean deleted;
 
