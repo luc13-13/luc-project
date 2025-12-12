@@ -5,6 +5,7 @@ import com.lc.framework.core.page.PaginationResult;
 import com.lc.product.center.domain.dto.ProductInfoDTO;
 import com.lc.product.center.domain.entity.ProductInfoDO;
 import com.lc.product.center.domain.vo.ProductInfoVO;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -63,6 +64,7 @@ public interface ProductInfoService extends IService<ProductInfoDO> {
      * @param id 产品ID
      * @return 是否删除成功
      */
+    @Transactional(rollbackFor = Exception.class)
     Boolean deleteProduct(Long id);
 
     /**
@@ -71,6 +73,7 @@ public interface ProductInfoService extends IService<ProductInfoDO> {
      * @param ids 产品ID列表
      * @return 是否删除成功
      */
+    @Transactional(rollbackFor = Exception.class)
     Boolean batchDeleteProduct(List<Long> ids);
 }
 

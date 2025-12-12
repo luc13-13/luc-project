@@ -38,13 +38,19 @@ mybatis-plus:
   mapper-locations: classpath*:mapper/*.xml
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  auto-fill-handler:
+    enabled: true
+    insert-date-field-name: dtCreated
+    insert-user-field-name: createdBy
+    update-date-field-name: dtModified
+    update-user-field-name: modifiedBy
 
 # SpringDoc OpenAPI 配置
 springdoc:
   info:
     title: "product-center API文档"
     version: "1.0.0"
-    description: "基于LUC框架的framework-archetype服务API文档"
+    description: "基于LUC框架的产品管理系统服务API文档"
 
 # 日志配置
 logging:

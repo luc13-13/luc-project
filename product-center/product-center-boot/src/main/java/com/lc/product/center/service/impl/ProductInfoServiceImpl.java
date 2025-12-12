@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lc.framework.core.mvc.BizException;
 import com.lc.framework.core.page.PaginationResult;
 import com.lc.product.center.domain.dto.ProductInfoDTO;
 import com.lc.product.center.domain.entity.ProductInfoDO;
@@ -98,14 +99,10 @@ public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, Produ
     public Boolean deleteProduct(Long id) {
         ProductInfoDO productDO = this.getById(id);
         if (productDO == null) {
-            return false;
+            throw BizException.exp("产品不存在");
         }
-
         // 逻辑删除
-        productDO.setDeleted((short) 1);
-        productDO.setDtModified(new Date());
-
-        return this.updateById(productDO);
+        return this.removeById(productDO);
     }
 
     @Override
@@ -115,14 +112,8 @@ public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, Produ
         }
 
         List<ProductInfoDO> products = this.listByIds(ids);
-        Date now = new Date();
 
-        products.forEach(product -> {
-            product.setDeleted((short) 1);
-            product.setDtModified(now);
-        });
-
-        return this.updateBatchById(products);
+        return this.removeByIds(products);
     }
 
     /**
