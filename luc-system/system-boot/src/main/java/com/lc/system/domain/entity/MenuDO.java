@@ -1,5 +1,6 @@
 package com.lc.system.domain.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
@@ -80,25 +81,25 @@ public class MenuDO implements Serializable {
     /**
      * 创建者
      */
-    @TableField("created_by")
+    @TableField(value = "created_by", fill = FieldFill.INSERT)
     private String createdBy;
 
     /**
      * 创建时间
      */
-    @TableField("dt_created")
+    @TableField(value = "dt_created", fill = FieldFill.INSERT)
     private Date dtCreated;
 
     /**
      * 更新者
      */
-    @TableField("modified_by")
+    @TableField(value = "modified_by", fill = FieldFill.UPDATE)
     private String modifiedBy;
 
     /**
      * 更新时间
      */
-    @TableField("dt_modified")
+    @TableField(value = "dt_modified", fill = FieldFill.UPDATE)
     private Date dtModified;
 
     /**
@@ -108,4 +109,3 @@ public class MenuDO implements Serializable {
     private Short deleted;
 
 }
-

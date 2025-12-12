@@ -1,6 +1,9 @@
 package com.lc.system.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lc.framework.core.mvc.BizException;
 import com.lc.framework.web.utils.WebUtil;
 import com.lc.system.converter.MenuConverter;
 import com.lc.system.converter.MenuMetaConverter;
@@ -35,7 +38,8 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
 
     private final MenuMetaService menuMetaService;
 
-    public MenuServiceImpl(MenuConverter menuConverter, MenuMetaConverter menuMetaConverter, MenuMetaService menuMetaService) {
+    public MenuServiceImpl(MenuConverter menuConverter, MenuMetaConverter menuMetaConverter,
+            MenuMetaService menuMetaService) {
         this.menuConverter = menuConverter;
         this.menuMetaConverter = menuMetaConverter;
         this.menuMetaService = menuMetaService;
@@ -75,5 +79,51 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
         this.save(menuDO);
         menuMetaService.save(menuMetaDO);
     }
-}
 
+    @Override
+    public void updateMenu(MenuDTO dto) {
+        // 1. 检查菜单是否存在
+        MenuDO existingMenu = this.getById(dto.getId());
+        if (existingMenu == null) {
+            throw BizException.exp("菜单不存在: " + dto.getId());
+        }
+
+        // 2. 更新 MenuDO
+        MenuDO menuDO = menuConverter.convertDTO2DO(dto);
+        this.updateById(menuDO);
+
+        // 3. 更新 MenuMetaDO
+        // 注意：DTO 中的 children 被忽略，不进行级联更新
+        if (dto.getMeta() != null) {
+            MenuMetaDO menuMetaDO = menuMetaConverter.convertMenuDTO2DO(dto);
+
+            LambdaUpdateWrapper<MenuMetaDO> metaUpdateWrapper = new LambdaUpdateWrapper<>();
+            metaUpdateWrapper.eq(MenuMetaDO::getMenuId, existingMenu.getMenuId());
+            menuMetaService.update(menuMetaDO, metaUpdateWrapper);
+        }
+    }
+
+    @Override
+    public void deleteMenu(Long id) {
+        // 1. 检查菜单是否存在
+        MenuDO menuDO = this.getById(id);
+        if (menuDO == null) {
+            throw BizException.exp("菜单不存在: " + id);
+        }
+
+        // 2. 检查是否有子菜单 (查询数据库)
+        LambdaQueryWrapper<MenuDO> childQuery = new LambdaQueryWrapper<>();
+        childQuery.eq(MenuDO::getParentMenuId, menuDO.getMenuId());
+        if (this.count(childQuery) > 0) {
+            throw BizException.exp("存在子菜单，不允许删除");
+        }
+
+        // 3. 逻辑删除 MenuDO
+        this.removeById(id);
+
+        // 4. 逻辑删除 MenuMetaDO
+        LambdaUpdateWrapper<MenuMetaDO> metaDeleteWrapper = new LambdaUpdateWrapper<>();
+        metaDeleteWrapper.eq(MenuMetaDO::getMenuId, menuDO.getMenuId());
+        menuMetaService.remove(metaDeleteWrapper);
+    }
+}

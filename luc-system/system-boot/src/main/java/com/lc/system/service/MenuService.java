@@ -36,5 +36,11 @@ public interface MenuService extends IService<MenuDO> {
 
     @Transactional(rollbackFor = Exception.class)
     void saveMenu(MenuDTO dto);
+
+    @Transactional(rollbackFor = Exception.class)
+    void updateMenu(MenuDTO dto);
+
+    @Transactional(rollbackFor = Exception.class)
+    void deleteMenu(Long id);
 }
 

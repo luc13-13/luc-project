@@ -54,21 +54,23 @@ public class MenuController {
     }
 
     @Operation(summary = "保存菜单")
-    @PostMapping("/save")
+    @PostMapping("/add")
     public WebResult<String> saveMenu(@RequestBody @Validated(Groups.AddGroup.class) MenuDTO dto) {
         menuService.saveMenu(dto);
-        return WebResult.success(MessageUtils.getMessage("menu.api.save.success"));
+        return WebResult.success(MessageUtils.getMessage("add.success"));
     }
 
     @Operation(summary = "更新菜单")
     @PostMapping("/update")
     public WebResult<String> updateMenu(@RequestBody @Validated(Groups.UpdateGroup.class) MenuDTO dto) {
-        return WebResult.success(MessageUtils.getMessage("menu.api.update.success"));
+        menuService.updateMenu(dto);
+        return WebResult.success(MessageUtils.getMessage("update.success"));
     }
 
     @Operation(summary = "删除菜单")
     @PostMapping("/delete")
     public WebResult<String> deleteMenu(@RequestBody @Validated(Groups.DeleteGroup.class) MenuDTO dto) {
-        return WebResult.success(MessageUtils.getMessage("menu.api.update.success"));
+        menuService.deleteMenu(dto.getId());
+        return WebResult.success(MessageUtils.getMessage("delete.success"));
     }
 }
