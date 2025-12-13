@@ -7,25 +7,26 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 系统角色表(luc_system.sys_role)表实体类
+ * 组织架构表(luc_system.sys_org)实体类
  *
  * @author lucheng
- * @since 2025-09-04
+ * @since 2025-12-13
  */
 @Data
-@TableName("luc_system.sys_role")
-public class SysRoleDO implements Serializable {
+@TableName("luc_system.sys_org")
+public class SysOrgDO implements Serializable {
+
     /**
      * 主键ID
      */
-    @TableId("id")
-    private Integer id;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
-     * 角色ID
+     * 组织ID
      */
-    @TableField("role_id")
-    private String roleId;
+    @TableField("org_id")
+    private String orgId;
 
     /**
      * 租户ID
@@ -34,19 +35,31 @@ public class SysRoleDO implements Serializable {
     private String tenantId;
 
     /**
-     * 角色名称
+     * 父级组织ID
      */
-    @TableField("role_name")
-    private String roleName;
+    @TableField("parent_org_id")
+    private String parentOrgId;
 
     /**
-     * 角色描述
+     * 组织名称
      */
-    @TableField("description")
-    private String description;
+    @TableField("org_name")
+    private String orgName;
 
     /**
-     * 状态(0:禁用 1:启用)
+     * 组织层级
+     */
+    @TableField("org_level")
+    private Integer orgLevel;
+
+    /**
+     * 排序号
+     */
+    @TableField("sort_order")
+    private Integer sortOrder;
+
+    /**
+     * 状态(0禁用 1启用)
      */
     @TableField("status")
     private Boolean status;
@@ -76,10 +89,9 @@ public class SysRoleDO implements Serializable {
     private Date dtModified;
 
     /**
-     * 逻辑删除(0:未删除 1:已删除)
+     * 逻辑删除
      */
     @TableLogic
     @TableField("deleted")
     private Boolean deleted;
-
 }

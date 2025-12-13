@@ -31,6 +31,12 @@ public class SysUserDO implements Serializable {
     private String userId;
 
     /**
+     * 租户ID
+     */
+    @TableField("tenant_id")
+    private String tenantId;
+
+    /**
      * 部门ID
      */
     @TableField("dept_id")

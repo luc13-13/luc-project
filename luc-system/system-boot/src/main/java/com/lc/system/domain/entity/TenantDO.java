@@ -7,25 +7,20 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 系统角色表(luc_system.sys_role)表实体类
+ * 租户表(luc_system.tenant)实体类
  *
  * @author lucheng
- * @since 2025-09-04
+ * @since 2025-12-13
  */
 @Data
-@TableName("luc_system.sys_role")
-public class SysRoleDO implements Serializable {
+@TableName("luc_system.tenant")
+public class TenantDO implements Serializable {
+
     /**
      * 主键ID
      */
-    @TableId("id")
-    private Integer id;
-
-    /**
-     * 角色ID
-     */
-    @TableField("role_id")
-    private String roleId;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 租户ID
@@ -34,22 +29,10 @@ public class SysRoleDO implements Serializable {
     private String tenantId;
 
     /**
-     * 角色名称
+     * 租户名称
      */
-    @TableField("role_name")
-    private String roleName;
-
-    /**
-     * 角色描述
-     */
-    @TableField("description")
-    private String description;
-
-    /**
-     * 状态(0:禁用 1:启用)
-     */
-    @TableField("status")
-    private Boolean status;
+    @TableField("tenant_name")
+    private String tenantName;
 
     /**
      * 创建者
@@ -76,10 +59,9 @@ public class SysRoleDO implements Serializable {
     private Date dtModified;
 
     /**
-     * 逻辑删除(0:未删除 1:已删除)
+     * 逻辑删除
      */
     @TableLogic
     @TableField("deleted")
     private Boolean deleted;
-
 }

@@ -7,25 +7,20 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 系统角色表(luc_system.sys_role)表实体类
+ * 租户配额表(luc_system.sys_tenant_quota)实体类
  *
  * @author lucheng
- * @since 2025-09-04
+ * @since 2025-12-13
  */
 @Data
-@TableName("luc_system.sys_role")
-public class SysRoleDO implements Serializable {
+@TableName("luc_system.sys_tenant_quota")
+public class SysTenantQuotaDO implements Serializable {
+
     /**
      * 主键ID
      */
-    @TableId("id")
-    private Integer id;
-
-    /**
-     * 角色ID
-     */
-    @TableField("role_id")
-    private String roleId;
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 租户ID
@@ -34,22 +29,28 @@ public class SysRoleDO implements Serializable {
     private String tenantId;
 
     /**
-     * 角色名称
+     * 产品代码
      */
-    @TableField("role_name")
-    private String roleName;
+    @TableField("product_code")
+    private String productCode;
 
     /**
-     * 角色描述
+     * 配额数量
      */
-    @TableField("description")
-    private String description;
+    @TableField("quota")
+    private Integer quota;
 
     /**
-     * 状态(0:禁用 1:启用)
+     * 已使用数量
      */
-    @TableField("status")
-    private Boolean status;
+    @TableField("used")
+    private Integer used;
+
+    /**
+     * 过期时间
+     */
+    @TableField("expire_date")
+    private Date expireDate;
 
     /**
      * 创建者
@@ -74,12 +75,4 @@ public class SysRoleDO implements Serializable {
      */
     @TableField(value = "dt_modified", fill = FieldFill.UPDATE)
     private Date dtModified;
-
-    /**
-     * 逻辑删除(0:未删除 1:已删除)
-     */
-    @TableLogic
-    @TableField("deleted")
-    private Boolean deleted;
-
 }
