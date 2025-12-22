@@ -34,4 +34,8 @@ public interface StringConstants {
     String HTTPS = "https";
 
     String HTTP = "http";
+
+    String STATUS_TRUE = "1";
+
+    String STATUS_FALSE = "0";
 }

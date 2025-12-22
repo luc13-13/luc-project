@@ -365,9 +365,46 @@ sequenceDiagram
 
 ## 四、账号体系
 
-## 五、luc-framework脚手架核心功能
+## 五、产品体系
 
-### 5.1 framework-apidoc
+### 5.1 产品中心
+
+```txt
+┌─────────────────────────────────────────────────────────────────────────┐
+│                                                                         │
+│  product_info (四层产品定义)                                            │
+│  PK: (product_code, sub_product_code, billing_item_code,               │
+│       sub_billing_item_code)                                           │
+│                                                                         │
+│       ▲                                           ▲                     │
+│       │                                           │                     │
+│       │ 引用四层编码                               │ 引用四层编码         │
+│       │                                           │                     │
+│  ┌────┴────────────────────┐         ┌────────────┴──────────────────┐ │
+│  │ sku_item_combination    │         │ metering_dimension_mapping   │ │
+│  │ (SKU的计费项组合)        │         │ (第三方计量映射)              │ │
+│  └────┬────────────────────┘         └───────────────────────────────┘ │
+│       │                                                                 │
+│       │ sku_code                                                        │
+│       ▼                                                                 │
+│  ┌─────────────────────────┐                                           │
+│  │ product_sku             │                                           │
+│  │ (可售卖单元)             │                                           │
+│  └────┬────────────────────┘                                           │
+│       │                                                                 │
+│       │ sku_code                                                        │
+│       ▼                                                                 │
+│  ┌─────────────────────────┐                                           │
+│  │ sku_pricing             │                                           │
+│  │ (SKU定价策略)            │                                           │
+│  └─────────────────────────┘                                           │
+│                                                                         │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+## 六、luc-framework脚手架核心功能
+
+### 6.1 framework-apidoc
 
 日志依赖，向外暴露/v3/api-doc接口，提供日志信息，支持配置鉴权接口（指向认证服务器）
 
@@ -416,7 +453,7 @@ springdoc:
 通过 [RefreshRouteEventListener.java](../../authorization-gateway/src/main/java/com/lc/authorization/gateway/config/RefreshRouteEventListener.java)
 监听服务变化，聚合各服务API文档，访问<http://网关服务地址/swagger-ui/index.html>
 
-## 六、其他配置
+## 七、其他配置
 
 ### 1、Maven
 
