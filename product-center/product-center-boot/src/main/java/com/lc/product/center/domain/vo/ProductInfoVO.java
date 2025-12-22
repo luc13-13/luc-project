@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -22,6 +23,10 @@ import java.util.Date;
 @NoArgsConstructor
 @Schema(name = "ProductInfoVO", description = "产品信息视图对象")
 public class ProductInfoVO implements Serializable {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /**
      * 主键id
      */
@@ -29,28 +34,38 @@ public class ProductInfoVO implements Serializable {
     private Long id;
 
     /**
-     * 产品code
+     * 租户ID
      */
-    @Schema(description = "产品code")
+    @Schema(description = "租户ID")
+    private String tenantId;
+
+    // ==================== 四层产品结构 ====================
+
+    /**
+     * 产品编码
+     */
+    @Schema(description = "产品编码")
     private String productCode;
 
     /**
-     * 子产品code
+     * 规格族编码
      */
-    @Schema(description = "子产品code")
+    @Schema(description = "规格族编码")
     private String subProductCode;
 
     /**
-     * 计费项code
+     * 计费项编码
      */
-    @Schema(description = "计费项code")
+    @Schema(description = "计费项编码")
     private String billingItemCode;
 
     /**
-     * 子计费项code
+     * 计费规格编码
      */
-    @Schema(description = "子计费项code")
+    @Schema(description = "计费规格编码")
     private String subBillingItemCode;
+
+    // ==================== 名称 ====================
 
     /**
      * 产品名称
@@ -59,9 +74,9 @@ public class ProductInfoVO implements Serializable {
     private String productName;
 
     /**
-     * 子产品名称
+     * 规格族名称
      */
-    @Schema(description = "子产品名称")
+    @Schema(description = "规格族名称")
     private String subProductName;
 
     /**
@@ -71,40 +86,72 @@ public class ProductInfoVO implements Serializable {
     private String billingItemName;
 
     /**
-     * 子计费项名称
+     * 计费规格名称
      */
-    @Schema(description = "子计费项名称")
+    @Schema(description = "计费规格名称")
     private String subBillingItemName;
 
-    /**
-     * 单位，个、次、GB等
-     */
-    @Schema(description = "单位，个、次、GB等")
-    private String unit;
+    // ==================== 规格属性 ====================
 
     /**
-     * 价格
+     * 规格值
      */
-    @Schema(description = "价格")
-    private BigDecimal price;
+    @Schema(description = "规格值")
+    private BigDecimal specValue;
 
     /**
-     * 计费规格
+     * 规格单位
      */
-    @Schema(description = "计费规格")
-    private BigDecimal chargeSize;
+    @Schema(description = "规格单位")
+    private String specUnit;
+
+    // ==================== 计费属性 ====================
 
     /**
-     * 生效状态（1生效 0失效）
+     * 基准单价
      */
-    @Schema(description = "生效状态（1生效 0失效）")
-    private Short status;
+    @Schema(description = "基准单价")
+    private BigDecimal basePrice;
+
+    /**
+     * 价格系数
+     */
+    @Schema(description = "价格系数")
+    private BigDecimal priceFactor;
+
+    /**
+     * 计算后的单价 = basePrice * priceFactor
+     */
+    @Schema(description = "计算后的单价")
+    private BigDecimal unitPrice;
+
+    /**
+     * 计量单位（账单展示）
+     */
+    @Schema(description = "计量单位")
+    private String meteringUnit;
+
+    // ==================== 状态与排序 ====================
+
+    /**
+     * 状态: DRAFT/ACTIVE/INACTIVE
+     */
+    @Schema(description = "状态")
+    private String status;
 
     /**
      * 状态描述
      */
     @Schema(description = "状态描述")
     private String statusDesc;
+
+    /**
+     * 排序
+     */
+    @Schema(description = "排序")
+    private Integer sortOrder;
+
+    // ==================== 审计字段 ====================
 
     /**
      * 创建者
@@ -129,10 +176,4 @@ public class ProductInfoVO implements Serializable {
      */
     @Schema(description = "更新时间")
     private Date dtModified;
-
-    /**
-     * 备注
-     */
-    @Schema(description = "备注")
-    private String remark;
 }

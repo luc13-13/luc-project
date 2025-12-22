@@ -42,20 +42,36 @@ public interface ProductInfoService extends IService<ProductInfoDO> {
     ProductInfoVO getProductById(Long id);
 
     /**
+     * 根据四层编码查询产品信息
+     *
+     * @param tenantId           租户ID
+     * @param productCode        产品编码
+     * @param subProductCode     规格族编码
+     * @param billingItemCode    计费项编码
+     * @param subBillingItemCode 计费规格编码
+     * @return 产品信息
+     */
+    ProductInfoVO getProductByFourLevelCode(String tenantId, String productCode,
+            String subProductCode, String billingItemCode,
+            String subBillingItemCode);
+
+    /**
      * 创建产品
      *
      * @param productDTO 产品信息
      * @return 创建的产品信息
      */
+    @Transactional(rollbackFor = Exception.class)
     ProductInfoVO createProduct(ProductInfoDTO productDTO);
 
     /**
      * 更新产品
      *
-     * @param id 产品ID
+     * @param id         产品ID
      * @param productDTO 产品信息
      * @return 更新的产品信息
      */
+    @Transactional(rollbackFor = Exception.class)
     ProductInfoVO updateProduct(Long id, ProductInfoDTO productDTO);
 
     /**
@@ -75,5 +91,31 @@ public interface ProductInfoService extends IService<ProductInfoDO> {
      */
     @Transactional(rollbackFor = Exception.class)
     Boolean batchDeleteProduct(List<Long> ids);
-}
 
+    /**
+     * 获取产品编码列表
+     *
+     * @param tenantId 租户ID
+     * @return 产品编码列表
+     */
+    List<String> getProductCodes(String tenantId);
+
+    /**
+     * 获取规格族编码列表
+     *
+     * @param tenantId    租户ID
+     * @param productCode 产品编码
+     * @return 规格族编码列表
+     */
+    List<String> getSubProductCodes(String tenantId, String productCode);
+
+    /**
+     * 获取计费项编码列表
+     *
+     * @param tenantId       租户ID
+     * @param productCode    产品编码
+     * @param subProductCode 规格族编码
+     * @return 计费项编码列表
+     */
+    List<String> getBillingItemCodes(String tenantId, String productCode, String subProductCode);
+}

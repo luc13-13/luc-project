@@ -4,11 +4,13 @@ import com.lc.framework.core.page.PaginationParams;
 import com.lc.framework.core.utils.validator.Groups;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
@@ -22,101 +24,135 @@ import java.math.BigDecimal;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(name = "ProductInfoDTO")
-public class ProductInfoDTO implements Serializable , PaginationParams {
+@Schema(name = "ProductInfoDTO", description = "产品信息DTO")
+public class ProductInfoDTO implements Serializable, PaginationParams {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
+
     /**
      * 主键id
      */
-    @Schema(name = "id", title = "主键id")
+    @Schema(description = "主键id")
     private Long id;
 
     /**
-     * 产品code
+     * 租户ID
      */
-    @Schema(name = "productCode", title = "产品code")
+    @Schema(description = "租户ID")
+    private String tenantId;
+
+    // ==================== 四层产品结构 ====================
+
+    /**
+     * 产品编码: CVM/CBS/CLB
+     */
+    @Schema(description = "产品编码: CVM/CBS/CLB")
+    @NotBlank(message = "产品编码不能为空", groups = { Groups.AddGroup.class })
     private String productCode;
 
     /**
-     * 子产品code
+     * 规格族编码: S5_GENERAL/C6_COMPUTE
      */
-    @Schema(name = "subProductCode", title = "子产品code")
+    @Schema(description = "规格族编码: S5_GENERAL/C6_COMPUTE")
+    @NotBlank(message = "规格族编码不能为空", groups = { Groups.AddGroup.class })
     private String subProductCode;
 
     /**
-     * 计费项code
+     * 计费项编码: CPU/MEMORY/STORAGE
      */
-    @Schema(name = "billingItemCode", title = "计费项code")
+    @Schema(description = "计费项编码: CPU/MEMORY/STORAGE")
+    @NotBlank(message = "计费项编码不能为空", groups = { Groups.AddGroup.class })
     private String billingItemCode;
 
     /**
-     * 子计费项code
+     * 计费规格编码: INTEL_4C/HYGON_4C
      */
-    @Schema(name = "subBillingItemCode", title = "子计费项code")
+    @Schema(description = "计费规格编码: INTEL_4C/HYGON_4C")
+    @NotBlank(message = "计费规格编码不能为空", groups = { Groups.AddGroup.class })
     private String subBillingItemCode;
+
+    // ==================== 名称 ====================
 
     /**
      * 产品名称
      */
-    @Schema(name = "productName", title = "产品名称")
+    @Schema(description = "产品名称")
     private String productName;
 
     /**
-     * 子产品名称
+     * 规格族名称
      */
-    @Schema(name = "subProductName", title = "子产品名称")
+    @Schema(description = "规格族名称")
     private String subProductName;
 
     /**
      * 计费项名称
      */
-    @Schema(name = "billingItemName", title = "计费项名称")
+    @Schema(description = "计费项名称")
     private String billingItemName;
 
     /**
-     * 子计费项名称
+     * 计费规格名称
      */
-    @Schema(name = "subBillingItemName", title = "子计费项名称")
+    @Schema(description = "计费规格名称")
     private String subBillingItemName;
 
-    /**
-     * 单位，个、次、GB等
-     */
-    @Schema(name = "unit", title = "单位，个、次、GB等")
-    private String unit;
+    // ==================== 规格属性 ====================
 
     /**
-     * 价格
+     * 规格值: 4, 8, 100
      */
-    @Schema(name = "price", title = "价格")
-    private BigDecimal price;
+    @Schema(description = "规格值: 4, 8, 100")
+    private BigDecimal specValue;
 
     /**
-     * 计费规格
+     * 规格单位: 核, GB, Mbps
      */
-    @Schema(name = "chargeSize", title = "计费规格")
-    private BigDecimal chargeSize;
+    @Schema(description = "规格单位: 核, GB, Mbps")
+    private String specUnit;
+
+    // ==================== 计费属性 ====================
 
     /**
-     * 生效状态（1生效 0实效）
+     * 基准单价
      */
-    @Schema(name = "status", title = "生效状态（1生效 0实效）")
-    private Short status;
+    @Schema(description = "基准单价")
+    private BigDecimal basePrice;
 
     /**
-     * 备注
+     * 价格系数
      */
-    @Schema(name = "remark", title = "备注")
-    private String remark;
+    @Schema(description = "价格系数，默认1.00")
+    private BigDecimal priceFactor;
 
-    @Min(value = 1, message = "{page.index}", groups = {Groups.PageGroup.class})
+    /**
+     * 计量单位（账单展示）: 核·小时, GB·月
+     */
+    @Schema(description = "计量单位（账单展示）: 核·小时, GB·月")
+    private String meteringUnit;
+
+    // ==================== 状态与排序 ====================
+
+    /**
+     * 状态: DRAFT/ACTIVE/INACTIVE
+     */
+    @Schema(description = "状态: DRAFT/ACTIVE/INACTIVE")
+    private String status;
+
+    /**
+     * 排序
+     */
+    @Schema(description = "排序")
+    private Integer sortOrder;
+
+    // ==================== 分页参数 ====================
+
+    @Min(value = 1, message = "{page.index}", groups = { Groups.PageGroup.class })
     private Long pageIndex;
 
-    @Min(value = 1, message = "{page.pageSize}", groups = {Groups.PageGroup.class})
+    @Min(value = 1, message = "{page.pageSize}", groups = { Groups.PageGroup.class })
     private Long pageSize;
 
     private Long total;
-
-
-
 }
-
