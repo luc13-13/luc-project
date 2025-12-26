@@ -1,5 +1,7 @@
 package com.lc.product.center.domain.bo;
 
+import com.lc.framework.core.constants.NumberConstants;
+import com.lc.product.center.constants.ProductStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -172,6 +174,6 @@ public class ProductInfoBO implements Serializable {
      * 是否生效
      */
     public boolean isActive() {
-        return "ACTIVE".equals(this.status) && (this.deleted == null || this.deleted == 0);
+        return ProductStatusEnum.ACTIVE.getCode().equals(this.status) && (this.deleted == null || this.deleted == NumberConstants.STATUS_FALSE.intValue());
     }
 }
