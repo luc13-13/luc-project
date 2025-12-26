@@ -9,6 +9,7 @@ import com.lc.product.center.service.ProductInfoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -79,19 +80,18 @@ public class ProductController {
         return WebResult.success(result);
     }
 
-    @PutMapping("/update/{id}")
+    @PutMapping("/update")
     @Operation(summary = "更新产品", description = "根据产品ID更新产品信息")
     public WebResult<ProductInfoVO> update(
-            @Parameter(description = "产品ID") @PathVariable Long id,
-            @RequestBody ProductInfoDTO productDTO) {
-        ProductInfoVO result = productInfoService.updateProduct(id, productDTO);
+            @RequestBody @Validated(Groups.UpdateGroup.class) ProductInfoDTO productDTO) {
+        ProductInfoVO result = productInfoService.updateProduct(productDTO);
         return WebResult.success(result);
     }
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "删除产品", description = "根据产品ID删除产品（逻辑删除）")
     public WebResult<Boolean> delete(
-            @Parameter(description = "产品ID") @PathVariable Long id) {
+            @Parameter(description = "产品ID") @PathVariable @NotNull(message = "id不能为空") Long id) {
         Boolean result = productInfoService.deleteProduct(id);
         return WebResult.success(result);
     }

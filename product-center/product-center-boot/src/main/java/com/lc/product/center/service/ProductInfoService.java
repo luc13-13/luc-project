@@ -65,14 +65,13 @@ public interface ProductInfoService extends IService<ProductInfoDO> {
     ProductInfoVO createProduct(ProductInfoDTO productDTO);
 
     /**
-     * 更新产品
+     * 更新产品信息
      *
-     * @param id         产品ID
-     * @param productDTO 产品信息
-     * @return 更新的产品信息
+     * @param productDTO 产品DTO（包含ID）
+     * @return 更新后的产品信息
      */
     @Transactional(rollbackFor = Exception.class)
-    ProductInfoVO updateProduct(Long id, ProductInfoDTO productDTO);
+    ProductInfoVO updateProduct(ProductInfoDTO productDTO);
 
     /**
      * 删除产品
