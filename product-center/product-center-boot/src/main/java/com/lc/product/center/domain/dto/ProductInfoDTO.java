@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,13 +36,14 @@ public class ProductInfoDTO implements Serializable, PaginationParams {
      * 主键id
      */
     @Schema(description = "主键id")
-    @NotNull(groups = {Groups.UpdateGroup.class, Groups.DeleteGroup.class})
+    @NotNull(groups = { Groups.UpdateGroup.class, Groups.DeleteGroup.class })
     private Long id;
 
     /**
      * 租户ID
      */
     @Schema(description = "租户ID")
+    @Null(message = "禁止修改租户ID", groups = Groups.UpdateGroup.class)
     private String tenantId;
 
     // ==================== 四层产品结构 ====================
@@ -50,28 +52,32 @@ public class ProductInfoDTO implements Serializable, PaginationParams {
      * 产品编码: CVM/CBS/CLB
      */
     @Schema(description = "产品编码: CVM/CBS/CLB")
-    @NotBlank(message = "产品编码不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
+    @NotBlank(message = "产品编码不能为空", groups = Groups.AddGroup.class)
+    @Null(message = "禁止修改产品编码", groups = Groups.UpdateGroup.class)
     private String productCode;
 
     /**
      * 规格族编码: S5_GENERAL/C6_COMPUTE
      */
     @Schema(description = "规格族编码: S5_GENERAL/C6_COMPUTE")
-    @NotBlank(message = "规格族编码不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
+    @NotBlank(message = "规格族编码不能为空", groups = Groups.AddGroup.class)
+    @Null(message = "禁止修改", groups = Groups.UpdateGroup.class)
     private String subProductCode;
 
     /**
      * 计费项编码: CPU/MEMORY/STORAGE
      */
     @Schema(description = "计费项编码: CPU/MEMORY/STORAGE")
-    @NotBlank(message = "计费项编码不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
+    @NotBlank(message = "计费项编码不能为空", groups = Groups.AddGroup.class)
+    @Null(message = "禁止修改", groups = Groups.UpdateGroup.class)
     private String billingItemCode;
 
     /**
      * 计费规格编码: INTEL_4C/HYGON_4C
      */
     @Schema(description = "子计费规格编码: INTEL_4C/HYGON_4C")
-    @NotBlank(message = "子计费规格编码不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
+    @NotBlank(message = "子计费规格编码不能为空", groups = Groups.AddGroup.class)
+    @Null(message = "禁止修改子计费规格编码", groups = Groups.UpdateGroup.class)
     private String subBillingItemCode;
 
     // ==================== 名称 ====================

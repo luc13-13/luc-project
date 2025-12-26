@@ -87,22 +87,6 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
         // 设置默认值
         entity.setTenantId(tenantId);
 
-        if (entity.getSkuType() == null) {
-            entity.setSkuType(com.lc.product.center.constants.SkuTypeConstants.INSTANCE);
-        }
-        if (entity.getSaleable() == null) {
-            entity.setSaleable(com.lc.framework.core.constants.NumberConstants.STATUS_TRUE.intValue());
-        }
-        if (entity.getVisible() == null) {
-            entity.setVisible(com.lc.framework.core.constants.NumberConstants.STATUS_TRUE.intValue());
-        }
-        if (!org.springframework.util.StringUtils.hasText(entity.getStatus())) {
-            entity.setStatus(com.lc.product.center.constants.ProductStatusEnum.ACTIVE.getCode());
-        }
-
-        entity.setDeleted(com.lc.framework.core.constants.NumberConstants.STATUS_FALSE.intValue());
-        entity.setDtCreated(new java.util.Date());
-
         return entity;
     }
 

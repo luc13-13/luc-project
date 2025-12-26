@@ -4,11 +4,10 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.lc.framework.core.constants.NumberConstants;
 import com.lc.framework.core.mvc.BizException;
 import com.lc.framework.core.page.PaginationResult;
 import com.lc.product.center.constants.ProductDefaultConstants;
-import com.lc.product.center.constants.ProductStatusConstants;
+import com.lc.product.center.constants.ProductStatusEnum;
 import com.lc.product.center.converter.ProductInfoConverter;
 import com.lc.product.center.domain.dto.ProductInfoDTO;
 import com.lc.product.center.domain.entity.ProductInfoDO;
@@ -19,8 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -112,19 +109,12 @@ public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, Produ
         productDO.setTenantId(tenantId);
 
         // 设置默认值
-        if (productDO.getPriceFactor() == null) {
-            productDO.setPriceFactor(BigDecimal.ONE);
-        }
         if (!StringUtils.hasText(productDO.getStatus())) {
-            productDO.setStatus(ProductStatusConstants.ACTIVE);
+            productDO.setStatus(ProductStatusEnum.ACTIVE.getCode());
         }
         if (productDO.getSortOrder() == null) {
             productDO.setSortOrder(ProductDefaultConstants.DEFAULT_SORT_ORDER);
         }
-
-        Date now = new Date();
-        productDO.setDtCreated(now);
-        productDO.setDeleted(NumberConstants.STATUS_FALSE.intValue());
 
         this.save(productDO);
 
@@ -134,10 +124,6 @@ public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, Produ
 
     @Override
     public ProductInfoVO updateProduct(ProductInfoDTO productDTO) {
-        if (productDTO.getId() == null) {
-            throw BizException.exp("产品ID不能为空");
-        }
-
         ProductInfoDO existingProduct = this.getById(productDTO.getId());
         if (existingProduct == null) {
             throw BizException.exp("产品不存在");
@@ -146,18 +132,6 @@ public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, Produ
         // 转换DTO为DO（MyBatis-Plus的updateById会自动忽略null字段）
         ProductInfoDO updateDO = productInfoConverter.convertDTO2DO(productDTO);
         updateDO.setId(existingProduct.getId());
-
-        // 保护关键字段不被修改
-        updateDO.setTenantId(existingProduct.getTenantId());
-        updateDO.setProductCode(existingProduct.getProductCode());
-        updateDO.setSubProductCode(existingProduct.getSubProductCode());
-        updateDO.setBillingItemCode(existingProduct.getBillingItemCode());
-        updateDO.setSubBillingItemCode(existingProduct.getSubBillingItemCode());
-        updateDO.setCreatedBy(existingProduct.getCreatedBy());
-        updateDO.setDtCreated(existingProduct.getDtCreated());
-        updateDO.setDeleted(existingProduct.getDeleted());
-
-        updateDO.setDtModified(new Date());
 
         this.updateById(updateDO);
 

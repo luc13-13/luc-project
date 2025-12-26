@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -34,13 +35,14 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
      * 主键id
      */
     @Schema(description = "主键id")
-    @NotNull(message = "id cannot be null", groups = {Groups.DeleteGroup.class, Groups.UpdateGroup.class})
+    @NotNull(message = "id cannot be null", groups = { Groups.DeleteGroup.class, Groups.UpdateGroup.class })
     private Long id;
 
     /**
      * 租户ID
      */
     @Schema(description = "租户ID")
+    @Null(message = "禁止修改租户ID", groups = Groups.UpdateGroup.class)
     private String tenantId;
 
     // ==================== SKU基本信息 ====================
@@ -49,7 +51,8 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
      * SKU编码
      */
     @Schema(description = "SKU编码: CVM-S5-4C8G")
-    @NotBlank(message = "SKU编码不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
+    @NotBlank(message = "SKU编码不能为空", groups = Groups.AddGroup.class)
+    @Null(message = "禁止修改SKU编码", groups = Groups.UpdateGroup.class)
     private String skuCode;
 
     /**

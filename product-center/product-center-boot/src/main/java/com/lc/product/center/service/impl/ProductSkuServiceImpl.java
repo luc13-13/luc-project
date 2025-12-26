@@ -127,9 +127,6 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
     @Override
     public ProductSkuVO updateSku(ProductSkuDTO skuDTO) {
-        if (skuDTO.getId() == null) {
-            throw BizException.exp("SKU ID不能为空");
-        }
 
         ProductSkuDO existingSku = this.getById(skuDTO.getId());
         if (existingSku == null) {
@@ -140,15 +137,6 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         ProductSkuDO updateDO = productSkuConverter.convertDTO2DO(skuDTO);
         updateDO.setId(existingSku.getId());
 
-        // 保护关键字段不被修改
-        updateDO.setTenantId(existingSku.getTenantId());
-        updateDO.setSkuCode(existingSku.getSkuCode());
-        updateDO.setCreatedBy(existingSku.getCreatedBy());
-        updateDO.setDtCreated(existingSku.getDtCreated());
-        updateDO.setDeleted(existingSku.getDeleted());
-        updateDO.setPublishTime(existingSku.getPublishTime());
-
-        updateDO.setDtModified(new Date());
 
         this.updateById(updateDO);
 

@@ -80,10 +80,12 @@ public class ProductController {
         return WebResult.success(result);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/update/{id}")
     @Operation(summary = "更新产品", description = "根据产品ID更新产品信息")
     public WebResult<ProductInfoVO> update(
+            @Parameter(description = "产品ID") @PathVariable Long id,
             @RequestBody @Validated(Groups.UpdateGroup.class) ProductInfoDTO productDTO) {
+        productDTO.setId(id);
         ProductInfoVO result = productInfoService.updateProduct(productDTO);
         return WebResult.success(result);
     }
