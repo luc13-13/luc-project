@@ -137,7 +137,6 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         ProductSkuDO updateDO = productSkuConverter.convertDTO2DO(skuDTO);
         updateDO.setId(existingSku.getId());
 
-
         this.updateById(updateDO);
 
         // 简单转换：DO → VO
@@ -172,7 +171,6 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         skuDO.setSaleable(NumberConstants.STATUS_TRUE.intValue());
         skuDO.setVisible(NumberConstants.STATUS_TRUE.intValue());
         skuDO.setPublishTime(new Date());
-        skuDO.setDtModified(new Date());
 
         return this.updateById(skuDO);
     }
@@ -186,7 +184,6 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
         skuDO.setStatus(ProductStatusEnum.INACTIVE.getCode());
         skuDO.setSaleable(NumberConstants.STATUS_FALSE.intValue());
-        skuDO.setDtModified(new Date());
 
         return this.updateById(skuDO);
     }

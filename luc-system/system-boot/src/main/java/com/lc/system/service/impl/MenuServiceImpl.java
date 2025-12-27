@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lc.framework.core.mvc.BizException;
-import com.lc.framework.web.utils.WebUtil;
 import com.lc.system.converter.MenuConverter;
 import com.lc.system.converter.MenuMetaConverter;
 import com.lc.system.domain.bo.MenuBO;
@@ -72,10 +71,6 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, MenuDO> implements 
         MenuDO menuDO = menuConverter.convertDTO2DO(dto);
         // 提取元数据
         MenuMetaDO menuMetaDO = menuMetaConverter.convertMenuDTO2DO(dto);
-        // 封装创建人
-        String createBy = WebUtil.getUserId();
-        menuDO.setCreatedBy(createBy);
-        menuMetaDO.setCreatedBy(createBy);
         this.save(menuDO);
         menuMetaService.save(menuMetaDO);
     }
