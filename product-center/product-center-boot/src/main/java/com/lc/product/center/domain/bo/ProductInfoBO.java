@@ -155,7 +155,7 @@ public class ProductInfoBO implements Serializable {
     /**
      * 逻辑删除
      */
-    private Integer deleted;
+    private Short deleted;
 
     // ==================== 业务方法 ====================
 
@@ -174,6 +174,7 @@ public class ProductInfoBO implements Serializable {
      * 是否生效
      */
     public boolean isActive() {
-        return ProductStatusEnum.ACTIVE.getCode().equals(this.status) && (this.deleted == null || this.deleted == NumberConstants.STATUS_FALSE.intValue());
+        return ProductStatusEnum.ACTIVE.getCode().equals(this.status)
+                && (this.deleted == null || this.deleted == NumberConstants.STATUS_FALSE.intValue());
     }
 }

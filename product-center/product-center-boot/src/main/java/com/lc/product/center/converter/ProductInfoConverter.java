@@ -25,6 +25,14 @@ public interface ProductInfoConverter {
      */
     ProductInfoDO convertDTO2DO(ProductInfoDTO dto);
 
+    /**
+     * 转换DTO为DO（创建场景：设置默认值）
+     *
+     * @param dto      数据传输对象
+     * @param tenantId 租户ID
+     * @return 数据库对象
+     */
+    ProductInfoDO convertDTO2DOForCreate(ProductInfoDTO dto, String tenantId);
 
     /**
      * 转换DO为VO（简单场景：查询展示）

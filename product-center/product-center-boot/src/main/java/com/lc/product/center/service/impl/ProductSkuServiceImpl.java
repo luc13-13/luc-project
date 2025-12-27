@@ -17,6 +17,7 @@ import com.lc.product.center.mapper.ProductSkuMapper;
 import com.lc.product.center.service.ProductSkuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
@@ -76,31 +77,39 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
     @Override
     public ProductSkuVO getSkuByCode(String tenantId, String skuCode) {
-        String tenant = StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT;
-        ProductSkuDO skuDO = baseMapper.findBySkuCode(tenant, skuCode);
-        if (skuDO == null) {
+        // 封装查询参数
+        ProductSkuDTO queryDTO = ProductSkuDTO.builder()
+                .tenantId(StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT)
+                .skuCode(skuCode)
+                .build();
+        List<ProductSkuDO> list = baseMapper.selectByCondition(queryDTO);
+        if (CollectionUtils.isEmpty(list)) {
             return null;
         }
-
-        // 简单查询：DO → VO（不经过BO）
-        return productSkuConverter.convertDO2VO(skuDO);
+        return productSkuConverter.convertDO2VO(list.get(0));
     }
 
     @Override
     public List<ProductSkuVO> getSkusByProductCode(String tenantId, String productCode) {
-        String tenant = StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT;
-        List<ProductSkuDO> list = baseMapper.findByProductCode(tenant, productCode);
-
-        // 简单查询：DO → VO（不经过BO）
+        // 封装查询参数
+        ProductSkuDTO queryDTO = ProductSkuDTO.builder()
+                .tenantId(StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT)
+                .productCode(productCode)
+                .build();
+        List<ProductSkuDO> list = baseMapper.selectByCondition(queryDTO);
         return productSkuConverter.convertDO2VO(list);
     }
 
     @Override
     public List<ProductSkuVO> getSaleableSkus(String tenantId) {
-        String tenant = StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT;
-        List<ProductSkuDO> list = baseMapper.findSaleableSkus(tenant);
-
-        // 简单查询：DO → VO（不经过BO）
+        // 封装查询参数：设置 saleable=1, visible=1, status=ACTIVE
+        ProductSkuDTO queryDTO = ProductSkuDTO.builder()
+                .tenantId(StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT)
+                .saleable(NumberConstants.STATUS_TRUE)
+                .visible(NumberConstants.STATUS_TRUE)
+                .status(ProductStatusEnum.ACTIVE.getCode())
+                .build();
+        List<ProductSkuDO> list = baseMapper.selectByCondition(queryDTO);
         return productSkuConverter.convertDO2VO(list);
     }
 
@@ -110,9 +119,13 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
                 ? skuDTO.getTenantId()
                 : ProductDefaultConstants.DEFAULT_TENANT;
 
-        // 检查SKU编码是否已存在
-        ProductSkuDO existing = baseMapper.findBySkuCode(tenantId, skuDTO.getSkuCode());
-        if (existing != null) {
+        // 检查SKU编码是否已存在（复用 selectByCondition）
+        ProductSkuDTO checkDTO = ProductSkuDTO.builder()
+                .tenantId(tenantId)
+                .skuCode(skuDTO.getSkuCode())
+                .build();
+        List<ProductSkuDO> existing = baseMapper.selectByCondition(checkDTO);
+        if (!CollectionUtils.isEmpty(existing)) {
             throw BizException.exp("SKU编码已存在: " + skuDTO.getSkuCode());
         }
 
@@ -168,8 +181,8 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         }
 
         skuDO.setStatus(ProductStatusEnum.ACTIVE.getCode());
-        skuDO.setSaleable(NumberConstants.STATUS_TRUE.intValue());
-        skuDO.setVisible(NumberConstants.STATUS_TRUE.intValue());
+        skuDO.setSaleable(NumberConstants.STATUS_TRUE);
+        skuDO.setVisible(NumberConstants.STATUS_TRUE);
         skuDO.setPublishTime(new Date());
 
         return this.updateById(skuDO);
@@ -183,7 +196,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         }
 
         skuDO.setStatus(ProductStatusEnum.INACTIVE.getCode());
-        skuDO.setSaleable(NumberConstants.STATUS_FALSE.intValue());
+        skuDO.setSaleable(NumberConstants.STATUS_FALSE);
 
         return this.updateById(skuDO);
     }

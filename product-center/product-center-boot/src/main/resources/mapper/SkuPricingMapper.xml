@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.product.center.mapper.SkuPricingMapper">
+
+    <!-- 动态条件查询 -->
+    <sql id="Base_Select">
+        SELECT id, tenant_id, sku_code, pricing_model, billing_period, period_count,
+               original_price, sale_price, currency, discount_rate,
+               effective_time, expiry_time, priority, status,
+               created_by, dt_created, modified_by, dt_modified
+        FROM sku_pricing
+    </sql>
+
+    <select id="selectByCondition" resultType="com.lc.product.center.domain.entity.SkuPricingDO"
+            parameterType="com.lc.product.center.domain.dto.SkuPricingDTO">
+        <include refid="Base_Select"/>
+        <where>
+            <if test="tenantId != null and tenantId != ''">
+                AND tenant_id = #{tenantId}
+            </if>
+            <if test="skuCode != null and skuCode != ''">
+                AND sku_code = #{skuCode}
+            </if>
+            <if test="pricingModel != null and pricingModel != ''">
+                AND pricing_model = #{pricingModel}
+            </if>
+            <if test="billingPeriod != null and billingPeriod != ''">
+                AND billing_period = #{billingPeriod}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+            <if test="currency != null and currency != ''">
+                AND currency = #{currency}
+            </if>
+            <if test="effectiveOnly != null and effectiveOnly == true">
+                AND (effective_time IS NULL OR effective_time &lt;= NOW())
+                AND (expiry_time IS NULL OR expiry_time &gt;= NOW())
+            </if>
+        </where>
+        ORDER BY priority DESC, dt_created DESC
+    </select>
+
+</mapper>

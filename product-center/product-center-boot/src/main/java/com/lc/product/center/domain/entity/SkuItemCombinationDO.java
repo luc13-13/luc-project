@@ -3,24 +3,23 @@ package com.lc.product.center.domain.entity;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 产品SKU表(product_center.product_sku)表实体类
- * 可售卖单元
+ * SKU计费项组合表(product_center.sku_item_combination)表实体类
  *
  * @author lucheng
- * @since 2025-12-21
+ * @since 2025-12-27
  */
 @Data
-@TableName("product_sku")
-public class ProductSkuDO implements Serializable {
+@TableName("sku_item_combination")
+public class SkuItemCombinationDO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -37,82 +36,47 @@ public class ProductSkuDO implements Serializable {
     @TableField("tenant_id")
     private String tenantId;
 
-    // ==================== SKU基本信息 ====================
-
     /**
-     * SKU编码: CVM-S5-4C8G
+     * SKU编码
      */
     @TableField("sku_code")
     private String skuCode;
 
     /**
-     * SKU名称: 通用型S5 4核8G
-     */
-    @TableField("sku_name")
-    private String skuName;
-
-    // ==================== 关联产品 ====================
-
-    /**
-     * 所属产品编码
+     * 产品编码
      */
     @TableField("product_code")
     private String productCode;
 
     /**
-     * 所属规格族编码
+     * 规格族编码
      */
     @TableField("sub_product_code")
     private String subProductCode;
 
-    // ==================== SKU类型 ====================
+    /**
+     * 计费项编码
+     */
+    @TableField("billing_item_code")
+    private String billingItemCode;
 
     /**
-     * SKU类型: INSTANCE/ADDON/BUNDLE/SUBSCRIPTION
+     * 计费规格编码
      */
-    @TableField("sku_type")
-    private String skuType;
-
-    // ==================== 售卖控制 ====================
+    @TableField("sub_billing_item_code")
+    private String subBillingItemCode;
 
     /**
-     * 是否可售: 1是 0否
+     * 数量/份数
      */
-    @TableField("saleable")
-    private Short saleable;
+    @TableField("quantity")
+    private BigDecimal quantity;
 
     /**
-     * 是否可见: 1是 0否
+     * 是否计入SKU定价: 1是 0否
      */
-    @TableField("visible")
-    private Short visible;
-
-    /**
-     * 配额限制，NULL表示无限制
-     */
-    @TableField("quota_limit")
-    private Integer quotaLimit;
-
-    // ==================== 状态 ====================
-
-    /**
-     * 状态: DRAFT/ACTIVE/INACTIVE
-     */
-    @TableField("status")
-    private String status;
-
-    /**
-     * 上架时间
-     */
-    @TableField("publish_time")
-    private Date publishTime;
-
-    /**
-     * 逻辑删除(0:未删除 1:已删除)
-     */
-    @TableField("deleted")
-    @TableLogic
-    private Short deleted;
+    @TableField("pricing_included")
+    private Short pricingIncluded;
 
     // ==================== 审计字段 ====================
 

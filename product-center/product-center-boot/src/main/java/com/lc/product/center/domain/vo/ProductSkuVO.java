@@ -100,13 +100,13 @@ public class ProductSkuVO implements Serializable {
      * 是否可售
      */
     @Schema(description = "是否可售")
-    private Integer saleable;
+    private Short saleable;
 
     /**
      * 是否可见
      */
     @Schema(description = "是否可见")
-    private Integer visible;
+    private Short visible;
 
     /**
      * 配额限制

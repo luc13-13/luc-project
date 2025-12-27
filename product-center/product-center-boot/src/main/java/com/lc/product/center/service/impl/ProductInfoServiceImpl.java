@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.lc.framework.core.mvc.BizException;
 import com.lc.framework.core.page.PaginationResult;
 import com.lc.product.center.constants.ProductDefaultConstants;
-import com.lc.product.center.constants.ProductStatusEnum;
+
 import com.lc.product.center.converter.ProductInfoConverter;
 import com.lc.product.center.domain.dto.ProductInfoDTO;
 import com.lc.product.center.domain.entity.ProductInfoDO;
@@ -16,6 +16,7 @@ import com.lc.product.center.mapper.ProductInfoMapper;
 import com.lc.product.center.service.ProductInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -79,42 +80,40 @@ public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, Produ
     public ProductInfoVO getProductByFourLevelCode(String tenantId, String productCode,
             String subProductCode, String billingItemCode,
             String subBillingItemCode) {
-        ProductInfoDO productDO = baseMapper.findByFourLevelCode(
-                tenantId, productCode, subProductCode, billingItemCode, subBillingItemCode);
-        if (productDO == null) {
+        // 封装查询参数
+        ProductInfoDTO queryDTO = ProductInfoDTO.builder()
+                .tenantId(tenantId)
+                .productCode(productCode)
+                .subProductCode(subProductCode)
+                .billingItemCode(billingItemCode)
+                .subBillingItemCode(subBillingItemCode)
+                .build();
+        List<ProductInfoDO> list = baseMapper.selectByCondition(queryDTO);
+        if (CollectionUtils.isEmpty(list)) {
             return null;
         }
-
-        // 简单查询：DO → VO（不经过BO）
-        return productInfoConverter.convertDO2VO(productDO);
+        return productInfoConverter.convertDO2VO(list.get(0));
     }
 
     @Override
     public ProductInfoVO createProduct(ProductInfoDTO productDTO) {
-        // 检查是否已存在相同的四层编码
+        // 检查是否已存在相同的四层编码（复用 selectByCondition）
         String tenantId = StringUtils.hasText(productDTO.getTenantId()) ? productDTO.getTenantId()
                 : ProductDefaultConstants.DEFAULT_TENANT;
-        ProductInfoDO existing = baseMapper.findByFourLevelCode(
-                tenantId,
-                productDTO.getProductCode(),
-                productDTO.getSubProductCode(),
-                productDTO.getBillingItemCode(),
-                productDTO.getSubBillingItemCode());
-        if (existing != null) {
+        ProductInfoDTO checkDTO = ProductInfoDTO.builder()
+                .tenantId(tenantId)
+                .productCode(productDTO.getProductCode())
+                .subProductCode(productDTO.getSubProductCode())
+                .billingItemCode(productDTO.getBillingItemCode())
+                .subBillingItemCode(productDTO.getSubBillingItemCode())
+                .build();
+        List<ProductInfoDO> existing = baseMapper.selectByCondition(checkDTO);
+        if (!CollectionUtils.isEmpty(existing)) {
             throw BizException.exp("产品配置已存在");
         }
 
-        // 简单转换：DTO → DO
-        ProductInfoDO productDO = productInfoConverter.convertDTO2DO(productDTO);
-        productDO.setTenantId(tenantId);
-
-        // 设置默认值
-        if (!StringUtils.hasText(productDO.getStatus())) {
-            productDO.setStatus(ProductStatusEnum.ACTIVE.getCode());
-        }
-        if (productDO.getSortOrder() == null) {
-            productDO.setSortOrder(ProductDefaultConstants.DEFAULT_SORT_ORDER);
-        }
+        // 使用Converter设置默认值
+        ProductInfoDO productDO = productInfoConverter.convertDTO2DOForCreate(productDTO, tenantId);
 
         this.save(productDO);
 

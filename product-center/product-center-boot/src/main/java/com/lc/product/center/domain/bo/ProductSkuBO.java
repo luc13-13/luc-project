@@ -85,12 +85,12 @@ public class ProductSkuBO implements Serializable {
     /**
      * 是否可售
      */
-    private Integer saleable;
+    private Short saleable;
 
     /**
      * 是否可见
      */
-    private Integer visible;
+    private Short visible;
 
     /**
      * 配额限制
@@ -156,7 +156,7 @@ public class ProductSkuBO implements Serializable {
     /**
      * 逻辑删除
      */
-    private Integer deleted;
+    private Short deleted;
 
     // ==================== 业务方法 ====================
 
@@ -165,7 +165,7 @@ public class ProductSkuBO implements Serializable {
      */
     public boolean isSaleable() {
         return ProductStatusEnum.ACTIVE.getCode().equals(this.status)
-                && NumberConstants.STATUS_TRUE.intValue() ==  this.saleable
+                && NumberConstants.STATUS_TRUE.intValue() == this.saleable
                 && NumberConstants.STATUS_TRUE.intValue() == this.visible
                 && (this.deleted == null || this.deleted == NumberConstants.STATUS_FALSE.intValue());
     }

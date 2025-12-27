@@ -51,6 +51,28 @@ public class ProductInfoConverterImpl implements ProductInfoConverter {
     }
 
     @Override
+    public ProductInfoDO convertDTO2DOForCreate(ProductInfoDTO dto, String tenantId) {
+        if (dto == null) {
+            return null;
+        }
+
+        // 基础转换
+        ProductInfoDO entity = convertDTO2DO(dto);
+
+        // 设置默认值
+        entity.setTenantId(tenantId);
+
+        if (!org.springframework.util.StringUtils.hasText(entity.getStatus())) {
+            entity.setStatus(ProductStatusEnum.ACTIVE.getCode());
+        }
+        if (entity.getSortOrder() == null) {
+            entity.setSortOrder(com.lc.product.center.constants.ProductDefaultConstants.DEFAULT_SORT_ORDER);
+        }
+
+        return entity;
+    }
+
+    @Override
     public ProductInfoVO convertDO2VO(ProductInfoDO entity) {
         if (entity == null) {
             return null;

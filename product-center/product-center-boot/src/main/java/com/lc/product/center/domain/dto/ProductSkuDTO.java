@@ -94,14 +94,14 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
      */
     @Schema(description = "是否可售: 1是 0否")
     @NotNull(message = "是否可售不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
-    private Integer saleable;
+    private Short saleable;
 
     /**
      * 是否可见
      */
     @Schema(description = "是否可见: 1是 0否")
     @NotNull(message = "是否可见不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
-    private Integer visible;
+    private Short visible;
 
     /**
      * 配额限制

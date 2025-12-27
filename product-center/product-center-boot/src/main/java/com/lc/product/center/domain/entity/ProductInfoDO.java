@@ -141,7 +141,7 @@ public class ProductInfoDO implements Serializable {
      */
     @TableField("deleted")
     @TableLogic(value = STATUS_FALSE)
-    private Integer deleted;
+    private Short deleted;
 
     // ==================== 审计字段 ====================
 
