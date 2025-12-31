@@ -1,9 +1,7 @@
 package com.lc.framework.security.auth.server.authentication;
 
 import cn.hutool.crypto.asymmetric.RSA;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.lc.framework.redis.starter.customizer.ObjectMapperCustomizer;
+import com.lc.framework.redis.starter.customizer.JacksonModuleProvider;
 import com.lc.framework.security.auth.server.authentication.extension.MultiTypeAuthenticationFilter;
 import com.lc.framework.security.auth.server.authentication.extension.sms.SmsAuthenticationConverter;
 import com.lc.framework.security.auth.server.authentication.extension.sms.SmsAuthenticationProvider;
@@ -26,9 +24,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.encrypt.RsaRawEncryptor;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.jackson2.CoreJackson2Module;
-import org.springframework.security.jackson2.SecurityJackson2Modules;
-import org.springframework.security.oauth2.client.jackson2.OAuth2ClientJackson2Module;
+import org.springframework.security.jackson.CoreJacksonModule;
+import org.springframework.security.jackson.SecurityJacksonModules;
+import org.springframework.security.oauth2.client.jackson.OAuth2ClientJacksonModule;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
 import org.springframework.security.oauth2.core.oidc.OidcScopes;
@@ -39,7 +37,7 @@ import org.springframework.security.oauth2.server.authorization.OAuth2Authorizat
 import org.springframework.security.oauth2.server.authorization.client.JdbcRegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
-import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
+import org.springframework.security.oauth2.server.authorization.jackson.OAuth2AuthorizationServerJacksonModule;
 import org.springframework.security.oauth2.server.authorization.settings.ClientSettings;
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.oauth2.server.authorization.token.JwtEncodingContext;
@@ -49,8 +47,10 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import tools.jackson.databind.JacksonModule;
 
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.lc.framework.security.core.constants.OAuth2ParameterConstants.JWT_CLAIM_AUTHORITY;
@@ -114,6 +114,7 @@ public class LucAuthenticationConfiguration {
                 .scope("write")
                 .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(true)
+                        .requireProofKey(false)
                         .build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofHours(2))
@@ -267,13 +268,12 @@ public class LucAuthenticationConfiguration {
      * 向redisTemplate中添加SpringSecurity相关类的序列化支持
      */
     @Bean
-    public ObjectMapperCustomizer<ObjectMapper> redisSerializerCustomizer() {
-        return objectMapper -> objectMapper
-                .registerModules(new JavaTimeModule())
-                .registerModules(SecurityJackson2Modules.getModules(getClass().getClassLoader()))
-                .registerModules(new OAuth2AuthorizationServerJackson2Module())
-                .registerModules(new OAuth2ClientJackson2Module())
-                .registerModules(new CoreJackson2Module());
+    public JacksonModuleProvider redisSerializerCustomizer() {
+        List<JacksonModule> appendedModules = new ArrayList<>(SecurityJacksonModules.getModules(getClass().getClassLoader()));
+        appendedModules.add(new OAuth2AuthorizationServerJacksonModule());
+        appendedModules.add(new OAuth2ClientJacksonModule());
+        appendedModules.add(new CoreJacksonModule());
+        return () -> appendedModules;
     }
 
     @Bean

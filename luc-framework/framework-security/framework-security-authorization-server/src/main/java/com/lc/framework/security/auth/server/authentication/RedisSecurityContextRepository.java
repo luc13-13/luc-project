@@ -1,11 +1,13 @@
 package com.lc.framework.security.auth.server.authentication;
 
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -21,6 +23,7 @@ import static com.lc.framework.security.core.constants.OAuth2ParameterConstants.
 
 @Slf4j
 @AllArgsConstructor
+@NullMarked
 public class RedisSecurityContextRepository implements SecurityContextRepository {
 
     private final RedisTemplate<String, Object> sessionRedisTemplate;
@@ -35,7 +38,7 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
         HttpServletRequest request = requestResponseHolder.getRequest();
         String token = extractToken(request);
 
-        if (token != null) {
+        if (StringUtils.hasText(token)) {
             SecurityContext context = loadContextFromRedis(token);
             if (context != null) {
                 log.debug("从Redis加载SecurityContext: {}", token);
@@ -53,7 +56,7 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
         }
 
         String token = extractToken(request);
-        if (token == null) {
+        if (!StringUtils.hasText(token)) {
             // 如果请求中没有token，生成新的token并返回给客户端
             token = generateToken();
             setTokenInResponse(response, token);
@@ -68,13 +71,13 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
     public boolean containsContext(HttpServletRequest request) {
         String token = extractToken(request);
         log.info("检查是否有context, key: {}", token);
-        return token != null && contextExistsInRedis(token);
+        return StringUtils.hasText(token) && contextExistsInRedis(token);
     }
 
     /**
      * 从Redis加载SecurityContext
      */
-    private SecurityContext loadContextFromRedis(String token) {
+    private @Nullable SecurityContext loadContextFromRedis(String token) {
         try {
             String key = SECURITY_CONTEXT_PREFIX + token;
             Object contextObj = sessionRedisTemplate.opsForValue().get(key);

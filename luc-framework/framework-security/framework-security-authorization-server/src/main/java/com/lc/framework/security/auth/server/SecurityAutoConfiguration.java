@@ -26,7 +26,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -78,14 +77,11 @@ public class SecurityAutoConfiguration {
     public SecurityFilterChain authorizationServerSecurityFilterChain(HttpSecurity http,
                                                                       ObjectProvider<SecurityContextRepository> securityContextRepositoryProvider) throws Exception {
 
-        OAuth2AuthorizationServerConfigurer authorizationServerConfigurer =
-                OAuth2AuthorizationServerConfigurer.authorizationServer();
-
         http
-                .securityMatcher(authorizationServerConfigurer.getEndpointsMatcher())
-                .with(authorizationServerConfigurer, authorizationServer -> authorizationServer
-                        .oidc(Customizer.withDefaults())
-                )
+                .oauth2AuthorizationServer(authorizationServer -> {
+                    http.securityMatcher(authorizationServer.getEndpointsMatcher());
+                    authorizationServer.oidc(Customizer.withDefaults());
+                })
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
                 // Redirect to the login page when not authenticated from the authorization endpoint
                 .exceptionHandling((exceptions) -> exceptions

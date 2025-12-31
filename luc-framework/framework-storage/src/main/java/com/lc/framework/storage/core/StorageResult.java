@@ -1,6 +1,6 @@
 package com.lc.framework.storage.core;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import tools.jackson.databind.annotation.JsonSerialize;
 import com.lc.framework.storage.serializer.StorageResultSerializer;
 
 /**
@@ -8,7 +8,7 @@ import com.lc.framework.storage.serializer.StorageResultSerializer;
  *     存储响应，统一的序列化为json串，子类可重写序列化方法
  *     Examples:
  *     默认的序列化结果：{
- *         "accessUrl": "https://accesUrl",
+ *         "accessUrl": "<a href="https://accesUrl">...</a>",
  *         "filename": "2025-01-20.89828afb-9a77-407c-9254-fe1963ce1e7d.jpg",
  *         "bucket": "mini-program-cookbook"
  *     }

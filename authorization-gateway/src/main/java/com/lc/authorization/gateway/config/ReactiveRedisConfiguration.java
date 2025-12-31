@@ -4,21 +4,28 @@ import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.lc.framework.security.core.customizer.JacksonModuleProvider;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
+import org.springframework.data.redis.serializer.JacksonJsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
 import org.springframework.data.redis.serializer.RedisSerializer;
-import org.springframework.security.jackson2.CoreJackson2Module;
-import org.springframework.security.jackson2.SecurityJackson2Modules;
+import org.springframework.security.jackson.CoreJacksonModule;
+import org.springframework.security.jackson.SecurityJacksonModules;
+import tools.jackson.databind.DefaultTyping;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * <pre>
@@ -33,7 +40,7 @@ public class ReactiveRedisConfiguration {
     @Bean
     public ReactiveRedisTemplate<String, Object> reactiveRedisTemplate(
             ReactiveRedisConnectionFactory reactiveRedisConnectionFactory,
-            ObjectProvider<ObjectMapperCustomizer<ObjectMapper>> customizerProvider) {
+            ObjectProvider<JacksonModuleProvider> customizerProvider) {
         RedisSerializer<String> stringRedisSerializer = RedisSerializer.string();
         RedisSerializationContext.RedisSerializationContextBuilder<String, Object> serializationContext = RedisSerializationContext
                 .newSerializationContext();
@@ -47,32 +54,24 @@ public class ReactiveRedisConfiguration {
         ObjectMapper objectMapper = JsonMapper.builder()
                 .configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false)
                 .configure(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE, false)
-                .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
                 .configure(DeserializationFeature.FAIL_ON_MISSING_CREATOR_PROPERTIES, false)
-                .configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false)
-                .visibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY)
-                .serializationInclusion(JsonInclude.Include.NON_NULL)
+                .addModules(customizerProvider.orderedStream().filter(Objects::nonNull).map(JacksonModuleProvider::getModules).flatMap(Collection::stream).toList())
+                .changeDefaultVisibility(handle -> handle.withVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY))
+                .changeDefaultPropertyInclusion(incl -> incl.withContentInclusion(JsonInclude.Include.NON_NULL).withValueInclusion(JsonInclude.Include.NON_NULL))
+                .activateDefaultTyping(BasicPolymorphicTypeValidator.builder()
+                        .allowIfBaseType("com.lc")
+                        .build(), DefaultTyping.NON_FINAL_AND_ENUMS, JsonTypeInfo.As.PROPERTY)
                 .build();
-        objectMapper.activateDefaultTyping(objectMapper.getPolymorphicTypeValidator(), ObjectMapper.DefaultTyping.NON_FINAL, JsonTypeInfo.As.PROPERTY);
-        customizerProvider.orderedStream().forEach(customer -> customer.customize(objectMapper));
-        Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer = new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
-        serializationContext.value(jackson2JsonRedisSerializer)
-                .hashValue(jackson2JsonRedisSerializer);
+        JacksonJsonRedisSerializer<Object> jacksonJsonRedisSerializer = new JacksonJsonRedisSerializer<>(objectMapper, Object.class);
+        serializationContext.value(jacksonJsonRedisSerializer)
+                .hashValue(jacksonJsonRedisSerializer);
         return new ReactiveRedisTemplate<>(reactiveRedisConnectionFactory, serializationContext.build());
     }
 
     @Bean
-    public ObjectMapperCustomizer<ObjectMapper> redisSerializerCustomizer() {
-        return objectMapper -> objectMapper
-                .registerModules(new JavaTimeModule())
-                .registerModules(SecurityJackson2Modules.getModules(getClass().getClassLoader()))
-//                .registerModules(new OAuth2AuthorizationServerJackson2Module())
-//                .registerModules(new OAuth2ClientJackson2Module())
-                .registerModules(new CoreJackson2Module());
-    }
-
-    @FunctionalInterface
-    public interface ObjectMapperCustomizer<T> {
-        void customize(T t);
+    public JacksonModuleProvider redisSerializerCustomizer() {
+        List<JacksonModule> appendedModules = new ArrayList<>(SecurityJacksonModules.getModules(getClass().getClassLoader()));
+        appendedModules.add(new CoreJacksonModule());
+        return () -> appendedModules;
     }
 }

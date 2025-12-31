@@ -1,7 +1,6 @@
 package com.lc.framework.security.auth.server.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -29,7 +28,7 @@ import static com.lc.framework.security.core.constants.OAuth2ParameterConstants.
 @Slf4j
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModules(new JavaTimeModule());
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
