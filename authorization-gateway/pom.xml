@@ -61,6 +61,10 @@
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-redis-starter</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

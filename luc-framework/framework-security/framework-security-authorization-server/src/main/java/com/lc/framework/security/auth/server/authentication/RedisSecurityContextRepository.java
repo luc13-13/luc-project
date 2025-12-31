@@ -84,6 +84,7 @@ public class RedisSecurityContextRepository implements SecurityContextRepository
             if (contextObj instanceof SecurityContext context) {
                 // 刷新过期时间
                 sessionRedisTemplate.expire(key, DEFAULT_TIMEOUT, TimeUnit.SECONDS);
+                log.info("loadContextFromRedis key: {}, context: {}", key, context);
                 return context;
             }
         } catch (Exception e) {

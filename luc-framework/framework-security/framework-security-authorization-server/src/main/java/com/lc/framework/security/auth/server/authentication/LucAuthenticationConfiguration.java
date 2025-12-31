@@ -1,7 +1,8 @@
 package com.lc.framework.security.auth.server.authentication;
 
 import cn.hutool.crypto.asymmetric.RSA;
-import com.lc.framework.redis.starter.customizer.JacksonModuleProvider;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import com.lc.framework.redis.starter.customizer.RedisJacksonCustomizer;
 import com.lc.framework.security.auth.server.authentication.extension.MultiTypeAuthenticationFilter;
 import com.lc.framework.security.auth.server.authentication.extension.sms.SmsAuthenticationConverter;
 import com.lc.framework.security.auth.server.authentication.extension.sms.SmsAuthenticationProvider;
@@ -21,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextImpl;
 import org.springframework.security.crypto.encrypt.RsaRawEncryptor;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -47,24 +49,30 @@ import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import tools.jackson.databind.DefaultTyping;
+import tools.jackson.databind.DeserializationFeature;
 import tools.jackson.databind.JacksonModule;
+import tools.jackson.databind.json.JsonMapper;
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 
 import java.time.Duration;
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.lc.framework.security.core.constants.OAuth2ParameterConstants.JWT_CLAIM_AUTHORITY;
+import static tools.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES;
 
 /**
  * <pre>
+ * 
  * <pre/>
+ * 
  * @author : Lu Cheng
  * @date : 2025/8/3 17:16
  * @version : 1.0
  */
 @Slf4j
 @AutoConfiguration
-@EnableConfigurationProperties({SysSecurityProperties.class, LoginProperties.class, SysCorsProperties.class})
+@EnableConfigurationProperties({ SysSecurityProperties.class, LoginProperties.class, SysCorsProperties.class })
 public class LucAuthenticationConfiguration {
 
     @Bean
@@ -86,12 +94,13 @@ public class LucAuthenticationConfiguration {
         RSA rsa = new RSA(sysSecurityProperties.getPrivateKey(), sysSecurityProperties.getPublicKey());
         return new RsaRawEncryptor("UTF-8", rsa.getPublicKey(), rsa.getPrivateKey());
     }
+
     /**
      * 注册客户端仓库
      */
     @Bean
     public RegisteredClientRepository registeredClientRepository(PasswordEncoder passwordEncoder,
-                                                                 JdbcTemplate jdbcTemplate) {
+            JdbcTemplate jdbcTemplate) {
 
         JdbcRegisteredClientRepository repository = new JdbcRegisteredClientRepository(jdbcTemplate);
         // 网关客户端
@@ -167,6 +176,7 @@ public class LucAuthenticationConfiguration {
                 .scope("user_info")
                 .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(false) // 前端应用不需要用户确认
+                        .requireProofKey(false)
                         .build())
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenTimeToLive(Duration.ofHours(8)) // 前端token有效期长一些
@@ -182,23 +192,40 @@ public class LucAuthenticationConfiguration {
 
     /**
      * 记录客户端授权信息
+     * 
      * @param jdbcTemplate 数据库操作类
-     * @param repository 客户端查询仓库
+     * @param repository   客户端查询仓库
      */
     @Bean
     public OAuth2AuthorizationService oauth2AuthorizationService(JdbcTemplate jdbcTemplate,
-                                                                 RegisteredClientRepository repository) {
-        return new JdbcOAuth2AuthorizationService(jdbcTemplate, repository);
+            RegisteredClientRepository repository) {
+        JdbcOAuth2AuthorizationService oauth2AuthorizationService = new JdbcOAuth2AuthorizationService(jdbcTemplate, repository);
+
+        BasicPolymorphicTypeValidator.Builder builder = BasicPolymorphicTypeValidator.builder()
+                .allowIfSubType(LoginUserDetail.class);
+        OAuth2AuthorizationServerJacksonModule authorizationServerJacksonModule = new OAuth2AuthorizationServerJacksonModule();
+        authorizationServerJacksonModule.configurePolymorphicTypeValidator(builder);
+        List<JacksonModule> securityJacksonModules = SecurityJacksonModules.getModules(JdbcOAuth2AuthorizationService.class.getClassLoader(), builder);
+
+        JdbcOAuth2AuthorizationService.JsonMapperOAuth2AuthorizationRowMapper rowMapper =
+                new JdbcOAuth2AuthorizationService.JsonMapperOAuth2AuthorizationRowMapper(repository, JsonMapper.builder()
+                        // IMPORTANT: authorizationServerJacksonModule MUST be before securityJacksonModules
+                        .addModules(authorizationServerJacksonModule)
+                        .addModules(securityJacksonModules)
+                        .build());
+        oauth2AuthorizationService.setAuthorizationRowMapper(rowMapper);
+        return oauth2AuthorizationService;
     }
 
     /**
      * 记录客户端授权确认信息
+     * 
      * @param jdbcTemplate 数据库操作类
-     * @param repository 客户端查询仓库
+     * @param repository   客户端查询仓库
      */
     @Bean
     public OAuth2AuthorizationConsentService oauth2AuthorizationConsentService(JdbcTemplate jdbcTemplate,
-                                                                        RegisteredClientRepository repository) {
+            RegisteredClientRepository repository) {
         return new JdbcOAuth2AuthorizationConsentService(jdbcTemplate, repository);
     }
 
@@ -206,9 +233,10 @@ public class LucAuthenticationConfiguration {
     @ConditionalOnClass(RedisTemplate.class)
     @ConditionalOnProperty(prefix = SysSecurityProperties.PREFIX, name = "enable-redis", havingValue = "true")
     public SecurityContextRepository redisSecurityContextRepository(RedisTemplate<String, Object> redisTemplate,
-                                                                    SysSecurityProperties sysSecurityProperties) {
+            SysSecurityProperties sysSecurityProperties) {
         log.info("开启RedisSecurityContextRepository");
-        return new RedisSecurityContextRepository(redisTemplate, sysSecurityProperties.getTokenTimeToLive().toSeconds());
+        return new RedisSecurityContextRepository(redisTemplate,
+                sysSecurityProperties.getTokenTimeToLive().toSeconds());
     }
 
     /**
@@ -228,6 +256,7 @@ public class LucAuthenticationConfiguration {
             }
         };
     }
+
     /**
      * 开启拓展认证方式
      *
@@ -235,7 +264,7 @@ public class LucAuthenticationConfiguration {
     @Bean
     @ConditionalOnBean(SmsAuthenticationConverter.class)
     public MultiTypeAuthenticationFilter multiTypeAuthenticationFilter(List<AuthenticationConverter> converters) {
-        return  new MultiTypeAuthenticationFilter(converters);
+        return new MultiTypeAuthenticationFilter(converters);
     }
 
     @Bean
@@ -246,15 +275,17 @@ public class LucAuthenticationConfiguration {
     }
 
     /**
-     * Create SMS code Authentication Provider bean when enable-sms-login is true. See {@link LoginProperties#isEnableSmsLogin()}
-     * @param smsCodeService 短信服务接口，调用方自行实现
+     * Create SMS code Authentication Provider bean when enable-sms-login is true.
+     * See {@link LoginProperties#isEnableSmsLogin()}
+     * 
+     * @param smsCodeService         短信服务接口，调用方自行实现
      * @param loginUserDetailService 登陆用户接口，调用方自行实现
      */
     @Bean
     @ConditionalOnMissingBean(SmsAuthenticationProvider.class)
     @ConditionalOnProperty(prefix = LoginProperties.PREFIX, name = "enable-sms-login", havingValue = "true")
     public SmsAuthenticationProvider smsAuthenticationProvider(SmsCodeService smsCodeService,
-                                                            LoginUserDetailService loginUserDetailService) {
+            LoginUserDetailService loginUserDetailService) {
         return new SmsAuthenticationProvider(smsCodeService, loginUserDetailService);
     }
 
@@ -264,16 +295,24 @@ public class LucAuthenticationConfiguration {
     public SmsAuthenticationConverter smsAuthenticationConverter() {
         return new SmsAuthenticationConverter();
     }
+
     /**
      * 向redisTemplate中添加SpringSecurity相关类的序列化支持
      */
     @Bean
-    public JacksonModuleProvider redisSerializerCustomizer() {
-        List<JacksonModule> appendedModules = new ArrayList<>(SecurityJacksonModules.getModules(getClass().getClassLoader()));
-        appendedModules.add(new OAuth2AuthorizationServerJacksonModule());
-        appendedModules.add(new OAuth2ClientJacksonModule());
-        appendedModules.add(new CoreJacksonModule());
-        return () -> appendedModules;
+    public RedisJacksonCustomizer redisSerializerCustomizer() {
+        BasicPolymorphicTypeValidator.Builder typeValidatorBuilder =  BasicPolymorphicTypeValidator.builder()
+                .allowIfSubType(SecurityContextImpl.class)
+                .allowIfSubType(LoginUserDetail.class);
+        return builder -> builder
+                .addModules(new OAuth2AuthorizationServerJacksonModule())
+                .addModules(new OAuth2ClientJacksonModule())
+                .addModules(new CoreJacksonModule())
+                .addModules(SecurityJacksonModules.getModules(getClass().getClassLoader(), typeValidatorBuilder))
+                    .addModules(SecurityJacksonModules.getModules(JdbcOAuth2AuthorizationService.class.getClassLoader(), typeValidatorBuilder))
+                .activateDefaultTyping(typeValidatorBuilder.build(), DefaultTyping.OBJECT_AND_NON_CONCRETE, JsonTypeInfo.As.PROPERTY)
+                .enable(ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+                .disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE);
     }
 
     @Bean

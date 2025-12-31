@@ -1,8 +1,6 @@
 package com.lc.framework.redis.starter.customizer;
 
-import tools.jackson.databind.JacksonModule;
-
-import java.util.List;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * <pre>
@@ -13,6 +11,6 @@ import java.util.List;
  * @date 2024/1/11 15:10
  */
 @FunctionalInterface
-public interface JacksonModuleProvider {
-    List<JacksonModule> getModules();
+public interface RedisJacksonCustomizer {
+    void customize(JsonMapper.Builder  builder);
 }
