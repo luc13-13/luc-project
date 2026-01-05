@@ -21,7 +21,7 @@
         <!--security-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
+            <artifactId>spring-boot-starter-security-oauth2-resource-server</artifactId>
         </dependency>
 
         <dependency>
@@ -60,6 +60,10 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-starter-webflux-ui</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.lc</groupId>
+            <artifactId>framework-redis-starter</artifactId>
         </dependency>
     </dependencies>
 

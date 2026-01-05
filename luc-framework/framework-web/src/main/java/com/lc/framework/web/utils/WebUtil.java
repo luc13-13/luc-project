@@ -1,7 +1,6 @@
 package com.lc.framework.web.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.databind.ObjectMapper;
 import com.lc.framework.core.constants.RequestHeaderConstants;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -27,7 +26,6 @@ public class WebUtil {
         response.setContentType(contentType);
         response.setStatus(status);
         ObjectMapper mapper = new ObjectMapper();
-        mapper.registerModules(new JavaTimeModule());
         mapper.writeValue(response.getOutputStream(), value);
     }
 

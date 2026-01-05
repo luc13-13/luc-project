@@ -2,6 +2,7 @@ package com.lc.framework.security.core.user;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,7 +20,7 @@ import java.util.*;
 /**
  * <pre>
  *     定义系统登录用户属性封装类
- *     自定义的UserDetails实现类需要被@JacksonAnnotation标注， 否则无法被OAuth2AuthorizationService#ObjectMapper解析
+ *     使用 @JsonTypeInfo 注解确保序列化时包含类型信息，便于从 Redis 反序列化
  * </pre>
  *
  * @author Lu Cheng
@@ -29,6 +30,7 @@ import java.util.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
 @JsonAutoDetect(fieldVisibility = JsonAutoDetect.Visibility.ANY)
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class LoginUserDetail implements OAuth2AuthenticatedPrincipal, UserDetails, CredentialsContainer {
@@ -59,12 +61,16 @@ public class LoginUserDetail implements OAuth2AuthenticatedPrincipal, UserDetail
     private Set<GrantedAuthority> authorities;
 
     /**
-     * 账号是否未过期：<br/>true未过期<br/>false过期
+     * 账号是否未过期：<br/>
+     * true未过期<br/>
+     * false过期
      */
     private boolean accountNonExpired;
 
     /**
-     * 账号是否未锁定：<br/>true未锁定<br/>false锁定
+     * 账号是否未锁定：<br/>
+     * true未锁定<br/>
+     * false锁定
      */
     private boolean accountNonLocked;
 
@@ -120,6 +126,18 @@ public class LoginUserDetail implements OAuth2AuthenticatedPrincipal, UserDetail
         return this.attributes;
     }
 
+    /**
+     * Jackson 反序列化时使用此方法设置 attributes
+     * 由于 attributes 是 final 字段，无法直接赋值，需要通过 putAll 合并数据
+     */
+    @com.fasterxml.jackson.annotation.JsonSetter("attributes")
+    public void setAttributes(Map<String, Object> attributes) {
+        if (attributes != null) {
+            this.attributes.clear();
+            this.attributes.putAll(attributes);
+        }
+    }
+
     @Override
     public String getName() {
         return this.getUsername();
@@ -132,6 +150,7 @@ public class LoginUserDetail implements OAuth2AuthenticatedPrincipal, UserDetail
 
     /**
      * 认证信息是否未过期
+     * 
      * @return true未过期，false过期
      */
     @Override
@@ -149,7 +168,8 @@ public class LoginUserDetail implements OAuth2AuthenticatedPrincipal, UserDetail
         Assert.notNull(authorities, "Cannot pass a null GrantedAuthority collection");
         // Ensure array iteration order is predictable (as per
         // UserDetails.getAuthorities() contract and SEC-717)
-        SortedSet<GrantedAuthority> sortedAuthorities = new TreeSet<>(Comparator.nullsLast(Comparator.comparing(GrantedAuthority::getAuthority)));
+        SortedSet<GrantedAuthority> sortedAuthorities = new TreeSet<>(
+                Comparator.nullsLast(Comparator.comparing(GrantedAuthority::getAuthority)));
         for (GrantedAuthority grantedAuthority : authorities) {
             Assert.notNull(grantedAuthority, "GrantedAuthority list cannot contain any null elements");
             sortedAuthorities.add(grantedAuthority);

@@ -46,16 +46,16 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <!--spring boot-->
-        <spring-boot.version>3.5.6</spring-boot.version>
+        <spring-boot.version>4.0.1</spring-boot.version>
 
         <!--spring cloud-->
-        <spring-cloud.version>2025.0.0</spring-cloud.version>
+        <spring-cloud.version>2025.1.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
 
         <!--数据库-->
         <druid.version>1.2.20</druid.version>
-        <mybatis-plus.version>3.5.13</mybatis-plus.version>
-        <mysql-connector.version>9.1.0</mysql-connector.version>
+        <mybatis-plus.version>3.5.15</mybatis-plus.version>
+<!--        <mysql-connector.version>9.5.0</mysql-connector.version>-->
         <mybatis-plus-dynamic-datasource.version>4.3.1</mybatis-plus-dynamic-datasource.version>
         <!--分库分表-->
         <shardingsphere.version>5.5.1</shardingsphere.version>
@@ -64,7 +64,7 @@
         <qiniu.version>7.17.0</qiniu.version>
         <!--api文档-->
         <knife4j.version>4.5.0</knife4j.version>
-        <springdoc-openapi.version>2.8.9</springdoc-openapi.version>
+        <springdoc-openapi.version>3.0.0</springdoc-openapi.version>
 
         <!--日志相关-->
         <logback.version>1.5.19</logback.version>
@@ -72,6 +72,7 @@
         <spring-boot-admin.version>3.5.5</spring-boot-admin.version>
 
         <!--常用工具依赖-->
+        <jackson.version>3.0.3</jackson.version>
         <fastjson.version>2.0.23</fastjson.version>
         <ttl.version>2.14.3</ttl.version>
         <easyexcel.version>3.3.1</easyexcel.version>
@@ -227,12 +228,6 @@
 
             <!--数据库-->
             <dependency>
-                <groupId>com.mysql</groupId>
-                <artifactId>mysql-connector-j</artifactId>
-                <version>${mysql-connector.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>druid-spring-boot-3-starter</artifactId>
                 <version>${druid.version}</version>
@@ -245,6 +240,12 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+<!--            <dependency>-->
+<!--                <groupId>com.baomidou</groupId>-->
+<!--                <artifactId>mybatis-plus-spring-boot4-starter</artifactId>-->
+<!--                <version>${mybatis-plus.version}</version>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -297,6 +298,11 @@
             </dependency>
 
             <!-- 工具 -->
+            <dependency>
+                <groupId>tools.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
             <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
@@ -383,7 +389,7 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>3.2.11</version>
+                <version>4.0.1</version>
                 <executions>
                     <execution>
                         <goals>

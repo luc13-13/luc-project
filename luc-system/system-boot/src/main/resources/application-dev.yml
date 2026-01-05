@@ -1,8 +1,8 @@
 spring:
   # mysql
   datasource:
-    # 只使用druid时的数据库配置
-    type: com.alibaba.druid.pool.DruidDataSource
+    # 只使用druid时的数据库配置, 等druid支持springboot4后再切换
+#    type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     password: luc123456
