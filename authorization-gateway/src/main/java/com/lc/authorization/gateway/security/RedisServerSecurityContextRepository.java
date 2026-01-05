@@ -1,6 +1,7 @@
 package com.lc.authorization.gateway.security;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
@@ -35,12 +36,12 @@ public class RedisServerSecurityContextRepository implements ServerSecurityConte
     }
 
     @Override
-    public Mono<Void> save(ServerWebExchange exchange, SecurityContext context) {
+    public @NonNull Mono<Void> save(@NonNull ServerWebExchange exchange, SecurityContext context) {
         return Mono.empty();
     }
 
     @Override
-    public Mono<SecurityContext> load(ServerWebExchange exchange) {
+    public @NonNull Mono<SecurityContext> load(ServerWebExchange exchange) {
         String key = exchange.getRequest().getHeaders().getFirst(AUTH_KEY);
         log.info("key:{}", key);
         return reactiveRedisTemplate.opsForValue().get(SECURITY_CONTEXT_PREFIX + key).mapNotNull(context -> {

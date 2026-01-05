@@ -1,6 +1,6 @@
 package com.lc.authorization.gateway.security;
 
-import tools.jackson.databind.ObjectMapper;
+import org.jspecify.annotations.NonNull;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -29,7 +30,7 @@ public class JwtAuthenticationEntryPoint implements ServerAuthenticationEntryPoi
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public Mono<Void> commence(ServerWebExchange exchange, AuthenticationException ex) {
+    public @NonNull Mono<Void> commence(ServerWebExchange exchange, @NonNull AuthenticationException ex) {
         // 设置响应状态码
         exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
         exchange.getResponse().getHeaders().add("Content-Type", MediaType.APPLICATION_JSON_VALUE);
