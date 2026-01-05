@@ -1,13 +1,24 @@
 package com.lc.authorization.gateway.config;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.lc.authorization.gateway.security.RedisServerSecurityContextRepository;
+import com.lc.framework.redis.starter.customizer.RedisJacksonCustomizer;
+import com.lc.framework.security.core.user.LoginUserDetail;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.core.ReactiveRedisTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.core.context.SecurityContextImpl;
+import org.springframework.security.jackson.CoreJacksonModule;
+import org.springframework.security.jackson.SecurityJacksonModules;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import tools.jackson.databind.DefaultTyping;
+import tools.jackson.databind.DeserializationFeature;
+import tools.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+
+import static tools.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITIVE_PROPERTIES;
 
 /**
  * Spring Security WebFlux 配置
@@ -44,5 +55,21 @@ public class SecurityConfiguration {
                         .anyExchange().authenticated()
                 )
                 .build();
+    }
+
+    /**
+     * 向redisTemplate中添加SpringSecurity相关类的序列化支持
+     */
+    @Bean
+    public RedisJacksonCustomizer redisSerializerCustomizer() {
+        BasicPolymorphicTypeValidator.Builder typeValidatorBuilder =  BasicPolymorphicTypeValidator.builder()
+                .allowIfSubType(SecurityContextImpl.class)
+                .allowIfSubType(LoginUserDetail.class);
+        return builder -> builder
+                .addModules(new CoreJacksonModule())
+                .addModules(SecurityJacksonModules.getModules(getClass().getClassLoader(), typeValidatorBuilder))
+                .activateDefaultTyping(typeValidatorBuilder.build(), DefaultTyping.NON_FINAL_AND_ENUMS, JsonTypeInfo.As.PROPERTY)
+                .enable(ACCEPT_CASE_INSENSITIVE_PROPERTIES)
+                .disable(DeserializationFeature.FAIL_ON_INVALID_SUBTYPE);
     }
 }
