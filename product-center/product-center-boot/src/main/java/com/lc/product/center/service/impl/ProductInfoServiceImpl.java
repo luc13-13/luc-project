@@ -92,7 +92,7 @@ public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, Produ
         if (CollectionUtils.isEmpty(list)) {
             return null;
         }
-        return productInfoConverter.convertDO2VO(list.get(0));
+        return productInfoConverter.convertDO2VO(list.getFirst());
     }
 
     @Override

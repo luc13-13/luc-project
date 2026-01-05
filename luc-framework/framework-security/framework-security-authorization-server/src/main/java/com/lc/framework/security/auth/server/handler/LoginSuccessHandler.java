@@ -1,15 +1,15 @@
 package com.lc.framework.security.auth.server.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NullMarked;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.util.StringUtils;
+import tools.jackson.databind.ObjectMapper;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -27,9 +27,10 @@ import static com.lc.framework.security.core.constants.OAuth2ParameterConstants.
  * @date 2023-10-19 11:17
  */
 @Slf4j
+@NullMarked
 public class LoginSuccessHandler implements AuthenticationSuccessHandler {
 
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModules(new JavaTimeModule());
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
@@ -37,7 +38,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
         if (!StringUtils.hasText(tokenKey)) {
             tokenKey = request.getAttribute(AUTH_KEY).toString();
         }
-        log.info("登陆成功，用户: {}, tokenKey: {}", authentication.getName(), tokenKey);
+        log.info("登陆成功，用户: {}, tokenKey: {}, responseKey: {}", authentication.getName(), tokenKey, response.getHeader(AUTH_KEY));
         // 设置响应头返回 token（不使用 Cookie）
         if (StringUtils.hasText(tokenKey)) {
             Cookie tokenCookie = new Cookie(AUTH_KEY, tokenKey);

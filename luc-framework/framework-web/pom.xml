@@ -51,7 +51,7 @@
         <!--mybatis plus-->
         <dependency>
             <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+            <artifactId>mybatis-plus-spring-boot4-starter</artifactId>
             <scope>compile</scope>
         </dependency>
         <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
@@ -67,11 +67,11 @@
             <scope>compile</scope>
         </dependency>
         <!--数据库连接池 druid-->
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>druid-spring-boot-3-starter</artifactId>
-            <scope>compile</scope>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba</groupId>-->
+<!--            <artifactId>druid-spring-boot-3-starter</artifactId>-->
+<!--            <scope>compile</scope>-->
+<!--        </dependency>-->
 
         <!--参数校验注解-->
         <dependency>

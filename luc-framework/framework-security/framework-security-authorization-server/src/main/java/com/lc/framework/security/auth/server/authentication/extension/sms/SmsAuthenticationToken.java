@@ -5,6 +5,8 @@ import org.springframework.security.core.GrantedAuthority;
 
 import java.util.Collection;
 
+import static org.springframework.security.core.authority.AuthorityUtils.NO_AUTHORITIES;
+
 /**
  * <pre>
  * <pre/>
@@ -24,7 +26,7 @@ public class SmsAuthenticationToken extends AbstractAuthenticationToken {
      * @param code 验证码
      */
     public SmsAuthenticationToken(String phone, String code) {
-        super(null);
+        super(NO_AUTHORITIES);
         this.phone = phone;
         this.code = code;
         setAuthenticated(false);

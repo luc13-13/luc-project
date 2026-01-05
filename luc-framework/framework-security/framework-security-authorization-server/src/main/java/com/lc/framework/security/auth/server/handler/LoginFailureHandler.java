@@ -1,7 +1,6 @@
 package com.lc.framework.security.auth.server.handler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.databind.ObjectMapper;
 import com.lc.framework.core.mvc.WebResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -22,7 +21,7 @@ import java.io.IOException;
  */
 @Slf4j
 public class LoginFailureHandler implements AuthenticationFailureHandler {
-    private final ObjectMapper objectMapper = new ObjectMapper().registerModules(new JavaTimeModule());
+    private final ObjectMapper objectMapper = new ObjectMapper();
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException {
         log.info("登陆失败");

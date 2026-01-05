@@ -3,6 +3,7 @@ package com.lc.auth.server.web;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,6 +29,7 @@ import java.io.IOException;
  * @date : 2025/9/28 09:40
  * @version : 1.0
  */
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -62,13 +64,11 @@ public class AuthController {
                 decryptedPassword);
         try {
             Authentication authenticationResult = authenticationManager.authenticate(authRequest);
-            if (authenticationResult == null) {
-                return;
-            }
             // 保存认证结果
             SecurityContext context = SecurityContextHolder.getContextHolderStrategy().createEmptyContext();
             context.setAuthentication(authenticationResult);
             SecurityContextHolder.getContextHolderStrategy().setContext(context);
+            log.info("登陆成功, context: {}", context);
             securityContextRepository.saveContext(context, request, response);
             // 认证成功跳转
             loginSuccessHandler.onAuthenticationSuccess(request, response, authenticationResult);
@@ -84,6 +84,6 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public void logout(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
     }
 }

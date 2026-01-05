@@ -1,6 +1,8 @@
 package com.lc.framework.security.auth.server.authentication.extension.sms;
 
 import com.lc.framework.security.core.user.LoginUserDetailService;
+import jakarta.annotation.Nonnull;
+import jakarta.annotation.Nullable;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -23,7 +25,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
     }
     
     @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    public Authentication authenticate(@Nullable Authentication authentication) throws AuthenticationException {
 
         // 只处理用户名密码认证Token
         if (!(authentication instanceof SmsAuthenticationToken authenticationToken)) {
@@ -34,6 +36,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
         String code = (String) authenticationToken.getCredentials();
 
         // 检查是否是手机号格式
+        assert phone != null;
         if (!phone.matches("^1[3-9]\\d{9}$")) {
             return null; // 不是手机号，让其他Provider处理
         }
@@ -56,7 +59,7 @@ public class SmsAuthenticationProvider implements AuthenticationProvider {
     }
     
     @Override
-    public boolean supports(Class<?> authentication) {
+    public boolean supports(@Nonnull Class<?> authentication) {
         return SmsAuthenticationToken.class.isAssignableFrom(authentication);
     }
 }
