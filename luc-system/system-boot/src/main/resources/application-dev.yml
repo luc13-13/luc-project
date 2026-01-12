@@ -7,7 +7,8 @@ spring:
     username: root
     password: luc123456
     url: jdbc:mysql://localhost:3306/luc_system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=FALSE
-
+    hikari:
+      maximum-pool-size: 2
     # 使用dynamic datasource的数据库配置
   #    dynamic:
   #      primary: master
@@ -33,24 +34,6 @@ spring:
   #        shardingSphere:
   #          sharding: true
   #          sharding-config: config/sharding-sphere.yml
-
-  data:
-    # redis
-    redis:
-      database: 0
-      host: 127.0.0.1
-      port: 6379
-      timeout: 5000
-      username:
-      password: luc123456
-      client-type: lettuce
-      lettuce:
-        pool:
-          min-idle: 8
-          max-idle: 500
-          max-active: 2000
-          max-wait: 10000
-          enabled: true
   jackson:
     serialization:
       fail-on-empty-beans: false

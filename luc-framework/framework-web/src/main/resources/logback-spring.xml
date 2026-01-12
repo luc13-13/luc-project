@@ -6,9 +6,11 @@
     <property name="LOG_HOME" value="logs"/>
 <!--    <springProperty scope="context" name="log.file.path" source="logging.file.path"/>-->
     <appender name="consoleApp" class="ch.qos.logback.core.ConsoleAppender">
-        <layout class="ch.qos.logback.classic.PatternLayout">
-            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
-        </layout>
+        <encoder class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+            </layout>
+        </encoder>
     </appender>
 
     <appender name="fileInfoApp" class="ch.qos.logback.core.rolling.RollingFileAppender">

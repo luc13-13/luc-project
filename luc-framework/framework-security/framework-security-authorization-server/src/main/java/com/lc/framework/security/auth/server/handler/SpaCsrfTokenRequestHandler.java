@@ -3,6 +3,7 @@ package com.lc.framework.security.auth.server.handler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
@@ -24,7 +25,7 @@ public class SpaCsrfTokenRequestHandler implements CsrfTokenRequestHandler {
     private final CsrfTokenRequestHandler xor = new XorCsrfTokenRequestAttributeHandler();
 
     @Override
-    public void handle(HttpServletRequest request, HttpServletResponse response, Supplier<CsrfToken> csrfToken) {
+    public void handle(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response, @NonNull Supplier<CsrfToken> csrfToken) {
         /*
          * Always use XorCsrfTokenRequestAttributeHandler to provide BREACH protection of
          * the CsrfToken when it is rendered in the response body.
