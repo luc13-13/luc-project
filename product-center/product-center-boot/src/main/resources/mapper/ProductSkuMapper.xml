@@ -4,15 +4,17 @@
 
     <!-- 通用字段列表 -->
     <sql id="Base_Column_List">
-    SELECT id, tenant_id, sku_code, sku_name, product_code, sub_product_code, sku_type,
+    id, tenant_id, sku_code, sku_name, product_code, sub_product_code, sku_type,
     saleable, visible, quota_limit, status, publish_time, deleted,
-    created_by, dt_created, modified_by, dt_modified FROM product_center.product_sku
+    created_by, dt_created, modified_by, dt_modified
     </sql>
 
     <!-- 动态条件查询（唯一的查询入口） -->
     <select id="selectByCondition" resultType="com.lc.product.center.domain.entity.ProductSkuDO"
             parameterType="com.lc.product.center.domain.dto.ProductSkuDTO">
+        SELECT
         <include refid="Base_Column_List"/>
+        FROM product_center.product_sku
         <where>
             deleted = 0
             <if test="tenantId != null and tenantId != ''">

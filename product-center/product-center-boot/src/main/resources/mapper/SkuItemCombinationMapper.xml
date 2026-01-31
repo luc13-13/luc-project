@@ -4,15 +4,16 @@
 
     <!-- 动态条件查询 -->
     <sql id="Base_Select">
-        SELECT id, tenant_id, sku_code, product_code, sub_product_code,
+                id, tenant_id, sku_code, product_code, sub_product_code,
                billing_item_code, sub_billing_item_code, quantity, pricing_included,
                created_by, dt_created, modified_by, dt_modified
-        FROM sku_item_combination
     </sql>
 
     <select id="selectByCondition" resultType="com.lc.product.center.domain.entity.SkuItemCombinationDO"
             parameterType="com.lc.product.center.domain.dto.SkuItemCombinationDTO">
+        SELECT
         <include refid="Base_Select"/>
+        FROM product_center.sku_item_combination
         <where>
             <if test="tenantId != null and tenantId != ''">
                 AND tenant_id = #{tenantId}

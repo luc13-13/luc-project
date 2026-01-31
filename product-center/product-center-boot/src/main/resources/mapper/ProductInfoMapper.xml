@@ -4,16 +4,18 @@
 
     <!-- 通用字段列表 -->
     <sql id="Base_Select">
-        SELECT id, tenant_id, product_code, sub_product_code, billing_item_code, sub_billing_item_code,
+        id, tenant_id, product_code, sub_product_code, billing_item_code, sub_billing_item_code,
         product_name, sub_product_name, billing_item_name, sub_billing_item_name,
         spec_value, spec_unit, base_price, price_factor, metering_unit, status, sort_order, deleted,
-        created_by, dt_created, modified_by, dt_modified FROM product_info
+        created_by, dt_created, modified_by, dt_modified
     </sql>
 
     <!-- 动态条件查询（唯一的查询入口） -->
     <select id="selectByCondition" resultType="com.lc.product.center.domain.entity.ProductInfoDO"
             parameterType="com.lc.product.center.domain.dto.ProductInfoDTO">
+        SELECT
         <include refid="Base_Select"/>
+        FROM product_center.product_info
         <where>
             deleted = 0
             <if test="tenantId != null and tenantId != ''">
@@ -44,21 +46,21 @@
     <!-- 获取去重编码列表（特殊需求，无法复用通用查询） -->
     <select id="findDistinctProductCodes" resultType="java.lang.String">
         SELECT DISTINCT product_code
-        FROM product_info
+        FROM product_center.product_info
         WHERE tenant_id = #{tenantId} AND deleted = 0
         ORDER BY product_code
     </select>
 
     <select id="findDistinctSubProductCodes" resultType="java.lang.String">
         SELECT DISTINCT sub_product_code
-        FROM product_info
+        FROM product_center.product_info
         WHERE tenant_id = #{tenantId} AND product_code = #{productCode} AND deleted = 0
         ORDER BY sub_product_code
     </select>
 
     <select id="findDistinctBillingItemCodes" resultType="java.lang.String">
         SELECT DISTINCT billing_item_code
-        FROM product_info
+        FROM product_center.product_info
         WHERE tenant_id = #{tenantId} AND product_code = #{productCode} 
               AND sub_product_code = #{subProductCode} AND deleted = 0
         ORDER BY billing_item_code
