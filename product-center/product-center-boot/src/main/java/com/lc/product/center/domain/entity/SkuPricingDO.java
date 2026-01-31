@@ -12,10 +12,11 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * SKU定价表(product_center.sku_pricing)表实体类
+ * 定价模板表(product_center.sku_pricing)表实体类
+ * 可复用的定价模板
  *
  * @author lucheng
- * @since 2025-12-27
+ * @since 2026-01-31
  */
 @Data
 @TableName("sku_pricing")
@@ -36,32 +37,82 @@ public class SkuPricingDO implements Serializable {
     @TableField("tenant_id")
     private String tenantId;
 
-    /**
-     * SKU编码
-     */
-    @TableField("sku_code")
-    private String skuCode;
+    // ==================== 业务标识 ====================
 
     /**
-     * 定价模式: PAY_AS_GO/PREPAID/SUBSCRIPTION
+     * 定价编码: POSTPAID-MONTHLY-LINEAR
      */
-    @TableField("pricing_model")
-    private String pricingModel;
+    @TableField("pricing_code")
+    private String pricingCode;
 
     /**
-     * 计费周期: HOURLY/DAILY/MONTHLY/QUARTERLY/YEARLY
+     * 定价版本号: yyyyMMddHHmmss
      */
-    @TableField("billing_period")
-    private String billingPeriod;
+    @TableField("revision")
+    private String revision;
+
+    // ==================== 四维度收费模式 ====================
 
     /**
-     * 周期数量
+     * 计量方式: BY_USAGE/BY_QUOTA
      */
-    @TableField("period_count")
-    private Integer periodCount;
+    @TableField("metering_mode")
+    private String meteringMode;
 
     /**
-     * 原价
+     * 付费方式: POSTPAID/PREPAID/SUBSCRIPTION
+     */
+    @TableField("payment_mode")
+    private String paymentMode;
+
+    /**
+     * 计费周期: HOURLY/DAILY/MONTHLY/QUARTERLY/YEARLY/ONCE
+     */
+    @TableField("billing_cycle")
+    private String billingCycle;
+
+    /**
+     * 周期数量: 1月/3月/12月
+     */
+    @TableField("cycle_count")
+    private Integer cycleCount;
+
+    /**
+     * 计费单位: PERIOD/QUANTITY
+     */
+    @TableField("billing_unit")
+    private String billingUnit;
+
+    // ==================== 策略驱动 ====================
+
+    /**
+     * 定价策略编码(覆盖SKU默认)
+     */
+    @TableField("pricing_strategy_code")
+    private String pricingStrategyCode;
+
+    /**
+     * 计费策略编码(覆盖SKU默认)
+     */
+    @TableField("billing_strategy_code")
+    private String billingStrategyCode;
+
+    /**
+     * 退款政策: PRO_RATA/NON_REFUNDABLE
+     */
+    @TableField("refund_policy")
+    private String refundPolicy;
+
+    // ==================== 价格信息 ====================
+
+    /**
+     * 单价
+     */
+    @TableField("unit_price")
+    private BigDecimal unitPrice;
+
+    /**
+     * 原价(用于展示折扣)
      */
     @TableField("original_price")
     private BigDecimal originalPrice;
@@ -84,6 +135,22 @@ public class SkuPricingDO implements Serializable {
     @TableField("discount_rate")
     private BigDecimal discountRate;
 
+    // ==================== 计量配置 ====================
+
+    /**
+     * 计量单位: 核·小时/GB·月/次
+     */
+    @TableField("metering_unit")
+    private String meteringUnit;
+
+    /**
+     * 计量精度: 小数位数
+     */
+    @TableField("metering_precision")
+    private Integer meteringPrecision;
+
+    // ==================== 时间与优先级 ====================
+
     /**
      * 生效时间
      */
@@ -97,16 +164,30 @@ public class SkuPricingDO implements Serializable {
     private Date expiryTime;
 
     /**
-     * 优先级，数值越大优先级越高
+     * 是否当前主版本: 1是 0否
+     */
+    @TableField("is_current")
+    private Short isCurrent;
+
+    /**
+     * 优先级(数值越大优先级越高)
      */
     @TableField("priority")
     private Integer priority;
+
+    // ==================== 状态与备注 ====================
 
     /**
      * 状态: ACTIVE/INACTIVE
      */
     @TableField("status")
     private String status;
+
+    /**
+     * 备注说明
+     */
+    @TableField("remark")
+    private String remark;
 
     // ==================== 审计字段 ====================
 

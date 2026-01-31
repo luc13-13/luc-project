@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * SKU定价表(product_center.sku_pricing)表服务实现类
+ * 定价模板表(product_center.sku_pricing)表服务实现类
  *
  * @author lucheng
- * @since 2025-12-27
+ * @since 2026-01-31
  */
 @Service("skuPricingService")
 public class SkuPricingServiceImpl extends ServiceImpl<SkuPricingMapper, SkuPricingDO>
@@ -66,37 +66,37 @@ public class SkuPricingServiceImpl extends ServiceImpl<SkuPricingMapper, SkuPric
     }
 
     @Override
-    public List<SkuPricingVO> getPricingsBySkuCode(String tenantId, String skuCode) {
+    public List<SkuPricingVO> getPricingsByCode(String tenantId, String pricingCode) {
         SkuPricingDTO queryDTO = SkuPricingDTO.builder()
                 .tenantId(StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT)
-                .skuCode(skuCode)
+                .pricingCode(pricingCode)
                 .build();
         List<SkuPricingDO> list = baseMapper.selectByCondition(queryDTO);
         return skuPricingConverter.convertDO2VO(list);
     }
 
     @Override
-    public SkuPricingVO getPricingBySkuCodeAndCycle(String tenantId, String skuCode, String billingPeriod) {
+    public SkuPricingVO getPricingByCodeAndCycle(String tenantId, String pricingCode, String billingCycle) {
         SkuPricingDTO queryDTO = SkuPricingDTO.builder()
                 .tenantId(StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT)
-                .skuCode(skuCode)
-                .billingPeriod(billingPeriod)
+                .pricingCode(pricingCode)
+                .billingCycle(billingCycle)
                 .build();
         List<SkuPricingDO> list = baseMapper.selectByCondition(queryDTO);
-        return CollectionUtils.isEmpty(list) ? null : skuPricingConverter.convertDO2VO(list.get(0));
+        return CollectionUtils.isEmpty(list) ? null : skuPricingConverter.convertDO2VO(list.getFirst());
     }
 
     @Override
-    public SkuPricingVO getEffectivePricing(String tenantId, String skuCode, String billingPeriod) {
+    public SkuPricingVO getEffectivePricing(String tenantId, String pricingCode, String billingCycle) {
         SkuPricingDTO queryDTO = SkuPricingDTO.builder()
                 .tenantId(StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT)
-                .skuCode(skuCode)
-                .billingPeriod(billingPeriod)
+                .pricingCode(pricingCode)
+                .billingCycle(billingCycle)
                 .status(ProductStatusEnum.ACTIVE.getCode())
                 .effectiveOnly(true)
                 .build();
         List<SkuPricingDO> list = baseMapper.selectByCondition(queryDTO);
-        return CollectionUtils.isEmpty(list) ? null : skuPricingConverter.convertDO2VO(list.get(0));
+        return CollectionUtils.isEmpty(list) ? null : skuPricingConverter.convertDO2VO(list.getFirst());
     }
 
     @Override
@@ -108,13 +108,15 @@ public class SkuPricingServiceImpl extends ServiceImpl<SkuPricingMapper, SkuPric
         // 检查是否已存在相同的定价配置
         SkuPricingDTO checkDTO = SkuPricingDTO.builder()
                 .tenantId(tenantId)
-                .skuCode(pricingDTO.getSkuCode())
-                .pricingModel(pricingDTO.getPricingModel())
-                .billingPeriod(pricingDTO.getBillingPeriod())
+                .pricingCode(pricingDTO.getPricingCode())
+                .meteringMode(pricingDTO.getMeteringMode())
+                .paymentMode(pricingDTO.getPaymentMode())
+                .billingCycle(pricingDTO.getBillingCycle())
+                .revision(pricingDTO.getRevision())
                 .build();
         List<SkuPricingDO> existing = baseMapper.selectByCondition(checkDTO);
         if (!CollectionUtils.isEmpty(existing)) {
-            throw BizException.exp("该SKU的定价配置已存在");
+            throw BizException.exp("该定价配置已存在");
         }
 
         SkuPricingDO entity = skuPricingConverter.convertDTO2DOForCreate(pricingDTO, tenantId);
@@ -155,11 +157,11 @@ public class SkuPricingServiceImpl extends ServiceImpl<SkuPricingMapper, SkuPric
     }
 
     @Override
-    public Boolean deletePricingsBySkuCode(String tenantId, String skuCode) {
+    public Boolean deletePricingsByCode(String tenantId, String pricingCode) {
         String tenant = StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT;
         LambdaQueryWrapper<SkuPricingDO> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SkuPricingDO::getTenantId, tenant)
-                .eq(SkuPricingDO::getSkuCode, skuCode);
+                .eq(SkuPricingDO::getPricingCode, pricingCode);
         return this.remove(wrapper);
     }
 
@@ -169,17 +171,23 @@ public class SkuPricingServiceImpl extends ServiceImpl<SkuPricingMapper, SkuPric
             if (StringUtils.hasText(queryDTO.getTenantId())) {
                 queryWrapper.eq(SkuPricingDO::getTenantId, queryDTO.getTenantId());
             }
-            if (StringUtils.hasText(queryDTO.getSkuCode())) {
-                queryWrapper.eq(SkuPricingDO::getSkuCode, queryDTO.getSkuCode());
+            if (StringUtils.hasText(queryDTO.getPricingCode())) {
+                queryWrapper.eq(SkuPricingDO::getPricingCode, queryDTO.getPricingCode());
             }
-            if (StringUtils.hasText(queryDTO.getPricingModel())) {
-                queryWrapper.eq(SkuPricingDO::getPricingModel, queryDTO.getPricingModel());
+            if (StringUtils.hasText(queryDTO.getMeteringMode())) {
+                queryWrapper.eq(SkuPricingDO::getMeteringMode, queryDTO.getMeteringMode());
             }
-            if (StringUtils.hasText(queryDTO.getBillingPeriod())) {
-                queryWrapper.eq(SkuPricingDO::getBillingPeriod, queryDTO.getBillingPeriod());
+            if (StringUtils.hasText(queryDTO.getPaymentMode())) {
+                queryWrapper.eq(SkuPricingDO::getPaymentMode, queryDTO.getPaymentMode());
+            }
+            if (StringUtils.hasText(queryDTO.getBillingCycle())) {
+                queryWrapper.eq(SkuPricingDO::getBillingCycle, queryDTO.getBillingCycle());
             }
             if (StringUtils.hasText(queryDTO.getStatus())) {
                 queryWrapper.eq(SkuPricingDO::getStatus, queryDTO.getStatus());
+            }
+            if (queryDTO.getIsCurrent() != null) {
+                queryWrapper.eq(SkuPricingDO::getIsCurrent, queryDTO.getIsCurrent());
             }
         }
         return queryWrapper;

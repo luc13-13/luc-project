@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
- * SKU定价表(product_center.sku_pricing)表服务接口
+ * 定价模板表(product_center.sku_pricing)表服务接口
  *
  * @author lucheng
- * @since 2025-12-27
+ * @since 2026-01-31
  */
 public interface SkuPricingService extends IService<SkuPricingDO> {
 
@@ -23,11 +23,34 @@ public interface SkuPricingService extends IService<SkuPricingDO> {
 
     SkuPricingVO getPricingById(Long id);
 
-    List<SkuPricingVO> getPricingsBySkuCode(String tenantId, String skuCode);
+    /**
+     * 根据定价编码查询定价模板列表
+     *
+     * @param tenantId    租户ID
+     * @param pricingCode 定价编码
+     * @return 定价模板列表
+     */
+    List<SkuPricingVO> getPricingsByCode(String tenantId, String pricingCode);
 
-    SkuPricingVO getPricingBySkuCodeAndCycle(String tenantId, String skuCode, String billingPeriod);
+    /**
+     * 根据定价编码和计费周期查询
+     *
+     * @param tenantId     租户ID
+     * @param pricingCode  定价编码
+     * @param billingCycle 计费周期
+     * @return 定价模板
+     */
+    SkuPricingVO getPricingByCodeAndCycle(String tenantId, String pricingCode, String billingCycle);
 
-    SkuPricingVO getEffectivePricing(String tenantId, String skuCode, String billingPeriod);
+    /**
+     * 获取有效的定价模板
+     *
+     * @param tenantId     租户ID
+     * @param pricingCode  定价编码
+     * @param billingCycle 计费周期
+     * @return 有效的定价模板
+     */
+    SkuPricingVO getEffectivePricing(String tenantId, String pricingCode, String billingCycle);
 
     @Transactional(rollbackFor = Exception.class)
     SkuPricingVO createPricing(SkuPricingDTO pricingDTO);
@@ -41,6 +64,13 @@ public interface SkuPricingService extends IService<SkuPricingDO> {
     @Transactional(rollbackFor = Exception.class)
     Boolean deletePricing(Long id);
 
+    /**
+     * 删除指定定价编码的所有定价模板
+     *
+     * @param tenantId    租户ID
+     * @param pricingCode 定价编码
+     * @return 是否成功
+     */
     @Transactional(rollbackFor = Exception.class)
-    Boolean deletePricingsBySkuCode(String tenantId, String skuCode);
+    Boolean deletePricingsByCode(String tenantId, String pricingCode);
 }

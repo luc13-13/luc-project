@@ -122,6 +122,9 @@ public class ProductInfoDO implements Serializable {
     @TableField("metering_unit")
     private String meteringUnit;
 
+    @TableField("revision_id")
+    private String revisionId;
+
     // ==================== 状态与排序 ====================
 
     /**

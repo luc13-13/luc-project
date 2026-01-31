@@ -67,12 +67,12 @@ public class ProductSkuController {
         return WebResult.success(result);
     }
 
-    @GetMapping("/by-product")
-    @Operation(summary = "根据产品编码查询SKU列表", description = "根据产品编码查询SKU列表")
-    public WebResult<List<ProductSkuVO>> getByProductCode(
+    @GetMapping("/by-type")
+    @Operation(summary = "根据SKU类型查询SKU列表", description = "根据SKU类型查询SKU列表")
+    public WebResult<List<ProductSkuVO>> getBySkuType(
             @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId,
-            @Parameter(description = "产品编码") @RequestParam String productCode) {
-        List<ProductSkuVO> result = productSkuService.getSkusByProductCode(tenantId, productCode);
+            @Parameter(description = "SKU类型") @RequestParam String skuType) {
+        List<ProductSkuVO> result = productSkuService.getSkusBySkuType(tenantId, skuType);
         return WebResult.success(result);
     }
 

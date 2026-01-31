@@ -86,15 +86,15 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
         if (CollectionUtils.isEmpty(list)) {
             return null;
         }
-        return productSkuConverter.convertDO2VO(list.get(0));
+        return productSkuConverter.convertDO2VO(list.getFirst());
     }
 
     @Override
-    public List<ProductSkuVO> getSkusByProductCode(String tenantId, String productCode) {
+    public List<ProductSkuVO> getSkusBySkuType(String tenantId, String skuType) {
         // 封装查询参数
         ProductSkuDTO queryDTO = ProductSkuDTO.builder()
                 .tenantId(StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT)
-                .productCode(productCode)
+                .skuType(skuType)
                 .build();
         List<ProductSkuDO> list = baseMapper.selectByCondition(queryDTO);
         return productSkuConverter.convertDO2VO(list);
@@ -220,12 +220,12 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
                 queryWrapper.like(ProductSkuDO::getSkuName, queryDTO.getSkuName());
             }
 
-            if (StringUtils.hasText(queryDTO.getProductCode())) {
-                queryWrapper.eq(ProductSkuDO::getProductCode, queryDTO.getProductCode());
+            if (StringUtils.hasText(queryDTO.getPricingStrategyCode())) {
+                queryWrapper.eq(ProductSkuDO::getPricingStrategyCode, queryDTO.getPricingStrategyCode());
             }
 
-            if (StringUtils.hasText(queryDTO.getSubProductCode())) {
-                queryWrapper.eq(ProductSkuDO::getSubProductCode, queryDTO.getSubProductCode());
+            if (StringUtils.hasText(queryDTO.getRevision())) {
+                queryWrapper.eq(ProductSkuDO::getRevision, queryDTO.getRevision());
             }
 
             if (StringUtils.hasText(queryDTO.getSkuType())) {

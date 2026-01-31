@@ -16,6 +16,7 @@ mvnw
 **/target/
 
 # Log file
+logs
 *.log
 **/logs
 

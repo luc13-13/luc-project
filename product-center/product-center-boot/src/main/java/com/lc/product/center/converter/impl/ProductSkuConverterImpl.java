@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
  * 产品SKU表对象转换实现类
  *
  * @author lucheng
- * @since 2025-12-26
+ * @since 2026-01-31
  */
 @Service("productSkuConverter")
 public class ProductSkuConverterImpl implements ProductSkuConverter {
@@ -35,12 +35,18 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
         entity.setTenantId(dto.getTenantId());
         entity.setSkuCode(dto.getSkuCode());
         entity.setSkuName(dto.getSkuName());
-        entity.setProductCode(dto.getProductCode());
-        entity.setSubProductCode(dto.getSubProductCode());
+        entity.setRevision(dto.getRevision());
         entity.setSkuType(dto.getSkuType());
+        entity.setBaseUnitPrice(dto.getBaseUnitPrice());
+        entity.setCurrency(dto.getCurrency());
+        entity.setPricingStrategyCode(dto.getPricingStrategyCode());
+        entity.setBillingStrategyCode(dto.getBillingStrategyCode());
         entity.setSaleable(dto.getSaleable());
         entity.setVisible(dto.getVisible());
         entity.setQuotaLimit(dto.getQuotaLimit());
+        entity.setIsCurrent(dto.getIsCurrent());
+        entity.setEffectiveTime(dto.getEffectiveTime());
+        entity.setExpiryTime(dto.getExpiryTime());
         entity.setStatus(dto.getStatus());
         return entity;
     }
@@ -56,12 +62,18 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
                 .tenantId(entity.getTenantId())
                 .skuCode(entity.getSkuCode())
                 .skuName(entity.getSkuName())
-                .productCode(entity.getProductCode())
-                .subProductCode(entity.getSubProductCode())
+                .revision(entity.getRevision())
                 .skuType(entity.getSkuType())
+                .baseUnitPrice(entity.getBaseUnitPrice())
+                .currency(entity.getCurrency())
+                .pricingStrategyCode(entity.getPricingStrategyCode())
+                .billingStrategyCode(entity.getBillingStrategyCode())
                 .saleable(entity.getSaleable())
                 .visible(entity.getVisible())
                 .quotaLimit(entity.getQuotaLimit())
+                .isCurrent(entity.getIsCurrent())
+                .effectiveTime(entity.getEffectiveTime())
+                .expiryTime(entity.getExpiryTime())
                 .status(entity.getStatus())
                 .publishTime(entity.getPublishTime())
                 .createdBy(entity.getCreatedBy())
@@ -112,12 +124,18 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
                 .tenantId(entity.getTenantId())
                 .skuCode(entity.getSkuCode())
                 .skuName(entity.getSkuName())
-                .productCode(entity.getProductCode())
-                .subProductCode(entity.getSubProductCode())
+                .revision(entity.getRevision())
                 .skuType(entity.getSkuType())
+                .baseUnitPrice(entity.getBaseUnitPrice())
+                .currency(entity.getCurrency())
+                .pricingStrategyCode(entity.getPricingStrategyCode())
+                .billingStrategyCode(entity.getBillingStrategyCode())
                 .saleable(entity.getSaleable())
                 .visible(entity.getVisible())
                 .quotaLimit(entity.getQuotaLimit())
+                .isCurrent(entity.getIsCurrent())
+                .effectiveTime(entity.getEffectiveTime())
+                .expiryTime(entity.getExpiryTime())
                 .status(entity.getStatus())
                 .publishTime(entity.getPublishTime())
                 .createdBy(entity.getCreatedBy())
@@ -139,14 +157,22 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
                 .tenantId(bo.getTenantId())
                 .skuCode(bo.getSkuCode())
                 .skuName(bo.getSkuName())
+                .revision(bo.getRevision())
+                .skuType(bo.getSkuType())
+                .baseUnitPrice(bo.getBaseUnitPrice())
+                .currency(bo.getCurrency())
+                .pricingStrategyCode(bo.getPricingStrategyCode())
+                .billingStrategyCode(bo.getBillingStrategyCode())
                 .productCode(bo.getProductCode())
                 .productName(bo.getProductName())
                 .subProductCode(bo.getSubProductCode())
                 .subProductName(bo.getSubProductName())
-                .skuType(bo.getSkuType())
                 .saleable(bo.getSaleable())
                 .visible(bo.getVisible())
                 .quotaLimit(bo.getQuotaLimit())
+                .isCurrent(bo.getIsCurrent())
+                .effectiveTime(bo.getEffectiveTime())
+                .expiryTime(bo.getExpiryTime())
                 .status(bo.getStatus())
                 .publishTime(bo.getPublishTime())
                 .hourlyPrice(bo.getHourlyPrice())

@@ -1,0 +1,313 @@
+package com.lc.product.center.service.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.lc.framework.core.mvc.BizException;
+import com.lc.framework.core.page.PaginationResult;
+import com.lc.product.center.constants.ProductDefaultConstants;
+import com.lc.product.center.constants.ProductStatusEnum;
+import com.lc.product.center.domain.dto.PricingStrategyDTO;
+import com.lc.product.center.domain.dto.PricingStrategyParamDTO;
+import com.lc.product.center.domain.entity.PricingStrategyDO;
+import com.lc.product.center.domain.entity.PricingStrategyParamDO;
+import com.lc.product.center.domain.vo.PricingStrategyParamVO;
+import com.lc.product.center.domain.vo.PricingStrategyVO;
+import com.lc.product.center.mapper.PricingStrategyMapper;
+import com.lc.product.center.mapper.PricingStrategyParamMapper;
+import com.lc.product.center.service.PricingStrategyService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * 定价策略表(product_center.pricing_strategy)表服务实现类
+ *
+ * @author lucheng
+ * @since 2026-01-31
+ */
+@Service("pricingStrategyService")
+public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMapper, PricingStrategyDO>
+        implements PricingStrategyService {
+
+    @Autowired
+    private PricingStrategyParamMapper paramMapper;
+
+    @Override
+    public PaginationResult<PricingStrategyVO> queryStrategyPage(PricingStrategyDTO queryDTO) {
+        Page<PricingStrategyDO> page = Page.of(queryDTO.getPageIndex(), queryDTO.getPageSize());
+
+        LambdaQueryWrapper<PricingStrategyDO> queryWrapper = buildQueryWrapper(queryDTO);
+        queryWrapper.orderByDesc(PricingStrategyDO::getPriority)
+                .orderByDesc(PricingStrategyDO::getDtCreated);
+
+        IPage<PricingStrategyDO> pageResult = this.page(page, queryWrapper);
+        queryDTO.setTotal(pageResult.getTotal());
+
+        List<PricingStrategyVO> voList = convertToVOList(pageResult.getRecords());
+        return PaginationResult.success(voList, queryDTO);
+    }
+
+    @Override
+    public List<PricingStrategyVO> queryStrategyList(PricingStrategyDTO queryDTO) {
+        List<PricingStrategyDO> list = baseMapper.selectByCondition(queryDTO);
+        return convertToVOList(list);
+    }
+
+    @Override
+    public PricingStrategyVO getStrategyById(Long id) {
+        PricingStrategyDO entity = this.getById(id);
+        if (entity == null) {
+            return null;
+        }
+        PricingStrategyVO vo = convertToVO(entity);
+        // 加载阶梯参数
+        List<PricingStrategyParamDO> params = paramMapper.selectByStrategyCode(
+                entity.getTenantId(), entity.getStrategyCode());
+        vo.setStrategyParams(convertParamsToVO(params));
+        return vo;
+    }
+
+    @Override
+    public PricingStrategyVO getStrategyByCode(String tenantId, String strategyCode) {
+        String tenant = StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT;
+        PricingStrategyDO entity = baseMapper.selectByCode(tenant, strategyCode);
+        if (entity == null) {
+            return null;
+        }
+        PricingStrategyVO vo = convertToVO(entity);
+        List<PricingStrategyParamDO> params = paramMapper.selectByStrategyCode(tenant, strategyCode);
+        vo.setStrategyParams(convertParamsToVO(params));
+        return vo;
+    }
+
+    @Override
+    public List<PricingStrategyVO> getEffectiveStrategies(String tenantId, String strategyType) {
+        String tenant = StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT;
+        List<PricingStrategyDO> list = baseMapper.selectEffectiveStrategies(tenant, strategyType);
+        return convertToVOList(list);
+    }
+
+    @Override
+    public PricingStrategyVO createStrategy(PricingStrategyDTO strategyDTO) {
+        String tenantId = StringUtils.hasText(strategyDTO.getTenantId())
+                ? strategyDTO.getTenantId()
+                : ProductDefaultConstants.DEFAULT_TENANT;
+
+        // 检查编码是否已存在
+        PricingStrategyDO existing = baseMapper.selectByCode(tenantId, strategyDTO.getStrategyCode());
+        if (existing != null) {
+            throw BizException.exp("策略编码已存在");
+        }
+
+        PricingStrategyDO entity = convertToEntity(strategyDTO);
+        entity.setTenantId(tenantId);
+        if (entity.getStatus() == null) {
+            entity.setStatus(ProductStatusEnum.ACTIVE.getCode());
+        }
+        if (entity.getPriority() == null) {
+            entity.setPriority(0);
+        }
+
+        this.save(entity);
+        return convertToVO(entity);
+    }
+
+    @Override
+    public PricingStrategyVO updateStrategy(PricingStrategyDTO strategyDTO) {
+        PricingStrategyDO existing = this.getById(strategyDTO.getId());
+        if (existing == null) {
+            throw BizException.exp("策略不存在");
+        }
+
+        PricingStrategyDO updateEntity = convertToEntity(strategyDTO);
+        updateEntity.setId(strategyDTO.getId());
+        this.updateById(updateEntity);
+
+        return getStrategyById(strategyDTO.getId());
+    }
+
+    @Override
+    public Boolean deleteStrategy(Long id) {
+        PricingStrategyDO entity = this.getById(id);
+        if (entity == null) {
+            throw BizException.exp("策略不存在");
+        }
+        // 删除关联的参数
+        paramMapper.deleteByStrategyCode(entity.getTenantId(), entity.getStrategyCode());
+        return this.removeById(id);
+    }
+
+    @Override
+    public Boolean saveStrategyParams(Long strategyId, List<PricingStrategyParamDTO> params) {
+        // 获取策略信息
+        PricingStrategyDO entity = this.getById(strategyId);
+        if (entity == null) {
+            throw BizException.exp("策略不存在");
+        }
+
+        String tenantId = entity.getTenantId();
+        String strategyCode = entity.getStrategyCode();
+
+        // 先删除原有参数
+        paramMapper.deleteByStrategyCode(tenantId, strategyCode);
+
+        if (CollectionUtils.isEmpty(params)) {
+            return true;
+        }
+
+        // 构建参数实体
+        List<PricingStrategyParamDO> paramDOs = new ArrayList<>();
+        for (int i = 0; i < params.size(); i++) {
+            PricingStrategyParamDTO dto = params.get(i);
+            PricingStrategyParamDO paramDO = PricingStrategyParamDO.builder()
+                    .tenantId(tenantId)
+                    .strategyCode(strategyCode)
+                    .rangeStart(dto.getRangeStart())
+                    .rangeEnd(dto.getRangeEnd())
+                    .unitPrice(dto.getUnitPrice())
+                    .fixedAmount(dto.getFixedAmount() != null ? dto.getFixedAmount() : BigDecimal.ZERO)
+                    .sortOrder(dto.getSortOrder() != null ? dto.getSortOrder() : i)
+                    .createdBy("system")
+                    .build();
+            paramDOs.add(paramDO);
+        }
+
+        paramMapper.batchInsert(paramDOs);
+        return true;
+    }
+
+    // ==================== 私有方法 ====================
+
+    private LambdaQueryWrapper<PricingStrategyDO> buildQueryWrapper(PricingStrategyDTO queryDTO) {
+        LambdaQueryWrapper<PricingStrategyDO> queryWrapper = new LambdaQueryWrapper<>();
+        if (queryDTO != null) {
+            if (StringUtils.hasText(queryDTO.getTenantId())) {
+                queryWrapper.eq(PricingStrategyDO::getTenantId, queryDTO.getTenantId());
+            }
+            if (StringUtils.hasText(queryDTO.getStrategyCode())) {
+                queryWrapper.like(PricingStrategyDO::getStrategyCode, queryDTO.getStrategyCode());
+            }
+            if (StringUtils.hasText(queryDTO.getStrategyName())) {
+                queryWrapper.like(PricingStrategyDO::getStrategyName, queryDTO.getStrategyName());
+            }
+            if (StringUtils.hasText(queryDTO.getStrategyType())) {
+                queryWrapper.eq(PricingStrategyDO::getStrategyType, queryDTO.getStrategyType());
+            }
+            if (StringUtils.hasText(queryDTO.getApplyScope())) {
+                queryWrapper.eq(PricingStrategyDO::getApplyScope, queryDTO.getApplyScope());
+            }
+            if (StringUtils.hasText(queryDTO.getStatus())) {
+                queryWrapper.eq(PricingStrategyDO::getStatus, queryDTO.getStatus());
+            }
+        }
+        return queryWrapper;
+    }
+
+    private PricingStrategyDO convertToEntity(PricingStrategyDTO dto) {
+        return PricingStrategyDO.builder()
+                .id(dto.getId())
+                .tenantId(dto.getTenantId())
+                .strategyCode(dto.getStrategyCode())
+                .strategyName(dto.getStrategyName())
+                .strategyType(dto.getStrategyType())
+                .applyScope(dto.getApplyScope())
+                .applyScopeValue(dto.getApplyScopeValue())
+                .strategyConfig(dto.getStrategyConfig())
+                .priority(dto.getPriority())
+                .effectiveTime(dto.getEffectiveTime())
+                .expiryTime(dto.getExpiryTime())
+                .status(dto.getStatus())
+                .remark(dto.getRemark())
+                .build();
+    }
+
+    private PricingStrategyVO convertToVO(PricingStrategyDO entity) {
+        if (entity == null) {
+            return null;
+        }
+        return PricingStrategyVO.builder()
+                .id(entity.getId())
+                .tenantId(entity.getTenantId())
+                .strategyCode(entity.getStrategyCode())
+                .strategyName(entity.getStrategyName())
+                .strategyType(entity.getStrategyType())
+                .strategyTypeDesc(getStrategyTypeDesc(entity.getStrategyType()))
+                .applyScope(entity.getApplyScope())
+                .applyScopeDesc(getApplyScopeDesc(entity.getApplyScope()))
+                .applyScopeValue(entity.getApplyScopeValue())
+                .strategyConfig(entity.getStrategyConfig())
+                .priority(entity.getPriority())
+                .effectiveTime(entity.getEffectiveTime())
+                .expiryTime(entity.getExpiryTime())
+                .status(entity.getStatus())
+                .statusDesc(ProductStatusEnum.getDescByCode(entity.getStatus()))
+                .remark(entity.getRemark())
+                .dtCreated(entity.getDtCreated())
+                .dtModified(entity.getDtModified())
+                .build();
+    }
+
+    private List<PricingStrategyVO> convertToVOList(List<PricingStrategyDO> entities) {
+        if (CollectionUtils.isEmpty(entities)) {
+            return new ArrayList<>();
+        }
+        return entities.stream().map(this::convertToVO).collect(Collectors.toList());
+    }
+
+    private List<PricingStrategyParamVO> convertParamsToVO(List<PricingStrategyParamDO> params) {
+        if (CollectionUtils.isEmpty(params)) {
+            return new ArrayList<>();
+        }
+        return params.stream().map(param -> {
+            String rangeDesc = param.getRangeStart() + " - " +
+                    (param.getRangeEnd() != null ? param.getRangeEnd() : "∞");
+            return PricingStrategyParamVO.builder()
+                    .id(param.getId())
+                    .tenantId(param.getTenantId())
+                    .pricingCode(param.getPricingCode())
+                    .pricingRevision(param.getPricingRevision())
+                    .strategyCode(param.getStrategyCode())
+                    .rangeStart(param.getRangeStart())
+                    .rangeEnd(param.getRangeEnd())
+                    .rangeDesc(rangeDesc)
+                    .unitPrice(param.getUnitPrice())
+                    .fixedAmount(param.getFixedAmount())
+                    .sortOrder(param.getSortOrder())
+                    .build();
+        }).collect(Collectors.toList());
+    }
+
+    private String getStrategyTypeDesc(String strategyType) {
+        if (strategyType == null) {
+            return null;
+        }
+        return switch (strategyType) {
+            case "LINEAR" -> "线性定价";
+            case "TIERED" -> "阶梯定价";
+            case "VOLUME_DISCOUNT" -> "批量折扣";
+            case "REGION" -> "区域定价";
+            case "PROMOTION" -> "促销定价";
+            default -> strategyType;
+        };
+    }
+
+    private String getApplyScopeDesc(String applyScope) {
+        if (applyScope == null) {
+            return null;
+        }
+        return switch (applyScope) {
+            case "ALL" -> "全局";
+            case "SKU" -> "指定SKU";
+            case "PRODUCT_LINE" -> "产品线";
+            default -> applyScope;
+        };
+    }
+}

@@ -16,7 +16,7 @@ import java.util.List;
  * 产品SKU表(product_center.product_sku)表视图对象
  *
  * @author lucheng
- * @since 2025-12-21
+ * @since 2026-01-31
  */
 @Data
 @Builder
@@ -54,31 +54,13 @@ public class ProductSkuVO implements Serializable {
     @Schema(description = "SKU名称")
     private String skuName;
 
-    // ==================== 关联产品 ====================
+    // ==================== 版本控制 ====================
 
     /**
-     * 所属产品编码
+     * SKU版本号
      */
-    @Schema(description = "所属产品编码")
-    private String productCode;
-
-    /**
-     * 产品名称
-     */
-    @Schema(description = "产品名称")
-    private String productName;
-
-    /**
-     * 所属规格族编码
-     */
-    @Schema(description = "所属规格族编码")
-    private String subProductCode;
-
-    /**
-     * 规格族名称
-     */
-    @Schema(description = "规格族名称")
-    private String subProductName;
+    @Schema(description = "SKU版本号")
+    private String revision;
 
     // ==================== SKU类型 ====================
 
@@ -93,6 +75,32 @@ public class ProductSkuVO implements Serializable {
      */
     @Schema(description = "SKU类型描述")
     private String skuTypeDesc;
+
+    // ==================== 基准定价 ====================
+
+    /**
+     * 基准单价
+     */
+    @Schema(description = "基准单价")
+    private BigDecimal baseUnitPrice;
+
+    /**
+     * 币种
+     */
+    @Schema(description = "币种")
+    private String currency;
+
+    /**
+     * 默认定价策略编码
+     */
+    @Schema(description = "默认定价策略编码")
+    private String pricingStrategyCode;
+
+    /**
+     * 默认计费策略编码
+     */
+    @Schema(description = "默认计费策略编码")
+    private String billingStrategyCode;
 
     // ==================== 售卖控制 ====================
 
@@ -114,6 +122,26 @@ public class ProductSkuVO implements Serializable {
     @Schema(description = "配额限制")
     private Integer quotaLimit;
 
+    // ==================== 版本状态 ====================
+
+    /**
+     * 是否当前主版本
+     */
+    @Schema(description = "是否当前主版本")
+    private Short isCurrent;
+
+    /**
+     * 生效时间
+     */
+    @Schema(description = "生效时间")
+    private Date effectiveTime;
+
+    /**
+     * 失效时间
+     */
+    @Schema(description = "失效时间")
+    private Date expiryTime;
+
     // ==================== 状态 ====================
 
     /**
@@ -133,6 +161,32 @@ public class ProductSkuVO implements Serializable {
      */
     @Schema(description = "上架时间")
     private Date publishTime;
+
+    // ==================== 关联信息（通过BOM查询） ====================
+
+    /**
+     * 所属产品编码
+     */
+    @Schema(description = "所属产品编码(通过BOM查询)")
+    private String productCode;
+
+    /**
+     * 产品名称
+     */
+    @Schema(description = "产品名称")
+    private String productName;
+
+    /**
+     * 所属规格族编码
+     */
+    @Schema(description = "所属规格族编码(通过BOM查询)")
+    private String subProductCode;
+
+    /**
+     * 规格族名称
+     */
+    @Schema(description = "规格族名称")
+    private String subProductName;
 
     // ==================== 价格信息（关联查询） ====================
 

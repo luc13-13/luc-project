@@ -402,6 +402,44 @@ sequenceDiagram
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
+```mermaid
+classDiagram
+    class ProductSkuDO {
+        +String skuCode
+        +String skuName
+        +String status
+    }
+    class SkuItemCombinationDO {
+        +String skuCode
+        +Long revisionId
+        +String billingItemCode -- 关联 ProductInfo
+        +BigDecimal quantity
+        +Integer pricingIncluded
+    }
+    class SkuPricingDO {
+        +String skuCode
+        +Long revisionId
+        +String strategyCode -- 驱动算法
+        +String refundPolicy
+    }
+    class ProductInfoDO {
+        +String billingItemCode -- 物理规格
+        +String meteringUnit -- 计量单位
+        +Long revisionId
+    }
+    class PricingStrategyParamDO {
+        +Long pricingId
+        +BigDecimal unitPrice
+        +BigDecimal rangeStart
+    }
+
+    ProductSkuDO "1" -- "N" SkuItemCombinationDO : 结构版本化
+    ProductSkuDO "1" -- "N" SkuPricingDO : 定价版本化
+    SkuItemCombinationDO "N" -- "1" ProductInfoDO : 资源绑定
+    SkuPricingDO "1" -- "N" PricingStrategyParamDO : 策略参数
+```
+
+
 ## 六、luc-framework脚手架核心功能
 
 ### 6.1 framework-apidoc

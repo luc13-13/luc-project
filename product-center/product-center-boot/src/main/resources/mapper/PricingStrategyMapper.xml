@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.product.center.mapper.PricingStrategyMapper">
+
+    <resultMap id="BaseResultMap" type="com.lc.product.center.domain.entity.PricingStrategyDO">
+        <id column="id" property="id"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="strategy_code" property="strategyCode"/>
+        <result column="strategy_name" property="strategyName"/>
+        <result column="strategy_type" property="strategyType"/>
+        <result column="apply_scope" property="applyScope"/>
+        <result column="apply_scope_value" property="applyScopeValue"/>
+        <result column="strategy_config" property="strategyConfig"
+                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="priority" property="priority"/>
+        <result column="effective_time" property="effectiveTime"/>
+        <result column="expiry_time" property="expiryTime"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="dt_created" property="dtCreated"/>
+        <result column="modified_by" property="modifiedBy"/>
+        <result column="dt_modified" property="dtModified"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id, tenant_id, strategy_code, strategy_name, strategy_type, apply_scope, apply_scope_value,
+        strategy_config, priority, effective_time, expiry_time, status, remark,
+        created_by, dt_created, modified_by, dt_modified
+    </sql>
+
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_center.pricing_strategy
+        <where>
+            <if test="query.tenantId != null and query.tenantId != ''">
+                AND tenant_id = #{query.tenantId}
+            </if>
+            <if test="query.strategyCode != null and query.strategyCode != ''">
+                AND strategy_code LIKE CONCAT('%', #{query.strategyCode}, '%')
+            </if>
+            <if test="query.strategyName != null and query.strategyName != ''">
+                AND strategy_name LIKE CONCAT('%', #{query.strategyName}, '%')
+            </if>
+            <if test="query.strategyType != null and query.strategyType != ''">
+                AND strategy_type = #{query.strategyType}
+            </if>
+            <if test="query.applyScope != null and query.applyScope != ''">
+                AND apply_scope = #{query.applyScope}
+            </if>
+            <if test="query.status != null and query.status != ''">
+                AND status = #{query.status}
+            </if>
+        </where>
+        ORDER BY priority DESC, dt_created DESC
+    </select>
+
+    <select id="selectByCode" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_center.pricing_strategy
+        WHERE tenant_id = #{tenantId}
+          AND strategy_code = #{strategyCode}
+        LIMIT 1
+    </select>
+
+    <select id="selectEffectiveStrategies" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_center.pricing_strategy
+        WHERE tenant_id = #{tenantId}
+          AND status = 'ACTIVE'
+          AND (effective_time IS NULL OR effective_time &lt;= NOW())
+          AND (expiry_time IS NULL OR expiry_time &gt;= NOW())
+        <if test="strategyType != null and strategyType != ''">
+            AND strategy_type = #{strategyType}
+        </if>
+        ORDER BY priority DESC
+    </select>
+
+</mapper>

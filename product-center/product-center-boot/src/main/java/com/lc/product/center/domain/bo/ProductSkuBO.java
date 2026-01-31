@@ -18,7 +18,7 @@ import java.util.List;
  * 承载业务逻辑中的参数封装
  *
  * @author lucheng
- * @since 2025-12-26
+ * @since 2026-01-31
  */
 @Data
 @Builder
@@ -51,27 +51,12 @@ public class ProductSkuBO implements Serializable {
      */
     private String skuName;
 
-    // ==================== 关联产品 ====================
+    // ==================== 版本控制 ====================
 
     /**
-     * 所属产品编码
+     * SKU版本号
      */
-    private String productCode;
-
-    /**
-     * 产品名称（关联查询）
-     */
-    private String productName;
-
-    /**
-     * 所属规格族编码
-     */
-    private String subProductCode;
-
-    /**
-     * 规格族名称（关联查询）
-     */
-    private String subProductName;
+    private String revision;
 
     // ==================== SKU类型 ====================
 
@@ -79,6 +64,28 @@ public class ProductSkuBO implements Serializable {
      * SKU类型
      */
     private String skuType;
+
+    // ==================== 基准定价 ====================
+
+    /**
+     * 基准单价
+     */
+    private BigDecimal baseUnitPrice;
+
+    /**
+     * 币种
+     */
+    private String currency;
+
+    /**
+     * 默认定价策略编码
+     */
+    private String pricingStrategyCode;
+
+    /**
+     * 默认计费策略编码
+     */
+    private String billingStrategyCode;
 
     // ==================== 售卖控制 ====================
 
@@ -97,6 +104,23 @@ public class ProductSkuBO implements Serializable {
      */
     private Integer quotaLimit;
 
+    // ==================== 版本状态 ====================
+
+    /**
+     * 是否当前主版本
+     */
+    private Short isCurrent;
+
+    /**
+     * 生效时间
+     */
+    private Date effectiveTime;
+
+    /**
+     * 失效时间
+     */
+    private Date expiryTime;
+
     // ==================== 状态 ====================
 
     /**
@@ -108,6 +132,28 @@ public class ProductSkuBO implements Serializable {
      * 上架时间
      */
     private Date publishTime;
+
+    // ==================== 关联信息（通过BOM聚合） ====================
+
+    /**
+     * 所属产品编码（从BOM查询）
+     */
+    private String productCode;
+
+    /**
+     * 产品名称（关联查询）
+     */
+    private String productName;
+
+    /**
+     * 所属规格族编码（从BOM查询）
+     */
+    private String subProductCode;
+
+    /**
+     * 规格族名称（关联查询）
+     */
+    private String subProductName;
 
     // ==================== 业务聚合字段 ====================
 
@@ -175,6 +221,13 @@ public class ProductSkuBO implements Serializable {
      */
     public boolean isPublished() {
         return ProductStatusEnum.ACTIVE.getCode().equals(this.status) && this.publishTime != null;
+    }
+
+    /**
+     * 是否当前版本
+     */
+    public boolean isCurrentVersion() {
+        return this.isCurrent != null && this.isCurrent == NumberConstants.STATUS_TRUE.shortValue();
     }
 
     /**

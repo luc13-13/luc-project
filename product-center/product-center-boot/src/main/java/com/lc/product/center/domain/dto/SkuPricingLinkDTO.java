@@ -3,6 +3,7 @@ package com.lc.product.center.domain.dto;
 import com.lc.framework.core.page.PaginationParams;
 import com.lc.framework.core.utils.validator.Groups;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -17,17 +18,17 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * SKU计费项组合表(product_center.sku_item_combination)表数据传输类
+ * SKU与定价关联表(product_center.sku_pricing_link)表数据传输类
  *
  * @author lucheng
- * @since 2025-12-27
+ * @since 2026-01-31
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(name = "SkuItemCombinationDTO", description = "SKU计费项组合DTO")
-public class SkuItemCombinationDTO implements Serializable, PaginationParams {
+@Schema(name = "SkuPricingLinkDTO", description = "SKU与定价关联DTO")
+public class SkuPricingLinkDTO implements Serializable, PaginationParams {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -40,36 +41,39 @@ public class SkuItemCombinationDTO implements Serializable, PaginationParams {
     @Null(message = "禁止修改租户ID", groups = Groups.UpdateGroup.class)
     private String tenantId;
 
+    // ==================== SKU关联 ====================
+
     @Schema(description = "SKU编码")
     @NotBlank(message = "SKU编码不能为空", groups = Groups.AddGroup.class)
-    @Null(message = "禁止修改SKU编码", groups = Groups.UpdateGroup.class)
     private String skuCode;
 
-    @Schema(description = "关联SKU版本号")
+    @Schema(description = "SKU版本号")
     @NotBlank(message = "SKU版本号不能为空", groups = Groups.AddGroup.class)
     private String skuRevision;
 
-    @Schema(description = "产品编码")
-    @NotBlank(message = "产品编码不能为空", groups = Groups.AddGroup.class)
-    private String productCode;
+    // ==================== 定价关联 ====================
 
-    @Schema(description = "规格族编码")
-    @NotBlank(message = "规格族编码不能为空", groups = Groups.AddGroup.class)
-    private String subProductCode;
+    @Schema(description = "定价编码")
+    @NotBlank(message = "定价编码不能为空", groups = Groups.AddGroup.class)
+    private String pricingCode;
 
-    @Schema(description = "计费项编码")
-    @NotBlank(message = "计费项编码不能为空", groups = Groups.AddGroup.class)
-    private String billingItemCode;
+    @Schema(description = "定价版本号")
+    @NotBlank(message = "定价版本号不能为空", groups = Groups.AddGroup.class)
+    private String pricingRevision;
 
-    @Schema(description = "计费规格编码")
-    @NotBlank(message = "计费规格编码不能为空", groups = Groups.AddGroup.class)
-    private String subBillingItemCode;
+    // ==================== 覆盖配置 ====================
 
-    @Schema(description = "数量/份数")
-    private BigDecimal quantity;
+    @Schema(description = "覆盖系数(可选)")
+    @DecimalMin(value = "0.00", message = "系数不能为负数", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
+    private BigDecimal overrideFactor;
 
-    @Schema(description = "是否计入SKU定价: 1是 0否")
-    private Short pricingIncluded;
+    @Schema(description = "是否默认收费模式: 1是 0否")
+    private Short isDefault;
+
+    // ==================== 状态 ====================
+
+    @Schema(description = "状态: ACTIVE/INACTIVE")
+    private String status;
 
     // ==================== 分页参数 ====================
 

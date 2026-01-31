@@ -12,14 +12,14 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * SKU计费项组合BOM表(product_center.sku_item_combination)表实体类
+ * SKU与定价关联表(product_center.sku_pricing_link)表实体类
  *
  * @author lucheng
  * @since 2026-01-31
  */
 @Data
-@TableName("sku_item_combination")
-public class SkuItemCombinationDO implements Serializable {
+@TableName("sku_pricing_link")
+public class SkuPricingLinkDO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -36,6 +36,8 @@ public class SkuItemCombinationDO implements Serializable {
     @TableField("tenant_id")
     private String tenantId;
 
+    // ==================== SKU关联 ====================
+
     /**
      * SKU编码
      */
@@ -43,50 +45,46 @@ public class SkuItemCombinationDO implements Serializable {
     private String skuCode;
 
     /**
-     * 关联SKU版本号
+     * SKU版本号
      */
     @TableField("sku_revision")
     private String skuRevision;
 
-    // ==================== 四层计费项编码 ====================
+    // ==================== 定价关联 ====================
 
     /**
-     * 产品编码
+     * 定价编码
      */
-    @TableField("product_code")
-    private String productCode;
+    @TableField("pricing_code")
+    private String pricingCode;
 
     /**
-     * 规格族编码
+     * 定价版本号
      */
-    @TableField("sub_product_code")
-    private String subProductCode;
+    @TableField("pricing_revision")
+    private String pricingRevision;
+
+    // ==================== 覆盖配置 ====================
 
     /**
-     * 计费项编码
+     * 覆盖系数(可选)
      */
-    @TableField("billing_item_code")
-    private String billingItemCode;
+    @TableField("override_factor")
+    private BigDecimal overrideFactor;
 
     /**
-     * 计费规格编码
+     * 是否默认收费模式: 1是 0否
      */
-    @TableField("sub_billing_item_code")
-    private String subBillingItemCode;
+    @TableField("is_default")
+    private Short isDefault;
 
-    // ==================== 数量与权重 ====================
-
-    /**
-     * 数量/份数
-     */
-    @TableField("quantity")
-    private BigDecimal quantity;
+    // ==================== 状态 ====================
 
     /**
-     * 是否计入SKU定价: 1是 0否
+     * 状态: ACTIVE/INACTIVE
      */
-    @TableField("pricing_included")
-    private Short pricingIncluded;
+    @TableField("status")
+    private String status;
 
     // ==================== 审计字段 ====================
 

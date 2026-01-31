@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * SKU定价管理控制器
+ * 定价模板管理控制器
  *
  * @author lucheng
- * @since 2025-12-27
+ * @since 2026-01-31
  */
 @RestController
 @RequestMapping("/sku-pricing")
-@Tag(name = "SKU定价管理", description = "SKU定价的增删改查接口")
+@Tag(name = "定价模板管理", description = "定价模板的增删改查接口")
 public class SkuPricingController {
 
     @Autowired
@@ -49,21 +49,21 @@ public class SkuPricingController {
         return result == null ? WebResult.error("定价不存在") : WebResult.success(result);
     }
 
-    @GetMapping("/by-sku")
-    @Operation(summary = "根据SKU编码查询定价")
-    public WebResult<List<SkuPricingVO>> getBySkuCode(
+    @GetMapping("/by-code")
+    @Operation(summary = "根据定价编码查询定价模板")
+    public WebResult<List<SkuPricingVO>> getByPricingCode(
             @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId,
-            @Parameter(description = "SKU编码") @RequestParam String skuCode) {
-        return WebResult.success(skuPricingService.getPricingsBySkuCode(tenantId, skuCode));
+            @Parameter(description = "定价编码") @RequestParam String pricingCode) {
+        return WebResult.success(skuPricingService.getPricingsByCode(tenantId, pricingCode));
     }
 
     @GetMapping("/effective")
-    @Operation(summary = "查询有效定价")
+    @Operation(summary = "查询有效定价模板")
     public WebResult<SkuPricingVO> getEffectivePricing(
             @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId,
-            @Parameter(description = "SKU编码") @RequestParam String skuCode,
-            @Parameter(description = "计费周期") @RequestParam String billingPeriod) {
-        SkuPricingVO result = skuPricingService.getEffectivePricing(tenantId, skuCode, billingPeriod);
+            @Parameter(description = "定价编码") @RequestParam String pricingCode,
+            @Parameter(description = "计费周期") @RequestParam String billingCycle) {
+        SkuPricingVO result = skuPricingService.getEffectivePricing(tenantId, pricingCode, billingCycle);
         return result == null ? WebResult.error("无有效定价") : WebResult.success(result);
     }
 

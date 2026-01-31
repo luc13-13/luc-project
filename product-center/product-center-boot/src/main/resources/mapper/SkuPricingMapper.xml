@@ -2,36 +2,68 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lc.product.center.mapper.SkuPricingMapper">
 
-    <!-- 动态条件查询 -->
-    <sql id="Base_Select">
-        SELECT id, tenant_id, sku_code, pricing_model, billing_period, period_count,
-               original_price, sale_price, currency, discount_rate,
-               effective_time, expiry_time, priority, status,
-               created_by, dt_created, modified_by, dt_modified
-        FROM sku_pricing
-    </sql>
+    <!-- 通用结果映射 -->
+    <resultMap id="BaseResultMap" type="com.lc.product.center.domain.entity.SkuPricingDO">
+        <id column="id" property="id"/>
+        <result column="tenant_id" property="tenantId"/>
+        <result column="pricing_code" property="pricingCode"/>
+        <result column="revision" property="revision"/>
+        <result column="metering_mode" property="meteringMode"/>
+        <result column="payment_mode" property="paymentMode"/>
+        <result column="billing_cycle" property="billingCycle"/>
+        <result column="cycle_count" property="cycleCount"/>
+        <result column="billing_unit" property="billingUnit"/>
+        <result column="pricing_strategy_code" property="pricingStrategyCode"/>
+        <result column="billing_strategy_code" property="billingStrategyCode"/>
+        <result column="refund_policy" property="refundPolicy"/>
+        <result column="unit_price" property="unitPrice"/>
+        <result column="original_price" property="originalPrice"/>
+        <result column="sale_price" property="salePrice"/>
+        <result column="currency" property="currency"/>
+        <result column="discount_rate" property="discountRate"/>
+        <result column="metering_unit" property="meteringUnit"/>
+        <result column="metering_precision" property="meteringPrecision"/>
+        <result column="effective_time" property="effectiveTime"/>
+        <result column="expiry_time" property="expiryTime"/>
+        <result column="is_current" property="isCurrent"/>
+        <result column="priority" property="priority"/>
+        <result column="status" property="status"/>
+        <result column="remark" property="remark"/>
+        <result column="created_by" property="createdBy"/>
+        <result column="dt_created" property="dtCreated"/>
+        <result column="modified_by" property="modifiedBy"/>
+        <result column="dt_modified" property="dtModified"/>
+    </resultMap>
 
-    <select id="selectByCondition" resultType="com.lc.product.center.domain.entity.SkuPricingDO"
+    <!-- 动态条件查询 -->
+    <select id="selectByCondition" resultMap="BaseResultMap"
             parameterType="com.lc.product.center.domain.dto.SkuPricingDTO">
-        <include refid="Base_Select"/>
+        SELECT *
+        FROM product_center.sku_pricing
         <where>
             <if test="tenantId != null and tenantId != ''">
                 AND tenant_id = #{tenantId}
             </if>
-            <if test="skuCode != null and skuCode != ''">
-                AND sku_code = #{skuCode}
+            <if test="pricingCode != null and pricingCode != ''">
+                AND pricing_code = #{pricingCode}
             </if>
-            <if test="pricingModel != null and pricingModel != ''">
-                AND pricing_model = #{pricingModel}
+            <if test="revision != null and revision != ''">
+                AND revision = #{revision}
             </if>
-            <if test="billingPeriod != null and billingPeriod != ''">
-                AND billing_period = #{billingPeriod}
+            <if test="meteringMode != null and meteringMode != ''">
+                AND metering_mode = #{meteringMode}
+            </if>
+            <if test="paymentMode != null and paymentMode != ''">
+                AND payment_mode = #{paymentMode}
+            </if>
+            <if test="billingCycle != null and billingCycle != ''">
+                AND billing_cycle = #{billingCycle}
             </if>
             <if test="status != null and status != ''">
                 AND status = #{status}
             </if>
-            <if test="currency != null and currency != ''">
-                AND currency = #{currency}
+            <if test="isCurrent != null">
+                AND is_current = #{isCurrent}
             </if>
             <if test="effectiveOnly != null and effectiveOnly == true">
                 AND (effective_time IS NULL OR effective_time &lt;= NOW())

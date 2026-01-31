@@ -9,14 +9,15 @@ import lombok.Data;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 /**
  * 产品SKU表(product_center.product_sku)表实体类
- * 可售卖单元
+ * 售卖单元(版本化+基准定价)
  *
  * @author lucheng
- * @since 2025-12-21
+ * @since 2026-01-31
  */
 @Data
 @TableName("product_sku")
@@ -51,19 +52,13 @@ public class ProductSkuDO implements Serializable {
     @TableField("sku_name")
     private String skuName;
 
-    // ==================== 关联产品 ====================
+    // ==================== 版本控制 ====================
 
     /**
-     * 所属产品编码
+     * SKU版本号: yyyyMMddHHmmss
      */
-    @TableField("product_code")
-    private String productCode;
-
-    /**
-     * 所属规格族编码
-     */
-    @TableField("sub_product_code")
-    private String subProductCode;
+    @TableField("revision")
+    private String revision;
 
     // ==================== SKU类型 ====================
 
@@ -72,6 +67,32 @@ public class ProductSkuDO implements Serializable {
      */
     @TableField("sku_type")
     private String skuType;
+
+    // ==================== 基准定价 ====================
+
+    /**
+     * 基准单价
+     */
+    @TableField("base_unit_price")
+    private BigDecimal baseUnitPrice;
+
+    /**
+     * 币种
+     */
+    @TableField("currency")
+    private String currency;
+
+    /**
+     * 默认定价策略编码
+     */
+    @TableField("pricing_strategy_code")
+    private String pricingStrategyCode;
+
+    /**
+     * 默认计费策略编码
+     */
+    @TableField("billing_strategy_code")
+    private String billingStrategyCode;
 
     // ==================== 售卖控制 ====================
 
@@ -92,6 +113,26 @@ public class ProductSkuDO implements Serializable {
      */
     @TableField("quota_limit")
     private Integer quotaLimit;
+
+    // ==================== 版本状态 ====================
+
+    /**
+     * 是否当前主版本: 1是 0否
+     */
+    @TableField("is_current")
+    private Short isCurrent;
+
+    /**
+     * 生效时间
+     */
+    @TableField("effective_time")
+    private Date effectiveTime;
+
+    /**
+     * 失效时间
+     */
+    @TableField("expiry_time")
+    private Date expiryTime;
 
     // ==================== 状态 ====================
 

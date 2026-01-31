@@ -51,13 +51,13 @@ public interface ProductSkuService extends IService<ProductSkuDO> {
     ProductSkuVO getSkuByCode(String tenantId, String skuCode);
 
     /**
-     * 根据产品编码查询SKU列表
+     * 根据SKU类型查询SKU列表
      *
-     * @param tenantId    租户ID
-     * @param productCode 产品编码
+     * @param tenantId 租户ID
+     * @param skuType  SKU类型
      * @return SKU列表
      */
-    List<ProductSkuVO> getSkusByProductCode(String tenantId, String productCode);
+    List<ProductSkuVO> getSkusBySkuType(String tenantId, String skuType);
 
     /**
      * 查询可售SKU列表

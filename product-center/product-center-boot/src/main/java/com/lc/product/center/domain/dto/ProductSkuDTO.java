@@ -3,6 +3,7 @@ package com.lc.product.center.domain.dto;
 import com.lc.framework.core.page.PaginationParams;
 import com.lc.framework.core.utils.validator.Groups;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,12 +15,14 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 产品SKU表(product_center.product_sku)表数据传输类
  *
  * @author lucheng
- * @since 2025-12-21
+ * @since 2026-01-31
  */
 @Data
 @Builder
@@ -62,21 +65,13 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
     @NotBlank(message = "SKU名称不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
     private String skuName;
 
-    // ==================== 关联产品 ====================
+    // ==================== 版本控制 ====================
 
     /**
-     * 所属产品编码
+     * SKU版本号
      */
-    @Schema(description = "所属产品编码")
-    @NotBlank(message = "产品编码不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
-    private String productCode;
-
-    /**
-     * 所属规格族编码
-     */
-    @Schema(description = "所属规格族编码")
-    @NotBlank(message = "规格族编码不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
-    private String subProductCode;
+    @Schema(description = "SKU版本号: yyyyMMddHHmmss")
+    private String revision;
 
     // ==================== SKU类型 ====================
 
@@ -86,6 +81,34 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
     @Schema(description = "SKU类型: INSTANCE/ADDON/BUNDLE/SUBSCRIPTION")
     @NotBlank(message = "SKU类型不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
     private String skuType;
+
+    // ==================== 基准定价 ====================
+
+    /**
+     * 基准单价
+     */
+    @Schema(description = "基准单价")
+    @NotNull(message = "基准单价不能为空", groups = Groups.AddGroup.class)
+    @DecimalMin(value = "0.00", message = "价格不能为负数", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
+    private BigDecimal baseUnitPrice;
+
+    /**
+     * 币种
+     */
+    @Schema(description = "币种: CNY/USD")
+    private String currency;
+
+    /**
+     * 默认定价策略编码
+     */
+    @Schema(description = "默认定价策略编码")
+    private String pricingStrategyCode;
+
+    /**
+     * 默认计费策略编码
+     */
+    @Schema(description = "默认计费策略编码")
+    private String billingStrategyCode;
 
     // ==================== 售卖控制 ====================
 
@@ -108,6 +131,26 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
      */
     @Schema(description = "配额限制，NULL表示无限制")
     private Integer quotaLimit;
+
+    // ==================== 版本状态 ====================
+
+    /**
+     * 是否当前主版本
+     */
+    @Schema(description = "是否当前主版本: 1是 0否")
+    private Short isCurrent;
+
+    /**
+     * 生效时间
+     */
+    @Schema(description = "生效时间")
+    private Date effectiveTime;
+
+    /**
+     * 失效时间
+     */
+    @Schema(description = "失效时间")
+    private Date expiryTime;
 
     // ==================== 状态 ====================
 
