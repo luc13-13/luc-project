@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serial;
 import java.io.Serializable;
@@ -22,10 +19,7 @@ import java.util.Map;
  * @since 2026-01-31
  */
 @Data
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-@TableName(value = "pricing_strategy", autoResultMap = true)
+@TableName("pricing_strategy")
 public class PricingStrategyDO implements Serializable {
 
     @Serial

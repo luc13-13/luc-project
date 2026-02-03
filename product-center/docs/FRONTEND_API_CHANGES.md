@@ -11,67 +11,67 @@
 
 #### product_sku (售卖单元)
 
-| 变更类型 | 字段 | 类型 | 说明 |
-|----------|------|------|------|
-| 新增 | `revision` | VARCHAR(32) | SKU版本号(yyyyMMddHHmmss) |
-| 新增 | `base_unit_price` | DECIMAL(20,6) | 基准单价 |
-| 新增 | `currency` | VARCHAR(8) | 币种 |
-| 新增 | `pricing_strategy_code` | VARCHAR(64) | 默认定价策略编码 |
-| 新增 | `billing_strategy_code` | VARCHAR(64) | 默认计费策略编码 |
-| 新增 | `is_current` | TINYINT→Short | 是否当前主版本 |
-| 新增 | `effective_time` | DATETIME | 生效时间 |
-| 新增 | `expiry_time` | DATETIME | 失效时间 |
-| 删除 | `revision_id` | - | 已更名为 revision |
+| 变更类型 | 字段                      | 类型            | 说明                     |
+|------|-------------------------|---------------|------------------------|
+| 新增   | `revision`              | VARCHAR(32)   | SKU版本号(yyyyMMddHHmmss) |
+| 新增   | `base_unit_price`       | DECIMAL(20,6) | 基准单价                   |
+| 新增   | `currency`              | VARCHAR(8)    | 币种                     |
+| 新增   | `pricing_strategy_code` | VARCHAR(64)   | 默认定价策略编码               |
+| 新增   | `billing_strategy_code` | VARCHAR(64)   | 默认计费策略编码               |
+| 新增   | `is_current`            | TINYINT→Short | 是否当前主版本                |
+| 新增   | `effective_time`        | DATETIME      | 生效时间                   |
+| 新增   | `expiry_time`           | DATETIME      | 失效时间                   |
+| 删除   | `revision_id`           | -             | 已更名为 revision          |
 
 ---
 
 #### sku_item_combination (SKU BOM)
 
-| 变更类型 | 字段 | 类型 | 说明 |
-|----------|------|------|------|
-| 新增 | `sku_revision` | VARCHAR(32) | 关联SKU版本号 |
+| 变更类型 | 字段             | 类型          | 说明       |
+|------|----------------|-------------|----------|
+| 新增   | `sku_revision` | VARCHAR(32) | 关联SKU版本号 |
 
 ---
 
 #### sku_pricing_link (新增表)
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | Long | 主键 |
-| `tenant_id` | String | 租户ID |
-| `sku_code` | String | SKU编码 |
-| `sku_revision` | String | SKU版本号 |
-| `pricing_code` | String | 定价编码 |
-| `pricing_revision` | String | 定价版本号 |
-| `override_factor` | BigDecimal | 覆盖系数 |
-| `is_default` | Short | 是否默认收费模式 |
-| `status` | String | 状态 |
+| 字段                 | 类型         | 说明       |
+|--------------------|------------|----------|
+| `id`               | Long       | 主键       |
+| `tenant_id`        | String     | 租户ID     |
+| `sku_code`         | String     | SKU编码    |
+| `sku_revision`     | String     | SKU版本号   |
+| `pricing_code`     | String     | 定价编码     |
+| `pricing_revision` | String     | 定价版本号    |
+| `override_factor`  | BigDecimal | 覆盖系数     |
+| `is_default`       | Short      | 是否默认收费模式 |
+| `status`           | String     | 状态       |
 
 ---
 
 #### sku_pricing (定价模板)
 
-| 变更类型 | 字段 | 类型 | 说明 |
-|----------|------|------|------|
-| 新增 | `pricing_code` | VARCHAR(64) | 定价编码 |
-| 新增 | `revision` | VARCHAR(32) | 定价版本号 |
-| 新增 | `metering_mode` | VARCHAR(32) | 计量方式 |
-| 新增 | `payment_mode` | VARCHAR(32) | 付费方式 |
-| 新增 | `billing_cycle` | VARCHAR(32) | 计费周期 |
-| 新增 | `cycle_count` | INT | 周期数量 |
-| 新增 | `billing_unit` | VARCHAR(32) | 计费单位 |
-| 新增 | `pricing_strategy_code` | VARCHAR(64) | 定价策略编码 |
-| 新增 | `billing_strategy_code` | VARCHAR(64) | 计费策略编码 |
-| 新增 | `refund_policy` | VARCHAR(32) | 退款政策 |
-| 新增 | `unit_price` | DECIMAL(20,6) | 单价 |
-| 新增 | `price_factor` | DECIMAL(10,4) | 价格系数 |
-| 新增 | `metering_unit` | VARCHAR(32) | 计量单位 |
-| 新增 | `metering_precision` | INT | 计量精度 |
-| 新增 | `is_current` | TINYINT→Short | 是否当前版本 |
-| 新增 | `remark` | TEXT | 备注 |
-| 删除 | `sku_code` | - | 通过 link 表关联 |
-| 删除 | `sku_revision` | - | 通过 link 表关联 |
-| 更名 | `strategy_code` → `pricing_strategy_code` | - | 消除歧义 |
+| 变更类型 | 字段                                        | 类型            | 说明          |
+|------|-------------------------------------------|---------------|-------------|
+| 新增   | `pricing_code`                            | VARCHAR(64)   | 定价编码        |
+| 新增   | `revision`                                | VARCHAR(32)   | 定价版本号       |
+| 新增   | `metering_mode`                           | VARCHAR(32)   | 计量方式        |
+| 新增   | `payment_mode`                            | VARCHAR(32)   | 付费方式        |
+| 新增   | `billing_cycle`                           | VARCHAR(32)   | 计费周期        |
+| 新增   | `cycle_count`                             | INT           | 周期数量        |
+| 新增   | `billing_unit`                            | VARCHAR(32)   | 计费单位        |
+| 新增   | `pricing_strategy_code`                   | VARCHAR(64)   | 定价策略编码      |
+| 新增   | `billing_strategy_code`                   | VARCHAR(64)   | 计费策略编码      |
+| 新增   | `refund_policy`                           | VARCHAR(32)   | 退款政策        |
+| 新增   | `unit_price`                              | DECIMAL(20,6) | 单价          |
+| 新增   | `price_factor`                            | DECIMAL(10,4) | 价格系数        |
+| 新增   | `metering_unit`                           | VARCHAR(32)   | 计量单位        |
+| 新增   | `metering_precision`                      | INT           | 计量精度        |
+| 新增   | `is_current`                              | TINYINT→Short | 是否当前版本      |
+| 新增   | `remark`                                  | TEXT          | 备注          |
+| 删除   | `sku_code`                                | -             | 通过 link 表关联 |
+| 删除   | `sku_revision`                            | -             | 通过 link 表关联 |
+| 更名   | `strategy_code` → `pricing_strategy_code` | -             | 消除歧义        |
 
 ---
 
@@ -176,52 +176,52 @@ private String remark;              // 备注
 
 #### ProductSku 接口
 
-| 操作 | 字段 | 类型 |
-|------|------|------|
-| 新增 | `revision` | string |
-| 新增 | `baseUnitPrice` | number |
-| 新增 | `currency` | string |
+| 操作 | 字段                    | 类型     |
+|----|-----------------------|--------|
+| 新增 | `revision`            | string |
+| 新增 | `baseUnitPrice`       | number |
+| 新增 | `currency`            | string |
 | 新增 | `pricingStrategyCode` | string |
 | 新增 | `billingStrategyCode` | string |
-| 新增 | `isCurrent` | number |
-| 新增 | `effectiveTime` | date |
-| 新增 | `expiryTime` | date |
-| 删除 | `revisionId` | - |
+| 新增 | `isCurrent`           | number |
+| 新增 | `effectiveTime`       | date   |
+| 新增 | `expiryTime`          | date   |
+| 删除 | `revisionId`          | -      |
 
 #### SkuPricing 接口 (重构)
 
-| 操作 | 字段 | 类型 |
-|------|------|------|
-| 新增 | `pricingCode` | string |
-| 新增 | `revision` | string |
-| 新增 | `meteringMode` | string |
-| 新增 | `paymentMode` | string |
-| 新增 | `billingCycle` | string |
-| 新增 | `cycleCount` | number |
-| 新增 | `billingUnit` | string |
+| 操作 | 字段                    | 类型     |
+|----|-----------------------|--------|
+| 新增 | `pricingCode`         | string |
+| 新增 | `revision`            | string |
+| 新增 | `meteringMode`        | string |
+| 新增 | `paymentMode`         | string |
+| 新增 | `billingCycle`        | string |
+| 新增 | `cycleCount`          | number |
+| 新增 | `billingUnit`         | string |
 | 新增 | `pricingStrategyCode` | string |
 | 新增 | `billingStrategyCode` | string |
-| 新增 | `refundPolicy` | string |
-| 新增 | `unitPrice` | number |
-| 新增 | `priceFactor` | number |
-| 新增 | `meteringUnit` | string |
-| 新增 | `meteringPrecision` | number |
-| 新增 | `isCurrent` | number |
-| 新增 | `remark` | string |
-| 删除 | `skuCode` | - |
-| 删除 | `strategyCode` | - |
+| 新增 | `refundPolicy`        | string |
+| 新增 | `unitPrice`           | number |
+| 新增 | `priceFactor`         | number |
+| 新增 | `meteringUnit`        | string |
+| 新增 | `meteringPrecision`   | number |
+| 新增 | `isCurrent`           | number |
+| 新增 | `remark`              | string |
+| 删除 | `skuCode`             | -      |
+| 删除 | `strategyCode`        | -      |
 
 #### 新增接口: SkuPricingLink
 
-| 字段 | 类型 |
-|------|------|
-| `skuCode` | string |
-| `skuRevision` | string |
-| `pricingCode` | string |
+| 字段                | 类型     |
+|-------------------|--------|
+| `skuCode`         | string |
+| `skuRevision`     | string |
+| `pricingCode`     | string |
 | `pricingRevision` | string |
-| `overrideFactor` | number |
-| `isDefault` | number |
-| `status` | string |
+| `overrideFactor`  | number |
+| `isDefault`       | number |
+| `status`          | string |
 
 ### 3.2 枚举值
 
@@ -254,46 +254,46 @@ type ApplyScope = 'ALL' | 'SKU' | 'PRODUCT_LINE';
 
 ### 4.1 接口端点
 
-| 方法 | 路径 | 描述 |
-|------|------|------|
-| POST | `/pricing-strategy/list` | 查询策略列表 |
-| POST | `/pricing-strategy/page` | 分页查询策略 |
-| GET | `/pricing-strategy/detail/{id}` | 策略详情(含阶梯参数) |
-| GET | `/pricing-strategy/by-code` | 根据编码查询 |
-| GET | `/pricing-strategy/effective` | 查询有效策略 |
-| POST | `/pricing-strategy/create` | 创建策略 |
-| PUT | `/pricing-strategy/update` | 更新策略 |
-| DELETE | `/pricing-strategy/delete/{id}` | 删除策略 |
-| POST | `/pricing-strategy/{id}/params` | 保存阶梯参数 |
+| 方法     | 路径                              | 描述          |
+|--------|---------------------------------|-------------|
+| POST   | `/pricing-strategy/list`        | 查询策略列表      |
+| POST   | `/pricing-strategy/page`        | 分页查询策略      |
+| GET    | `/pricing-strategy/detail/{id}` | 策略详情(含阶梯参数) |
+| GET    | `/pricing-strategy/by-code`     | 根据编码查询      |
+| GET    | `/pricing-strategy/effective`   | 查询有效策略      |
+| POST   | `/pricing-strategy/create`      | 创建策略        |
+| PUT    | `/pricing-strategy/update`      | 更新策略        |
+| DELETE | `/pricing-strategy/delete/{id}` | 删除策略        |
+| POST   | `/pricing-strategy/{id}/params` | 保存阶梯参数      |
 
 ### 4.2 PricingStrategy 字段
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | number | 主键 |
-| `tenantId` | string | 租户ID |
-| `strategyCode` | string | 策略编码 |
-| `strategyName` | string | 策略名称 |
-| `strategyType` | string | 策略类型 |
-| `applyScope` | string | 应用范围 |
+| 字段                | 类型     | 说明             |
+|-------------------|--------|----------------|
+| `id`              | number | 主键             |
+| `tenantId`        | string | 租户ID           |
+| `strategyCode`    | string | 策略编码           |
+| `strategyName`    | string | 策略名称           |
+| `strategyType`    | string | 策略类型           |
+| `applyScope`      | string | 应用范围           |
 | `applyScopeValue` | string | 范围值(SKU编码/产品线) |
-| `strategyConfig` | object | 策略配置(JSON) |
-| `priority` | number | 优先级 |
-| `effectiveTime` | date | 生效时间 |
-| `expiryTime` | date | 失效时间 |
-| `status` | string | 状态 |
-| `remark` | string | 备注 |
+| `strategyConfig`  | object | 策略配置(JSON)     |
+| `priority`        | number | 优先级            |
+| `effectiveTime`   | date   | 生效时间           |
+| `expiryTime`      | date   | 失效时间           |
+| `status`          | string | 状态             |
+| `remark`          | string | 备注             |
 
 ### 4.3 PricingStrategyParam 字段 (阶梯参数)
 
-| 字段 | 类型 | 说明 |
-|------|------|------|
-| `id` | number | 主键 |
-| `strategyId` | number | 关联策略ID |
-| `pricingId` | number | 关联定价ID(可选) |
-| `rangeStart` | number | 区间起始 |
-| `rangeEnd` | number | 区间结束(null=无穷大) |
-| `unitPrice` | number | 阶梯单价 |
-| `fixedAmount` | number | 固定附加费 |
-| `sortOrder` | number | 排序 |
+| 字段            | 类型     | 说明             |
+|---------------|--------|----------------|
+| `id`          | number | 主键             |
+| `strategyId`  | number | 关联策略ID         |
+| `pricingId`   | number | 关联定价ID(可选)     |
+| `rangeStart`  | number | 区间起始           |
+| `rangeEnd`    | number | 区间结束(null=无穷大) |
+| `unitPrice`   | number | 阶梯单价           |
+| `fixedAmount` | number | 固定附加费          |
+| `sortOrder`   | number | 排序             |
 

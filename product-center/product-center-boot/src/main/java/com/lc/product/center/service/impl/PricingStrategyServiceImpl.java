@@ -8,6 +8,8 @@ import com.lc.framework.core.mvc.BizException;
 import com.lc.framework.core.page.PaginationResult;
 import com.lc.product.center.constants.ProductDefaultConstants;
 import com.lc.product.center.constants.ProductStatusEnum;
+import com.lc.product.center.converter.PricingStrategyConverter;
+import com.lc.product.center.converter.PricingStrategyParamConverter;
 import com.lc.product.center.domain.dto.PricingStrategyDTO;
 import com.lc.product.center.domain.dto.PricingStrategyParamDTO;
 import com.lc.product.center.domain.entity.PricingStrategyDO;
@@ -22,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -40,6 +41,12 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
     @Autowired
     private PricingStrategyParamMapper paramMapper;
 
+    @Autowired
+    private PricingStrategyConverter pricingStrategyConverter;
+
+    @Autowired
+    private PricingStrategyParamConverter pricingStrategyParamConverter;
+
     @Override
     public PaginationResult<PricingStrategyVO> queryStrategyPage(PricingStrategyDTO queryDTO) {
         Page<PricingStrategyDO> page = Page.of(queryDTO.getPageIndex(), queryDTO.getPageSize());
@@ -51,14 +58,14 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
         IPage<PricingStrategyDO> pageResult = this.page(page, queryWrapper);
         queryDTO.setTotal(pageResult.getTotal());
 
-        List<PricingStrategyVO> voList = convertToVOList(pageResult.getRecords());
+        List<PricingStrategyVO> voList = pricingStrategyConverter.convertDO2VOList(pageResult.getRecords());
         return PaginationResult.success(voList, queryDTO);
     }
 
     @Override
     public List<PricingStrategyVO> queryStrategyList(PricingStrategyDTO queryDTO) {
         List<PricingStrategyDO> list = baseMapper.selectByCondition(queryDTO);
-        return convertToVOList(list);
+        return pricingStrategyConverter.convertDO2VOList(list);
     }
 
     @Override
@@ -67,7 +74,7 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
         if (entity == null) {
             return null;
         }
-        PricingStrategyVO vo = convertToVO(entity);
+        PricingStrategyVO vo = pricingStrategyConverter.convertDO2VO(entity);
         // 加载阶梯参数
         List<PricingStrategyParamDO> params = paramMapper.selectByStrategyCode(
                 entity.getTenantId(), entity.getStrategyCode());
@@ -82,7 +89,7 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
         if (entity == null) {
             return null;
         }
-        PricingStrategyVO vo = convertToVO(entity);
+        PricingStrategyVO vo = pricingStrategyConverter.convertDO2VO(entity);
         List<PricingStrategyParamDO> params = paramMapper.selectByStrategyCode(tenant, strategyCode);
         vo.setStrategyParams(convertParamsToVO(params));
         return vo;
@@ -92,7 +99,7 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
     public List<PricingStrategyVO> getEffectiveStrategies(String tenantId, String strategyType) {
         String tenant = StringUtils.hasText(tenantId) ? tenantId : ProductDefaultConstants.DEFAULT_TENANT;
         List<PricingStrategyDO> list = baseMapper.selectEffectiveStrategies(tenant, strategyType);
-        return convertToVOList(list);
+        return pricingStrategyConverter.convertDO2VOList(list);
     }
 
     @Override
@@ -107,7 +114,7 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
             throw BizException.exp("策略编码已存在");
         }
 
-        PricingStrategyDO entity = convertToEntity(strategyDTO);
+        PricingStrategyDO entity = pricingStrategyConverter.convertDTO2DO(strategyDTO);
         entity.setTenantId(tenantId);
         if (entity.getStatus() == null) {
             entity.setStatus(ProductStatusEnum.ACTIVE.getCode());
@@ -117,7 +124,7 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
         }
 
         this.save(entity);
-        return convertToVO(entity);
+        return pricingStrategyConverter.convertDO2VO(entity);
     }
 
     @Override
@@ -127,7 +134,7 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
             throw BizException.exp("策略不存在");
         }
 
-        PricingStrategyDO updateEntity = convertToEntity(strategyDTO);
+        PricingStrategyDO updateEntity = pricingStrategyConverter.convertDTO2DO(strategyDTO);
         updateEntity.setId(strategyDTO.getId());
         this.updateById(updateEntity);
 
@@ -167,19 +174,11 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
         List<PricingStrategyParamDO> paramDOs = new ArrayList<>();
         for (int i = 0; i < params.size(); i++) {
             PricingStrategyParamDTO dto = params.get(i);
-            PricingStrategyParamDO paramDO = PricingStrategyParamDO.builder()
-                    .tenantId(tenantId)
-                    .strategyCode(strategyCode)
-                    .rangeStart(dto.getRangeStart())
-                    .rangeEnd(dto.getRangeEnd())
-                    .unitPrice(dto.getUnitPrice())
-                    .fixedAmount(dto.getFixedAmount() != null ? dto.getFixedAmount() : BigDecimal.ZERO)
-                    .sortOrder(dto.getSortOrder() != null ? dto.getSortOrder() : i)
-                    .createdBy("system")
-                    .build();
-            paramDOs.add(paramDO);
+            dto.setTenantId(tenantId);
+            dto.setStrategyCode(strategyCode);
+            dto.setSortOrder(dto.getSortOrder() != null ? dto.getSortOrder() : i);
+            paramDOs.add(pricingStrategyParamConverter.convertDTO2DO(dto));
         }
-
         paramMapper.batchInsert(paramDOs);
         return true;
     }
@@ -209,57 +208,6 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
             }
         }
         return queryWrapper;
-    }
-
-    private PricingStrategyDO convertToEntity(PricingStrategyDTO dto) {
-        return PricingStrategyDO.builder()
-                .id(dto.getId())
-                .tenantId(dto.getTenantId())
-                .strategyCode(dto.getStrategyCode())
-                .strategyName(dto.getStrategyName())
-                .strategyType(dto.getStrategyType())
-                .applyScope(dto.getApplyScope())
-                .applyScopeValue(dto.getApplyScopeValue())
-                .strategyConfig(dto.getStrategyConfig())
-                .priority(dto.getPriority())
-                .effectiveTime(dto.getEffectiveTime())
-                .expiryTime(dto.getExpiryTime())
-                .status(dto.getStatus())
-                .remark(dto.getRemark())
-                .build();
-    }
-
-    private PricingStrategyVO convertToVO(PricingStrategyDO entity) {
-        if (entity == null) {
-            return null;
-        }
-        return PricingStrategyVO.builder()
-                .id(entity.getId())
-                .tenantId(entity.getTenantId())
-                .strategyCode(entity.getStrategyCode())
-                .strategyName(entity.getStrategyName())
-                .strategyType(entity.getStrategyType())
-                .strategyTypeDesc(getStrategyTypeDesc(entity.getStrategyType()))
-                .applyScope(entity.getApplyScope())
-                .applyScopeDesc(getApplyScopeDesc(entity.getApplyScope()))
-                .applyScopeValue(entity.getApplyScopeValue())
-                .strategyConfig(entity.getStrategyConfig())
-                .priority(entity.getPriority())
-                .effectiveTime(entity.getEffectiveTime())
-                .expiryTime(entity.getExpiryTime())
-                .status(entity.getStatus())
-                .statusDesc(ProductStatusEnum.getDescByCode(entity.getStatus()))
-                .remark(entity.getRemark())
-                .dtCreated(entity.getDtCreated())
-                .dtModified(entity.getDtModified())
-                .build();
-    }
-
-    private List<PricingStrategyVO> convertToVOList(List<PricingStrategyDO> entities) {
-        if (CollectionUtils.isEmpty(entities)) {
-            return new ArrayList<>();
-        }
-        return entities.stream().map(this::convertToVO).collect(Collectors.toList());
     }
 
     private List<PricingStrategyParamVO> convertParamsToVO(List<PricingStrategyParamDO> params) {
