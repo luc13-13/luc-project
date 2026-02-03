@@ -1,9 +1,6 @@
 package com.lc.product.center.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.Data;
 
@@ -34,6 +31,7 @@ public class PricingStrategyDO implements Serializable {
     /**
      * 租户ID
      */
+    @TableField("tenant_id")
     private String tenantId;
 
     // ==================== 策略标识 ====================
@@ -41,11 +39,13 @@ public class PricingStrategyDO implements Serializable {
     /**
      * 策略编码: TIERED_CPU_001
      */
+    @TableField("strategy_code")
     private String strategyCode;
 
     /**
      * 策略名称
      */
+    @TableField("strategy_name")
     private String strategyName;
 
     // ==================== 策略类型 ====================
@@ -53,6 +53,7 @@ public class PricingStrategyDO implements Serializable {
     /**
      * 策略类型: LINEAR/TIERED/VOLUME_DISCOUNT/REGION/PROMOTION
      */
+    @TableField("strategy_type")
     private String strategyType;
 
     // ==================== 应用范围 ====================
@@ -60,11 +61,13 @@ public class PricingStrategyDO implements Serializable {
     /**
      * 应用范围: ALL/SKU/PRODUCT_LINE
      */
+    @TableField("apply_scope")
     private String applyScope;
 
     /**
      * 范围值: SKU编码或产品线
      */
+    @TableField("apply_scope_value")
     private String applyScopeValue;
 
     // ==================== 策略配置 ====================
@@ -72,7 +75,7 @@ public class PricingStrategyDO implements Serializable {
     /**
      * 策略配置(阶梯区间/区域系数等)
      */
-    @TableField(typeHandler = JacksonTypeHandler.class)
+    @TableField(value = "strategy_config", typeHandler = JacksonTypeHandler.class)
     private Map<String, Object> strategyConfig;
 
     // ==================== 优先级 ====================
@@ -80,6 +83,7 @@ public class PricingStrategyDO implements Serializable {
     /**
      * 优先级
      */
+    @TableField("priority")
     private Integer priority;
 
     // ==================== 时间有效性 ====================
@@ -87,11 +91,13 @@ public class PricingStrategyDO implements Serializable {
     /**
      * 生效时间
      */
+    @TableField("effective_time")
     private Date effectiveTime;
 
     /**
      * 失效时间
      */
+    @TableField("expiry_time")
     private Date expiryTime;
 
     // ==================== 状态 ====================
@@ -99,11 +105,13 @@ public class PricingStrategyDO implements Serializable {
     /**
      * 状态: ACTIVE/INACTIVE
      */
+    @TableField("status")
     private String status;
 
     /**
      * 备注说明
      */
+    @TableField("remark")
     private String remark;
 
     // ==================== 审计字段 ====================
@@ -111,20 +119,24 @@ public class PricingStrategyDO implements Serializable {
     /**
      * 创建者
      */
+    @TableField(value = "created_by", fill = FieldFill.INSERT)
     private String createdBy;
 
     /**
      * 创建时间
      */
+    @TableField(value = "dt_created", fill = FieldFill.INSERT)
     private Date dtCreated;
 
     /**
      * 更新者
      */
+    @TableField(value = "modified_by", fill = FieldFill.UPDATE)
     private String modifiedBy;
 
     /**
      * 更新时间
      */
+    @TableField(value = "dt_modified", fill = FieldFill.UPDATE)
     private Date dtModified;
 }
