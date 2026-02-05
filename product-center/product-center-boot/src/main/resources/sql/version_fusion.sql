@@ -623,30 +623,6 @@ CREATE TABLE `sku_region_mapping` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='SKU区域可用区映射表';
 
 
--- ========================================================================
--- 5. 初始化数据
--- ========================================================================
-
--- 初始化区域数据
-INSERT INTO `region_config` (`region_code`, `region_name`, `region_type`, `country_code`, `price_factor`, `status`, `sort_order`) VALUES
-('cn-beijing', '华北-北京', 'PUBLIC', 'CN', 1.0000, 'ACTIVE', 1),
-('cn-shanghai', '华东-上海', 'PUBLIC', 'CN', 1.2000, 'ACTIVE', 2),
-('cn-guangzhou', '华南-广州', 'PUBLIC', 'CN', 0.9500, 'ACTIVE', 3),
-('cn-shenzhen', '华南-深圳', 'PUBLIC', 'CN', 1.0000, 'ACTIVE', 4),
-('cn-hongkong', '中国香港', 'PUBLIC', 'HK', 1.5000, 'ACTIVE', 5);
-
--- 初始化可用区数据
-INSERT INTO `availability_zone_config` (`region_code`, `zone_code`, `zone_name`, `zone_type`, `status`, `sort_order`) VALUES
-('cn-beijing', 'cn-beijing-a', '北京可用区A', 'STANDARD', 'ACTIVE', 1),
-('cn-beijing', 'cn-beijing-b', '北京可用区B', 'STANDARD', 'ACTIVE', 2),
-('cn-beijing', 'cn-beijing-c', '北京可用区C', 'STANDARD', 'ACTIVE', 3),
-('cn-shanghai', 'cn-shanghai-a', '上海可用区A', 'STANDARD', 'ACTIVE', 1),
-('cn-shanghai', 'cn-shanghai-b', '上海可用区B', 'STANDARD', 'ACTIVE', 2),
-('cn-guangzhou', 'cn-guangzhou-a', '广州可用区A', 'STANDARD', 'ACTIVE', 1),
-('cn-shenzhen', 'cn-shenzhen-a', '深圳可用区A', 'STANDARD', 'ACTIVE', 1),
-('cn-hongkong', 'cn-hongkong-a', '香港可用区A', 'STANDARD', 'ACTIVE', 1);
-
-
 SET FOREIGN_KEY_CHECKS = 1;
 
 -- ========================================================================
