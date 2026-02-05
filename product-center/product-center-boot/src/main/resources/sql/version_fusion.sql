@@ -80,8 +80,6 @@ CREATE TABLE `product_sku` (
     -- 基准定价
     `base_unit_price` DECIMAL(20,6) NOT NULL COMMENT '基准单价',
     `currency` VARCHAR(8) DEFAULT 'CNY' COMMENT '币种',
-    `pricing_strategy_code` VARCHAR(64) COMMENT '默认定价策略编码',
-    `billing_strategy_code` VARCHAR(64) COMMENT '默认计费策略编码',
 
     -- 售卖控制
     `saleable` TINYINT DEFAULT 1 COMMENT '是否可售: 1是 0否',
@@ -185,7 +183,7 @@ CREATE TABLE `sku_pricing_link` (
 -- ========================================================================
 
 -- ----------------------------
--- Table 5: sku_pricing SKU定价表(四维度收费+版本化+区域)
+-- Table 5: sku_pricing 定价模板表(收费模式模板,可复用)
 -- ----------------------------
 DROP TABLE IF EXISTS `sku_pricing`;
 CREATE TABLE `sku_pricing` (
@@ -193,7 +191,7 @@ CREATE TABLE `sku_pricing` (
     `tenant_id` VARCHAR(64) NOT NULL COMMENT '租户ID',
 
     -- 业务标识
-    `pricing_code` VARCHAR(64) NOT NULL COMMENT '定价编码: POSTPAID-MONTHLY-LINEAR',
+    `pricing_code` VARCHAR(64) NOT NULL COMMENT '定价编码: PAY_AS_GO_HOURLY/PREPAID_MONTHLY',
 
     -- 定价版本(时间戳字符串)
     `revision` VARCHAR(32) NOT NULL DEFAULT '20260101000000' COMMENT '定价版本号: yyyyMMddHHmmss',
@@ -213,19 +211,11 @@ CREATE TABLE `sku_pricing` (
     -- 维度4: 计费单位
     `billing_unit` VARCHAR(32) NOT NULL COMMENT '计费单位类型: PERIOD/QUANTITY',
 
-    -- ==================== 策略驱动 ====================
+    -- ==================== 定价配置 ====================
 
-    `pricing_strategy_code` VARCHAR(64) COMMENT '定价策略编码(覆盖SKU默认)',
-    `billing_strategy_code` VARCHAR(64) COMMENT '计费策略编码(覆盖SKU默认)',
     `refund_policy` VARCHAR(32) DEFAULT 'PRO_RATA' COMMENT '退款政策: PRO_RATA/NON_REFUNDABLE',
-
-    -- ==================== 价格信息 ====================
-
-    `unit_price` DECIMAL(20,6) NOT NULL COMMENT '单价',
-    `original_price` DECIMAL(20,2) COMMENT '原价(用于展示折扣)',
-    `sale_price` DECIMAL(20,2) NOT NULL COMMENT '售价',
-    `currency` VARCHAR(8) DEFAULT 'CNY' COMMENT '币种',
     `discount_rate` DECIMAL(10,4) DEFAULT 1.0000 COMMENT '折扣率: 0.85表示85折',
+    `currency` VARCHAR(8) DEFAULT 'CNY' COMMENT '币种',
 
     -- ==================== 计量配置 ====================
 
@@ -254,10 +244,9 @@ CREATE TABLE `sku_pricing` (
     UNIQUE KEY `uk_pricing_dim` (`tenant_id`, `pricing_code`, `metering_mode`, `payment_mode`, `billing_cycle`, `cycle_count`, `revision`),
     KEY `idx_pricing_code` (`pricing_code`),
     KEY `idx_effective_time` (`effective_time`, `expiry_time`),
-    KEY `idx_pricing_strategy` (`pricing_strategy_code`),
     KEY `idx_is_current` (`pricing_code`, `is_current`),
     KEY `idx_status` (`status`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='定价模板表(可复用)';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='定价模板表(收费模式模板,可复用)';
 
 
 -- ----------------------------
@@ -274,15 +263,15 @@ CREATE TABLE `pricing_strategy` (
     -- 策略类型
     `strategy_type` VARCHAR(32) NOT NULL COMMENT '策略类型: LINEAR/TIERED/VOLUME_DISCOUNT/REGION/PROMOTION',
 
+    -- 计算方式
+    `calc_method` VARCHAR(32) NOT NULL DEFAULT 'MULTIPLY' COMMENT '计算方式: MULTIPLY(乘法)/SUBTRACT(减法)',
+
     -- 应用范围
-    `apply_scope` VARCHAR(32) NOT NULL COMMENT '应用范围: ALL/SKU/PRODUCT_LINE',
+    `apply_scope` VARCHAR(32) NOT NULL DEFAULT 'ALL' COMMENT '应用范围: ALL/SKU/PRODUCT_LINE',
     `apply_scope_value` VARCHAR(128) COMMENT '范围值: SKU编码或产品线',
 
-    -- 策略配置(JSON)
-    `strategy_config` JSON COMMENT '策略配置(阶梯区间/区域系数等)',
-
     -- 优先级
-    `priority` INT DEFAULT 0 COMMENT '优先级',
+    `priority` INT DEFAULT 0 COMMENT '默认优先级(数值越大越先执行)',
 
     -- 时间有效性
     `effective_time` DATETIME COMMENT '生效时间',
@@ -306,39 +295,74 @@ CREATE TABLE `pricing_strategy` (
 
 
 -- ----------------------------
--- Table 7: pricing_strategy_param 定价策略参数细目(阶梯配置)
+-- Table 7: pricing_strategy_param 定价策略参数表
 -- ----------------------------
 DROP TABLE IF EXISTS `pricing_strategy_param`;
 CREATE TABLE `pricing_strategy_param` (
     `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
     `tenant_id` VARCHAR(64) NOT NULL DEFAULT 'DEFAULT' COMMENT '租户ID',
 
-    -- 关联定价模板(可选,直接关联定价)
-    `pricing_code` VARCHAR(64) COMMENT '关联sku_pricing.pricing_code',
-    `pricing_revision` VARCHAR(32) COMMENT '关联sku_pricing.revision',
+    -- 策略关联
+    `strategy_code` VARCHAR(64) NOT NULL COMMENT '关联pricing_strategy.strategy_code',
 
-    -- 关联策略模板(可选,关联策略模板)
-    `strategy_code` VARCHAR(64) COMMENT '关联pricing_strategy.strategy_code',
+    -- 参数类型
+    `param_type` VARCHAR(32) NOT NULL COMMENT '参数类型: TIER/CAP/FLOOR/THRESHOLD/RATE/FIXED/QUANTITY_LIMIT',
 
-    -- 阶梯区间
-    `range_start` DECIMAL(20,6) NOT NULL COMMENT '区间起始',
+    -- 通用参数字段
+    `range_start` DECIMAL(20,6) COMMENT '区间起始(阶梯/满减门槛)',
     `range_end` DECIMAL(20,6) COMMENT '区间结束(NULL为无穷大)',
-
-    -- 价格
-    `unit_price` DECIMAL(20,6) NOT NULL COMMENT '阶梯单价',
-    `fixed_amount` DECIMAL(20,6) DEFAULT 0.000000 COMMENT '固定附加费/起步价',
+    `value` DECIMAL(20,6) NOT NULL COMMENT '参数值(折扣率/金额/单价等)',
 
     -- 排序
-    `sort_order` INT DEFAULT 0 COMMENT '排序',
+    `sort_order` INT DEFAULT 0 COMMENT '排序(阶梯顺序)',
 
     -- 审计字段
     `created_by` VARCHAR(64) COMMENT '创建者',
     `dt_created` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 
     PRIMARY KEY (`id`),
-    KEY `idx_pricing` (`tenant_id`, `pricing_code`, `pricing_revision`),
-    KEY `idx_strategy` (`tenant_id`, `strategy_code`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='定价策略参数细目(阶梯配置)';
+    KEY `idx_strategy` (`tenant_id`, `strategy_code`),
+    KEY `idx_param_type` (`strategy_code`, `param_type`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='定价策略参数表';
+
+
+-- ----------------------------
+-- Table 8: sku_pricing_strategy_link SKU与策略关联表(支持多策略叠加)
+-- ----------------------------
+DROP TABLE IF EXISTS `sku_pricing_strategy_link`;
+CREATE TABLE `sku_pricing_strategy_link` (
+    `id` BIGINT NOT NULL AUTO_INCREMENT COMMENT '主键ID',
+    `tenant_id` VARCHAR(64) NOT NULL DEFAULT 'DEFAULT' COMMENT '租户ID',
+
+    -- SKU关联
+    `sku_code` VARCHAR(128) NOT NULL COMMENT 'SKU编码',
+    `sku_revision` VARCHAR(32) NOT NULL COMMENT 'SKU版本号',
+
+    -- 策略关联
+    `strategy_code` VARCHAR(64) NOT NULL COMMENT '策略编码',
+
+    -- 执行优先级(覆盖策略默认)
+    `priority` INT COMMENT '优先级(NULL使用策略默认值)',
+
+    -- 有效期(支持临时策略)
+    `effective_time` DATETIME COMMENT '生效时间',
+    `expiry_time` DATETIME COMMENT '失效时间',
+
+    -- 状态
+    `status` VARCHAR(32) DEFAULT 'ACTIVE' COMMENT '状态: ACTIVE/INACTIVE',
+
+    -- 审计字段
+    `created_by` VARCHAR(64) COMMENT '创建者',
+    `dt_created` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `modified_by` VARCHAR(64) COMMENT '更新者',
+    `dt_modified` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_sku_strategy` (`tenant_id`, `sku_code`, `sku_revision`, `strategy_code`),
+    KEY `idx_sku` (`sku_code`, `sku_revision`),
+    KEY `idx_strategy` (`strategy_code`),
+    KEY `idx_effective` (`effective_time`, `expiry_time`, `status`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='SKU与策略关联表(支持多策略叠加)';
 
 
 -- ========================================================================
@@ -346,7 +370,7 @@ CREATE TABLE `pricing_strategy_param` (
 -- ========================================================================
 
 -- ----------------------------
--- Table 8: resource_pricing_snapshot 资源实例定价快照表(交付时刻真相)
+-- Table 9: resource_pricing_snapshot 资源实例定价快照表(交付时刻真相)
 -- ----------------------------
 DROP TABLE IF EXISTS `resource_pricing_snapshot`;
 CREATE TABLE `resource_pricing_snapshot` (
@@ -411,7 +435,7 @@ CREATE TABLE `resource_pricing_snapshot` (
 
 
 -- ----------------------------
--- Table 9: pricing_change_log 价格变更记录表(审计追踪)
+-- Table 10: pricing_change_log 价格变更记录表(审计追踪)
 -- ----------------------------
 DROP TABLE IF EXISTS `pricing_change_log`;
 CREATE TABLE `pricing_change_log` (
@@ -472,7 +496,7 @@ CREATE TABLE `pricing_change_log` (
 -- ========================================================================
 
 -- ----------------------------
--- Table 10: region_config 区域配置表(物理机房)
+-- Table 11: region_config 区域配置表(物理机房)
 -- ----------------------------
 DROP TABLE IF EXISTS `region_config`;
 CREATE TABLE `region_config` (
@@ -511,7 +535,7 @@ CREATE TABLE `region_config` (
 
 
 -- ----------------------------
--- Table 11: availability_zone_config 可用区配置表
+-- Table 12: availability_zone_config 可用区配置表
 -- ----------------------------
 DROP TABLE IF EXISTS `availability_zone_config`;
 CREATE TABLE `availability_zone_config` (
@@ -552,7 +576,7 @@ CREATE TABLE `availability_zone_config` (
 
 
 -- ----------------------------
--- Table 12: sku_region_mapping SKU区域可用区映射表
+-- Table 13: sku_region_mapping SKU区域可用区映射表
 -- ----------------------------
 DROP TABLE IF EXISTS `sku_region_mapping`;
 CREATE TABLE `sku_region_mapping` (
@@ -622,11 +646,6 @@ INSERT INTO `availability_zone_config` (`region_code`, `zone_code`, `zone_name`,
 ('cn-shenzhen', 'cn-shenzhen-a', '深圳可用区A', 'STANDARD', 'ACTIVE', 1),
 ('cn-hongkong', 'cn-hongkong-a', '香港可用区A', 'STANDARD', 'ACTIVE', 1);
 
--- 初始化定价策略模板
-INSERT INTO `pricing_strategy` (`tenant_id`, `strategy_code`, `strategy_name`, `strategy_type`, `apply_scope`, `strategy_config`, `priority`, `status`) VALUES
-('DEFAULT', 'LINEAR', '线性计价', 'LINEAR', 'ALL', '{"description": "按单价*用量计算"}', 0, 'ACTIVE'),
-('DEFAULT', 'TIERED_CPU_001', 'CPU分层定价策略', 'TIERED', 'PRODUCT_LINE', '{"tiers":[{"minUsage":0,"maxUsage":100,"price":3.64},{"minUsage":100,"maxUsage":500,"price":3.28},{"minUsage":500,"maxUsage":null,"price":2.91}]}', 10, 'ACTIVE'),
-('DEFAULT', 'VOLUME_DISCOUNT_001', '批量折扣策略', 'VOLUME_DISCOUNT', 'ALL', '{"tiers":[{"minQty":1,"maxQty":10,"discount":1.0},{"minQty":10,"maxQty":100,"discount":0.9},{"minQty":100,"maxQty":null,"discount":0.8}]}', 20, 'ACTIVE');
 
 SET FOREIGN_KEY_CHECKS = 1;
 
