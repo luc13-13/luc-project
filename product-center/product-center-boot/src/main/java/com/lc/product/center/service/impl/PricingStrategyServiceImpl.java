@@ -220,42 +220,14 @@ public class PricingStrategyServiceImpl extends ServiceImpl<PricingStrategyMappe
             return PricingStrategyParamVO.builder()
                     .id(param.getId())
                     .tenantId(param.getTenantId())
-                    .pricingCode(param.getPricingCode())
-                    .pricingRevision(param.getPricingRevision())
                     .strategyCode(param.getStrategyCode())
+                    .paramType(param.getParamType())
                     .rangeStart(param.getRangeStart())
                     .rangeEnd(param.getRangeEnd())
                     .rangeDesc(rangeDesc)
-                    .unitPrice(param.getUnitPrice())
-                    .fixedAmount(param.getFixedAmount())
+                    .value(param.getValue())
                     .sortOrder(param.getSortOrder())
                     .build();
         }).collect(Collectors.toList());
-    }
-
-    private String getStrategyTypeDesc(String strategyType) {
-        if (strategyType == null) {
-            return null;
-        }
-        return switch (strategyType) {
-            case "LINEAR" -> "线性定价";
-            case "TIERED" -> "阶梯定价";
-            case "VOLUME_DISCOUNT" -> "批量折扣";
-            case "REGION" -> "区域定价";
-            case "PROMOTION" -> "促销定价";
-            default -> strategyType;
-        };
-    }
-
-    private String getApplyScopeDesc(String applyScope) {
-        if (applyScope == null) {
-            return null;
-        }
-        return switch (applyScope) {
-            case "ALL" -> "全局";
-            case "SKU" -> "指定SKU";
-            case "PRODUCT_LINE" -> "产品线";
-            default -> applyScope;
-        };
     }
 }

@@ -83,20 +83,6 @@ public class SkuPricingDO implements Serializable {
     @TableField("billing_unit")
     private String billingUnit;
 
-    // ==================== 策略驱动 ====================
-
-    /**
-     * 定价策略编码(覆盖SKU默认)
-     */
-    @TableField("pricing_strategy_code")
-    private String pricingStrategyCode;
-
-    /**
-     * 计费策略编码(覆盖SKU默认)
-     */
-    @TableField("billing_strategy_code")
-    private String billingStrategyCode;
-
     /**
      * 退款政策: PRO_RATA/NON_REFUNDABLE
      */
@@ -104,36 +90,17 @@ public class SkuPricingDO implements Serializable {
     private String refundPolicy;
 
     // ==================== 价格信息 ====================
-
     /**
-     * 单价
+     * 折扣率: 0.85表示85折
      */
-    @TableField("unit_price")
-    private BigDecimal unitPrice;
-
-    /**
-     * 原价(用于展示折扣)
-     */
-    @TableField("original_price")
-    private BigDecimal originalPrice;
-
-    /**
-     * 售价
-     */
-    @TableField("sale_price")
-    private BigDecimal salePrice;
+    @TableField("discount_rate")
+    private BigDecimal discountRate;
 
     /**
      * 币种
      */
     @TableField("currency")
     private String currency;
-
-    /**
-     * 折扣率: 0.85表示85折
-     */
-    @TableField("discount_rate")
-    private BigDecimal discountRate;
 
     // ==================== 计量配置 ====================
 

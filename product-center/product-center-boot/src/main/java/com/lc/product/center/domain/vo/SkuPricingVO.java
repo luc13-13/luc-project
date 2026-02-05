@@ -70,33 +70,16 @@ public class SkuPricingVO implements Serializable {
     @Schema(description = "计费单位描述")
     private String billingUnitDesc;
 
-    // ==================== 策略驱动 ====================
-
-    @Schema(description = "定价策略编码")
-    private String pricingStrategyCode;
-
-    @Schema(description = "计费策略编码")
-    private String billingStrategyCode;
-
     @Schema(description = "退款政策")
     private String refundPolicy;
 
     // ==================== 价格信息 ====================
 
-    @Schema(description = "单价")
-    private BigDecimal unitPrice;
-
-    @Schema(description = "原价")
-    private BigDecimal originalPrice;
-
-    @Schema(description = "售价")
-    private BigDecimal salePrice;
+    @Schema(description = "折扣率")
+    private BigDecimal discountRate;
 
     @Schema(description = "币种")
     private String currency;
-
-    @Schema(description = "折扣率")
-    private BigDecimal discountRate;
 
     // ==================== 计量配置 ====================
 

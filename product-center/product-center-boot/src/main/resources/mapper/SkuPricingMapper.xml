@@ -13,12 +13,7 @@
         <result column="billing_cycle" property="billingCycle"/>
         <result column="cycle_count" property="cycleCount"/>
         <result column="billing_unit" property="billingUnit"/>
-        <result column="pricing_strategy_code" property="pricingStrategyCode"/>
-        <result column="billing_strategy_code" property="billingStrategyCode"/>
         <result column="refund_policy" property="refundPolicy"/>
-        <result column="unit_price" property="unitPrice"/>
-        <result column="original_price" property="originalPrice"/>
-        <result column="sale_price" property="salePrice"/>
         <result column="currency" property="currency"/>
         <result column="discount_rate" property="discountRate"/>
         <result column="metering_unit" property="meteringUnit"/>

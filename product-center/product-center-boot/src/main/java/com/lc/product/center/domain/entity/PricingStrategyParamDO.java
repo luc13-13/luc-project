@@ -34,20 +34,6 @@ public class PricingStrategyParamDO implements Serializable {
     @TableField("tenant_id")
     private String tenantId;
 
-    // ==================== 关联定价模板 ====================
-
-    /**
-     * 关联sku_pricing.pricing_code
-     */
-    @TableField("pricing_code")
-    private String pricingCode;
-
-    /**
-     * 关联sku_pricing.revision
-     */
-    @TableField("pricing_revision")
-    private String pricingRevision;
-
     // ==================== 关联策略模板 ====================
 
     /**
@@ -55,6 +41,14 @@ public class PricingStrategyParamDO implements Serializable {
      */
     @TableField("strategy_code")
     private String strategyCode;
+
+    // ==================== 参数类型 ====================
+
+    /**
+     * 参数类型: TIER/CAP/FLOOR/THRESHOLD/RATE/FIXED
+     */
+    @TableField("param_type")
+    private String paramType;
 
     // ==================== 阶梯区间 ====================
 
@@ -70,19 +64,13 @@ public class PricingStrategyParamDO implements Serializable {
     @TableField("rang_end")
     private BigDecimal rangeEnd;
 
-    // ==================== 价格 ====================
+    // ==================== 参数值 ====================
 
     /**
-     * 阶梯单价
+     * 通用参数值(阶梯单价/折扣率/固定金额等)
      */
-    @TableField("unit_price")
-    private BigDecimal unitPrice;
-
-    /**
-     * 固定附加费/起步价
-     */
-    @TableField("fixed_amount")
-    private BigDecimal fixedAmount;
+    @TableField("value")
+    private BigDecimal value;
 
     // ==================== 排序 ====================
 

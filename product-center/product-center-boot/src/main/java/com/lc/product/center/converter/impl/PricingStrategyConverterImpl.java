@@ -14,7 +14,9 @@ import java.util.stream.Collectors;
 
 /**
  * <pre>
+ * 
  * <pre/>
+ * 
  * @author : Lu Cheng
  * @date : 3/2/26 09:50
  * @version : 1.0
@@ -39,7 +41,7 @@ public class PricingStrategyConverterImpl implements PricingStrategyConverter {
         entity.setStrategyType(dto.getStrategyType());
         entity.setApplyScope(dto.getApplyScope());
         entity.setApplyScopeValue(dto.getApplyScopeValue());
-        entity.setStrategyConfig(dto.getStrategyConfig());
+        entity.setCalcMethod(dto.getCalcMethod());
         entity.setPriority(dto.getPriority());
         entity.setEffectiveTime(dto.getEffectiveTime());
         entity.setExpiryTime(dto.getExpiryTime());
@@ -63,7 +65,7 @@ public class PricingStrategyConverterImpl implements PricingStrategyConverter {
                 .applyScope(entity.getApplyScope())
                 .applyScopeDesc(PricingStrategyConstants.StrategyApplyScopeEnum.getDescByScope(entity.getApplyScope()))
                 .applyScopeValue(entity.getApplyScopeValue())
-                .strategyConfig(entity.getStrategyConfig())
+                .calcMethod(entity.getCalcMethod())
                 .priority(entity.getPriority())
                 .effectiveTime(entity.getEffectiveTime())
                 .expiryTime(entity.getExpiryTime())

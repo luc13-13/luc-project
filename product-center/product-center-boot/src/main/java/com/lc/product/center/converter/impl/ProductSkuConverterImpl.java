@@ -39,8 +39,6 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
         entity.setSkuType(dto.getSkuType());
         entity.setBaseUnitPrice(dto.getBaseUnitPrice());
         entity.setCurrency(dto.getCurrency());
-        entity.setPricingStrategyCode(dto.getPricingStrategyCode());
-        entity.setBillingStrategyCode(dto.getBillingStrategyCode());
         entity.setSaleable(dto.getSaleable());
         entity.setVisible(dto.getVisible());
         entity.setQuotaLimit(dto.getQuotaLimit());
@@ -66,8 +64,6 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
                 .skuType(entity.getSkuType())
                 .baseUnitPrice(entity.getBaseUnitPrice())
                 .currency(entity.getCurrency())
-                .pricingStrategyCode(entity.getPricingStrategyCode())
-                .billingStrategyCode(entity.getBillingStrategyCode())
                 .saleable(entity.getSaleable())
                 .visible(entity.getVisible())
                 .quotaLimit(entity.getQuotaLimit())
@@ -128,8 +124,6 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
                 .skuType(entity.getSkuType())
                 .baseUnitPrice(entity.getBaseUnitPrice())
                 .currency(entity.getCurrency())
-                .pricingStrategyCode(entity.getPricingStrategyCode())
-                .billingStrategyCode(entity.getBillingStrategyCode())
                 .saleable(entity.getSaleable())
                 .visible(entity.getVisible())
                 .quotaLimit(entity.getQuotaLimit())
@@ -161,8 +155,6 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
                 .skuType(bo.getSkuType())
                 .baseUnitPrice(bo.getBaseUnitPrice())
                 .currency(bo.getCurrency())
-                .pricingStrategyCode(bo.getPricingStrategyCode())
-                .billingStrategyCode(bo.getBillingStrategyCode())
                 .productCode(bo.getProductCode())
                 .productName(bo.getProductName())
                 .subProductCode(bo.getSubProductCode())

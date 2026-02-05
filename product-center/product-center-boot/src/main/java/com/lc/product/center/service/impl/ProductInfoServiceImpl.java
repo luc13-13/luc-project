@@ -36,9 +36,7 @@ public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, Produ
 
     @Override
     public PaginationResult<ProductInfoVO> queryProductPage(ProductInfoDTO queryDTO) {
-        long pageNum = queryDTO.getPageIndex() != null ? queryDTO.getPageIndex() : 1L;
-        long pageSize = queryDTO.getPageSize() != null ? queryDTO.getPageSize() : 10L;
-        Page<ProductInfoDO> page = Page.of(pageNum, pageSize);
+        Page<ProductInfoDO> page = Page.of(queryDTO.getPageIndex(), queryDTO.getPageSize());
 
         LambdaQueryWrapper<ProductInfoDO> queryWrapper = buildQueryWrapper(queryDTO);
         queryWrapper.orderByAsc(ProductInfoDO::getSortOrder)

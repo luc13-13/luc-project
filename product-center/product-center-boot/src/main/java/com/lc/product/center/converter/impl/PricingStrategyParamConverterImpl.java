@@ -6,12 +6,13 @@ import com.lc.product.center.domain.entity.PricingStrategyParamDO;
 import com.lc.product.center.domain.vo.PricingStrategyParamVO;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * <pre>
+ * 
  * <pre/>
+ * 
  * @author : Lu Cheng
  * @date : 2/2/26 09:55
  * @version : 1.0
@@ -33,10 +34,10 @@ public class PricingStrategyParamConverterImpl implements PricingStrategyParamCo
         PricingStrategyParamDO entity = new PricingStrategyParamDO();
         entity.setTenantId(dto.getTenantId());
         entity.setStrategyCode(dto.getStrategyCode());
+        entity.setParamType(dto.getParamType());
         entity.setRangeStart(dto.getRangeStart());
         entity.setRangeEnd(dto.getRangeEnd());
-        entity.setUnitPrice(dto.getUnitPrice());
-        entity.setFixedAmount(dto.getFixedAmount() != null ? dto.getFixedAmount() : BigDecimal.ZERO);
+        entity.setValue(dto.getValue());
         entity.setSortOrder(dto.getSortOrder() != null ? dto.getSortOrder() : 0);
         return entity;
     }

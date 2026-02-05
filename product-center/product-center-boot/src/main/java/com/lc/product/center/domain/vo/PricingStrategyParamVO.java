@@ -32,18 +32,15 @@ public class PricingStrategyParamVO implements Serializable {
     @Schema(description = "租户ID")
     private String tenantId;
 
-    // ==================== 关联定价模板 ====================
-
-    @Schema(description = "关联定价编码")
-    private String pricingCode;
-
-    @Schema(description = "关联定价版本")
-    private String pricingRevision;
-
     // ==================== 关联策略模板 ====================
 
     @Schema(description = "关联策略编码")
     private String strategyCode;
+
+    // ==================== 参数类型 ====================
+
+    @Schema(description = "参数类型: TIER/CAP/FLOOR/THRESHOLD/RATE/FIXED")
+    private String paramType;
 
     // ==================== 阶梯区间 ====================
 
@@ -56,13 +53,10 @@ public class PricingStrategyParamVO implements Serializable {
     @Schema(description = "区间描述(如: 0-100GB)")
     private String rangeDesc;
 
-    // ==================== 价格 ====================
+    // ==================== 参数值 ====================
 
-    @Schema(description = "阶梯单价")
-    private BigDecimal unitPrice;
-
-    @Schema(description = "固定附加费/起步价")
-    private BigDecimal fixedAmount;
+    @Schema(description = "通用参数值")
+    private BigDecimal value;
 
     // ==================== 排序 ====================
 

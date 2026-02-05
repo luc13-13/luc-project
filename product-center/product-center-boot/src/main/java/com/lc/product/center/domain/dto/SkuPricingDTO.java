@@ -3,7 +3,6 @@ package com.lc.product.center.domain.dto;
 import com.lc.framework.core.page.PaginationParams;
 import com.lc.framework.core.utils.validator.Groups;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -73,38 +72,16 @@ public class SkuPricingDTO implements Serializable, PaginationParams {
     @NotBlank(message = "计费单位不能为空", groups = Groups.AddGroup.class)
     private String billingUnit;
 
-    // ==================== 策略驱动 ====================
-
-    @Schema(description = "定价策略编码(覆盖SKU默认)")
-    private String pricingStrategyCode;
-
-    @Schema(description = "计费策略编码(覆盖SKU默认)")
-    private String billingStrategyCode;
-
     @Schema(description = "退款政策: PRO_RATA/NON_REFUNDABLE")
     private String refundPolicy;
 
     // ==================== 价格信息 ====================
 
-    @Schema(description = "单价")
-    @NotNull(message = "单价不能为空", groups = Groups.AddGroup.class)
-    @DecimalMin(value = "0.00", message = "价格不能为负数", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
-    private BigDecimal unitPrice;
-
-    @Schema(description = "原价(用于展示折扣)")
-    @DecimalMin(value = "0.00", message = "价格不能为负数", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
-    private BigDecimal originalPrice;
-
-    @Schema(description = "售价")
-    @NotNull(message = "售价不能为空", groups = Groups.AddGroup.class)
-    @DecimalMin(value = "0.00", message = "价格不能为负数", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
-    private BigDecimal salePrice;
+    @Schema(description = "折扣率: 0.85表示85折")
+    private BigDecimal discountRate;
 
     @Schema(description = "币种: CNY/USD")
     private String currency;
-
-    @Schema(description = "折扣率: 0.85表示85折")
-    private BigDecimal discountRate;
 
     // ==================== 计量配置 ====================
 

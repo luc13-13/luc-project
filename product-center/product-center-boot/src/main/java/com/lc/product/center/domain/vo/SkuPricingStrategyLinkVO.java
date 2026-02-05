@@ -9,20 +9,19 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
- * 定价策略表(product_center.pricing_strategy)视图对象
+ * SKU与策略关联表(product_center.sku_pricing_strategy_link)视图对象
  *
  * @author lucheng
- * @since 2026-01-31
+ * @since 2026-02-05
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(name = "PricingStrategyVO", description = "定价策略VO")
-public class PricingStrategyVO implements Serializable {
+@Schema(name = "SkuPricingStrategyLinkVO", description = "SKU与策略关联VO")
+public class SkuPricingStrategyLinkVO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -33,7 +32,15 @@ public class PricingStrategyVO implements Serializable {
     @Schema(description = "租户ID")
     private String tenantId;
 
-    // ==================== 策略标识 ====================
+    // ==================== SKU关联 ====================
+
+    @Schema(description = "SKU编码")
+    private String skuCode;
+
+    @Schema(description = "SKU版本号")
+    private String skuRevision;
+
+    // ==================== 策略关联 ====================
 
     @Schema(description = "策略编码")
     private String strategyCode;
@@ -41,39 +48,12 @@ public class PricingStrategyVO implements Serializable {
     @Schema(description = "策略名称")
     private String strategyName;
 
-    // ==================== 策略类型 ====================
-
-    @Schema(description = "策略类型")
-    private String strategyType;
-
-    @Schema(description = "策略类型描述")
-    private String strategyTypeDesc;
-
-    // ==================== 应用范围 ====================
-
-    @Schema(description = "应用范围")
-    private String applyScope;
-
-    @Schema(description = "应用范围描述")
-    private String applyScopeDesc;
-
-    @Schema(description = "范围值")
-    private String applyScopeValue;
-
-    // ==================== 计算方法 ====================
-
-    @Schema(description = "计算方法: MULTIPLY(乘法)/SUBTRACT(减法)")
-    private String calcMethod;
-
-    @Schema(description = "阶梯参数列表")
-    private List<PricingStrategyParamVO> strategyParams;
-
-    // ==================== 优先级 ====================
+    // ==================== 执行优先级 ====================
 
     @Schema(description = "优先级")
     private Integer priority;
 
-    // ==================== 时间有效性 ====================
+    // ==================== 有效期 ====================
 
     @Schema(description = "生效时间")
     private Date effectiveTime;
@@ -88,9 +68,6 @@ public class PricingStrategyVO implements Serializable {
 
     @Schema(description = "状态描述")
     private String statusDesc;
-
-    @Schema(description = "备注说明")
-    private String remark;
 
     // ==================== 审计字段 ====================
 

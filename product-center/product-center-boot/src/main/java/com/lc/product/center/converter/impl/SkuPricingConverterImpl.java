@@ -36,14 +36,9 @@ public class SkuPricingConverterImpl implements SkuPricingConverter {
         entity.setBillingCycle(dto.getBillingCycle());
         entity.setCycleCount(dto.getCycleCount());
         entity.setBillingUnit(dto.getBillingUnit());
-        entity.setPricingStrategyCode(dto.getPricingStrategyCode());
-        entity.setBillingStrategyCode(dto.getBillingStrategyCode());
         entity.setRefundPolicy(dto.getRefundPolicy());
-        entity.setUnitPrice(dto.getUnitPrice());
-        entity.setOriginalPrice(dto.getOriginalPrice());
-        entity.setSalePrice(dto.getSalePrice());
-        entity.setCurrency(dto.getCurrency());
         entity.setDiscountRate(dto.getDiscountRate());
+        entity.setCurrency(dto.getCurrency());
         entity.setMeteringUnit(dto.getMeteringUnit());
         entity.setMeteringPrecision(dto.getMeteringPrecision());
         entity.setEffectiveTime(dto.getEffectiveTime());
@@ -103,14 +98,9 @@ public class SkuPricingConverterImpl implements SkuPricingConverter {
                 .billingCycle(entity.getBillingCycle())
                 .cycleCount(entity.getCycleCount())
                 .billingUnit(entity.getBillingUnit())
-                .pricingStrategyCode(entity.getPricingStrategyCode())
-                .billingStrategyCode(entity.getBillingStrategyCode())
                 .refundPolicy(entity.getRefundPolicy())
-                .unitPrice(entity.getUnitPrice())
-                .originalPrice(entity.getOriginalPrice())
-                .salePrice(entity.getSalePrice())
-                .currency(entity.getCurrency())
                 .discountRate(entity.getDiscountRate())
+                .currency(entity.getCurrency())
                 .meteringUnit(entity.getMeteringUnit())
                 .meteringPrecision(entity.getMeteringPrecision())
                 .effectiveTime(entity.getEffectiveTime())

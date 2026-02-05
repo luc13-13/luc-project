@@ -82,18 +82,6 @@ public class ProductSkuDO implements Serializable {
     @TableField("currency")
     private String currency;
 
-    /**
-     * 默认定价策略编码
-     */
-    @TableField("pricing_strategy_code")
-    private String pricingStrategyCode;
-
-    /**
-     * 默认计费策略编码
-     */
-    @TableField("billing_strategy_code")
-    private String billingStrategyCode;
-
     // ==================== 售卖控制 ====================
 
     /**

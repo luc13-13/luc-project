@@ -77,16 +77,6 @@ public class ProductSkuBO implements Serializable {
      */
     private String currency;
 
-    /**
-     * 默认定价策略编码
-     */
-    private String pricingStrategyCode;
-
-    /**
-     * 默认计费策略编码
-     */
-    private String billingStrategyCode;
-
     // ==================== 售卖控制 ====================
 
     /**

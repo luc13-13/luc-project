@@ -37,9 +37,7 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
     @Override
     public PaginationResult<ProductSkuVO> querySkuPage(ProductSkuDTO queryDTO) {
-        long pageNum = queryDTO.getPageIndex() != null ? queryDTO.getPageIndex() : 1L;
-        long pageSize = queryDTO.getPageSize() != null ? queryDTO.getPageSize() : 10L;
-        Page<ProductSkuDO> page = Page.of(pageNum, pageSize);
+        Page<ProductSkuDO> page = Page.of(queryDTO.getPageIndex(), queryDTO.getPageSize());
 
         LambdaQueryWrapper<ProductSkuDO> queryWrapper = buildQueryWrapper(queryDTO);
         queryWrapper.orderByDesc(ProductSkuDO::getDtCreated);
@@ -218,10 +216,6 @@ public class ProductSkuServiceImpl extends ServiceImpl<ProductSkuMapper, Product
 
             if (StringUtils.hasText(queryDTO.getSkuName())) {
                 queryWrapper.like(ProductSkuDO::getSkuName, queryDTO.getSkuName());
-            }
-
-            if (StringUtils.hasText(queryDTO.getPricingStrategyCode())) {
-                queryWrapper.eq(ProductSkuDO::getPricingStrategyCode, queryDTO.getPricingStrategyCode());
             }
 
             if (StringUtils.hasText(queryDTO.getRevision())) {

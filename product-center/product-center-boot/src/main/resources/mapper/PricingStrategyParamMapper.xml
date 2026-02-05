@@ -5,21 +5,19 @@
     <resultMap id="BaseResultMap" type="com.lc.product.center.domain.entity.PricingStrategyParamDO">
         <id column="id" property="id"/>
         <result column="tenant_id" property="tenantId"/>
-        <result column="pricing_code" property="pricingCode"/>
-        <result column="pricing_revision" property="pricingRevision"/>
         <result column="strategy_code" property="strategyCode"/>
+        <result column="param_type" property="paramType"/>
         <result column="range_start" property="rangeStart"/>
         <result column="range_end" property="rangeEnd"/>
-        <result column="unit_price" property="unitPrice"/>
-        <result column="fixed_amount" property="fixedAmount"/>
+        <result column="value" property="value"/>
         <result column="sort_order" property="sortOrder"/>
         <result column="created_by" property="createdBy"/>
         <result column="dt_created" property="dtCreated"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id, tenant_id, pricing_code, pricing_revision, strategy_code,
-        range_start, range_end, unit_price, fixed_amount, sort_order,
+        id, tenant_id, strategy_code, param_type,
+        range_start, range_end, value, sort_order,
         created_by, dt_created
     </sql>
 
@@ -29,19 +27,7 @@
         FROM product_center.pricing_strategy_param
         WHERE tenant_id = #{tenantId}
         AND strategy_code = #{strategyCode}
-        ORDER BY sort_order , range_start
-    </select>
-
-    <select id="selectByPricingCode" resultMap="BaseResultMap">
-        SELECT
-        <include refid="Base_Column_List"/>
-        FROM product_center.pricing_strategy_param
-        WHERE tenant_id = #{tenantId}
-          AND pricing_code = #{pricingCode}
-        <if test="pricingRevision != null and pricingRevision != ''">
-          AND pricing_revision = #{pricingRevision}
-        </if>
-        ORDER BY sort_order , range_start
+        ORDER BY sort_order, range_start
     </select>
 
     <delete id="deleteByStrategyCode">
@@ -52,12 +38,12 @@
 
     <insert id="batchInsert" parameterType="java.util.List">
         INSERT INTO product_center.pricing_strategy_param
-        (tenant_id, pricing_code, pricing_revision, strategy_code,
-         range_start, range_end, unit_price, fixed_amount, sort_order, created_by, dt_created)
+        (tenant_id, strategy_code, param_type,
+         range_start, range_end, value, sort_order, created_by, dt_created)
         VALUES
         <foreach collection="list" item="item" separator=",">
-            (#{item.tenantId}, #{item.pricingCode}, #{item.pricingRevision}, #{item.strategyCode},
-             #{item.rangeStart}, #{item.rangeEnd}, #{item.unitPrice}, #{item.fixedAmount},
+            (#{item.tenantId}, #{item.strategyCode}, #{item.paramType},
+             #{item.rangeStart}, #{item.rangeEnd}, #{item.value},
              #{item.sortOrder}, #{item.createdBy}, NOW())
         </foreach>
     </insert>

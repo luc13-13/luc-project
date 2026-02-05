@@ -33,18 +33,15 @@ public class PricingStrategyParamDTO implements Serializable {
     @Schema(description = "租户ID")
     private String tenantId;
 
-    // ==================== 关联定价模板 ====================
-
-    @Schema(description = "关联sku_pricing.pricing_code")
-    private String pricingCode;
-
-    @Schema(description = "关联sku_pricing.revision")
-    private String pricingRevision;
-
     // ==================== 关联策略模板 ====================
 
     @Schema(description = "关联pricing_strategy.strategy_code")
     private String strategyCode;
+
+    // ==================== 参数类型 ====================
+
+    @Schema(description = "参数类型: TIER/CAP/FLOOR/THRESHOLD/RATE/FIXED")
+    private String paramType;
 
     // ==================== 阶梯区间 ====================
 
@@ -55,14 +52,11 @@ public class PricingStrategyParamDTO implements Serializable {
     @Schema(description = "区间结束(NULL为无穷大)")
     private BigDecimal rangeEnd;
 
-    // ==================== 价格 ====================
+    // ==================== 参数值 ====================
 
-    @Schema(description = "阶梯单价")
-    @NotNull(message = "阶梯单价不能为空")
-    private BigDecimal unitPrice;
-
-    @Schema(description = "固定附加费/起步价")
-    private BigDecimal fixedAmount;
+    @Schema(description = "通用参数值(阶梯单价/折扣率/固定金额等)")
+    @NotNull(message = "参数值不能为空")
+    private BigDecimal value;
 
     // ==================== 排序 ====================
 

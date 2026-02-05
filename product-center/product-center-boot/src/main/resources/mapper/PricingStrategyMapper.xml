@@ -10,8 +10,7 @@
         <result column="strategy_type" property="strategyType"/>
         <result column="apply_scope" property="applyScope"/>
         <result column="apply_scope_value" property="applyScopeValue"/>
-        <result column="strategy_config" property="strategyConfig"
-                typeHandler="com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler"/>
+        <result column="calc_method" property="calcMethod"/>
         <result column="priority" property="priority"/>
         <result column="effective_time" property="effectiveTime"/>
         <result column="expiry_time" property="expiryTime"/>
@@ -25,7 +24,7 @@
 
     <sql id="Base_Column_List">
         id, tenant_id, strategy_code, strategy_name, strategy_type, apply_scope, apply_scope_value,
-        strategy_config, priority, effective_time, expiry_time, status, remark,
+        calc_method, priority, effective_time, expiry_time, status, remark,
         created_by, dt_created, modified_by, dt_modified
     </sql>
 

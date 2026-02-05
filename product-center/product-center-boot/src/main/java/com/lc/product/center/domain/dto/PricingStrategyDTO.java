@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Map;
 
 /**
  * 定价策略表(product_center.pricing_strategy)数据传输对象
@@ -64,10 +63,10 @@ public class PricingStrategyDTO implements Serializable, PaginationParams {
     @Schema(description = "范围值: SKU编码或产品线")
     private String applyScopeValue;
 
-    // ==================== 策略配置 ====================
+    // ==================== 计算方法 ====================
 
-    @Schema(description = "策略配置(阶梯区间/区域系数等)")
-    private Map<String, Object> strategyConfig;
+    @Schema(description = "计算方法: MULTIPLY(乘法)/SUBTRACT(减法)")
+    private String calcMethod;
 
     // ==================== 优先级 ====================
 

@@ -8,14 +8,15 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 定价策略表(product_center.pricing_strategy)实体类
+ * SKU与策略关联表(product_center.sku_pricing_strategy_link)实体类
+ * 支持多策略叠加
  *
  * @author lucheng
- * @since 2026-01-31
+ * @since 2026-02-05
  */
 @Data
-@TableName("pricing_strategy")
-public class PricingStrategyDO implements Serializable {
+@TableName("sku_pricing_strategy_link")
+public class SkuPricingStrategyLinkDO implements Serializable {
 
     @Serial
     private static final long serialVersionUID = 1L;
@@ -32,57 +33,37 @@ public class PricingStrategyDO implements Serializable {
     @TableField("tenant_id")
     private String tenantId;
 
-    // ==================== 策略标识 ====================
+    // ==================== SKU关联 ====================
 
     /**
-     * 策略编码: TIERED_CPU_001
+     * SKU编码
+     */
+    @TableField("sku_code")
+    private String skuCode;
+
+    /**
+     * SKU版本号
+     */
+    @TableField("sku_revision")
+    private String skuRevision;
+
+    // ==================== 策略关联 ====================
+
+    /**
+     * 策略编码
      */
     @TableField("strategy_code")
     private String strategyCode;
 
-    /**
-     * 策略名称
-     */
-    @TableField("strategy_name")
-    private String strategyName;
-
-    // ==================== 策略类型 ====================
+    // ==================== 执行优先级 ====================
 
     /**
-     * 策略类型: LINEAR/TIERED/VOLUME_DISCOUNT/REGION/PROMOTION
-     */
-    @TableField("strategy_type")
-    private String strategyType;
-
-    /**
-     * 计算方法: MULTIPLY(乘法)/SUBTRACT(减法)
-     */
-    @TableField("calc_method")
-    private String calcMethod;
-
-    // ==================== 应用范围 ====================
-
-    /**
-     * 应用范围: ALL/SKU/PRODUCT_LINE
-     */
-    @TableField("apply_scope")
-    private String applyScope;
-
-    /**
-     * 范围值: SKU编码或产品线
-     */
-    @TableField("apply_scope_value")
-    private String applyScopeValue;
-
-    // ==================== 优先级 ====================
-
-    /**
-     * 优先级
+     * 优先级(NULL使用策略默认值)
      */
     @TableField("priority")
     private Integer priority;
 
-    // ==================== 时间有效性 ====================
+    // ==================== 有效期 ====================
 
     /**
      * 生效时间
@@ -103,12 +84,6 @@ public class PricingStrategyDO implements Serializable {
      */
     @TableField("status")
     private String status;
-
-    /**
-     * 备注说明
-     */
-    @TableField("remark")
-    private String remark;
 
     // ==================== 审计字段 ====================
 
