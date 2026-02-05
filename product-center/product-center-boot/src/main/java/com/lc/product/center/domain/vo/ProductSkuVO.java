@@ -202,6 +202,18 @@ public class ProductSkuVO implements Serializable {
     @Schema(description = "计费项列表")
     private List<ProductInfoVO> billingItems;
 
+    /**
+     * 关联的定价模板列表
+     */
+    @Schema(description = "关联的定价模板列表")
+    private List<SkuPricingVO> pricingTemplates;
+
+    /**
+     * 关联的定价策略列表
+     */
+    @Schema(description = "关联的定价策略列表")
+    private List<PricingStrategyVO> pricingStrategies;
+
     // ==================== 审计字段 ====================
 
     /**

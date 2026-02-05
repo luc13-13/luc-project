@@ -132,8 +132,8 @@ public class ProductInfoServiceImpl extends ServiceImpl<ProductInfoMapper, Produ
 
         this.updateById(updateDO);
 
-        // 简单转换：DO → VO
-        return productInfoConverter.convertDO2VO(updateDO);
+        // 重新查询完整数据后转换
+        return productInfoConverter.convertDO2VO(this.getById(productDTO.getId()));
     }
 
     @Override

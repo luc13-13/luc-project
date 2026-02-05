@@ -17,6 +17,7 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 产品SKU表(product_center.product_sku)表数据传输类
@@ -140,14 +141,32 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
     @Schema(description = "失效时间")
     private Date expiryTime;
 
-    // ==================== 状态 ====================
-
     /**
      * 状态
      */
     @Schema(description = "状态: DRAFT/ACTIVE/INACTIVE")
     @NotBlank(message = "状态不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
     private String status;
+
+    // ==================== 关联数据（创建/更新时可传入） ====================
+
+    /**
+     * 计费项组合列表（BOM）
+     */
+    @Schema(description = "计费项组合列表")
+    private List<SkuItemCombinationDTO> itemCombinations;
+
+    /**
+     * 定价模板关联列表
+     */
+    @Schema(description = "定价模板关联列表")
+    private List<SkuPricingLinkDTO> pricingLinks;
+
+    /**
+     * 定价策略关联列表
+     */
+    @Schema(description = "定价策略关联列表")
+    private List<SkuPricingStrategyLinkDTO> strategyLinks;
 
     // ==================== 分页参数 ====================
 
