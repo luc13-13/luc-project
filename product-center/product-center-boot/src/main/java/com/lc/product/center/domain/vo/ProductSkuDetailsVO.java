@@ -6,28 +6,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 /**
- * 产品SKU表(product_center.product_sku)表视图对象
- *
- * @author lucheng
- * @since 2026-01-31
+ * <pre>
+ *     SKU详情
+ * <pre/>
+ * @author : Lu Cheng
+ * @date : 6/2/26 10:48
+ * @version : 1.0
  */
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Schema(name = "ProductSkuVO", description = "产品SKU视图对象")
-public class ProductSkuVO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
+@Schema(name = "ProductSkuDetailsVO", description = "产品SKU详情对象")
+public class ProductSkuDetailsVO implements Serializable {
     /**
      * 主键id
      */
@@ -117,6 +114,9 @@ public class ProductSkuVO implements Serializable {
      */
     @Schema(description = "是否当前主版本")
     private Short isCurrent;
+
+    @Schema(description = "历史版本")
+    private List<ProductSkuDetailsVO> historicalSkuDetails;
 
     /**
      * 生效时间

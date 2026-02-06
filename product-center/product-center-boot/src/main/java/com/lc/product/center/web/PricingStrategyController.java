@@ -6,11 +6,9 @@ import com.lc.framework.core.utils.validator.Groups;
 import com.lc.product.center.domain.dto.PricingStrategyDTO;
 import com.lc.product.center.domain.dto.PricingStrategyParamDTO;
 import com.lc.product.center.domain.vo.PricingStrategyVO;
-import com.lc.product.center.service.PricingStrategyService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,27 +25,23 @@ import java.util.List;
 @Tag(name = "定价策略管理", description = "定价策略的增删改查接口")
 public class PricingStrategyController {
 
-    @Autowired
-    private PricingStrategyService pricingStrategyService;
-
     @PostMapping("/list")
     @Operation(summary = "查询策略列表")
     public WebResult<List<PricingStrategyVO>> list(@RequestBody PricingStrategyDTO queryDTO) {
-        return WebResult.success(pricingStrategyService.queryStrategyList(queryDTO));
+        return WebResult.success();
     }
 
     @PostMapping("/page")
     @Operation(summary = "分页查询策略列表")
     public WebResult<PaginationResult<PricingStrategyVO>> page(
             @RequestBody @Validated(Groups.PageGroup.class) PricingStrategyDTO queryDTO) {
-        return WebResult.success(pricingStrategyService.queryStrategyPage(queryDTO));
+        return WebResult.success();
     }
 
     @GetMapping("/detail/{id}")
     @Operation(summary = "查询策略详情", description = "包含阶梯参数")
     public WebResult<PricingStrategyVO> detail(@PathVariable Long id) {
-        PricingStrategyVO result = pricingStrategyService.getStrategyById(id);
-        return result == null ? WebResult.error("策略不存在") : WebResult.success(result);
+        return WebResult.success();
     }
 
     @GetMapping("/by-code")
@@ -55,8 +49,7 @@ public class PricingStrategyController {
     public WebResult<PricingStrategyVO> getByCode(
             @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId,
             @Parameter(description = "策略编码") @RequestParam String strategyCode) {
-        PricingStrategyVO result = pricingStrategyService.getStrategyByCode(tenantId, strategyCode);
-        return result == null ? WebResult.error("策略不存在") : WebResult.success(result);
+        return WebResult.success();
     }
 
     @GetMapping("/effective")
@@ -64,27 +57,27 @@ public class PricingStrategyController {
     public WebResult<List<PricingStrategyVO>> getEffective(
             @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId,
             @Parameter(description = "策略类型") @RequestParam(required = false) String strategyType) {
-        return WebResult.success(pricingStrategyService.getEffectiveStrategies(tenantId, strategyType));
+        return WebResult.success();
     }
 
     @PostMapping("/create")
     @Operation(summary = "创建定价策略")
     public WebResult<PricingStrategyVO> create(
             @RequestBody @Validated(Groups.AddGroup.class) PricingStrategyDTO strategyDTO) {
-        return WebResult.success(pricingStrategyService.createStrategy(strategyDTO));
+        return WebResult.success();
     }
 
     @PutMapping("/update")
     @Operation(summary = "更新定价策略")
     public WebResult<PricingStrategyVO> update(
             @RequestBody @Validated(Groups.UpdateGroup.class) PricingStrategyDTO strategyDTO) {
-        return WebResult.success(pricingStrategyService.updateStrategy(strategyDTO));
+        return WebResult.success();
     }
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "删除定价策略", description = "同时删除关联的阶梯参数")
     public WebResult<Boolean> delete(@PathVariable Long id) {
-        return WebResult.success(pricingStrategyService.deleteStrategy(id));
+        return WebResult.success();
     }
 
     @PostMapping("/{id}/params")
@@ -92,6 +85,6 @@ public class PricingStrategyController {
     public WebResult<Boolean> saveParams(
             @PathVariable Long id,
             @RequestBody List<PricingStrategyParamDTO> params) {
-        return WebResult.success(pricingStrategyService.saveStrategyParams(id, params));
+        return WebResult.success();
     }
 }

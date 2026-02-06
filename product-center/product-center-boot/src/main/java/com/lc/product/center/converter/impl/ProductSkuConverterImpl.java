@@ -1,12 +1,17 @@
 package com.lc.product.center.converter.impl;
 
 import com.lc.product.center.constants.ProductStatusEnum;
-import com.lc.product.center.constants.SkuTypeConstants;
+import com.lc.product.center.constants.SkuConstants;
+import com.lc.product.center.converter.PricingStrategyConverter;
+import com.lc.product.center.converter.ProductInfoConverter;
 import com.lc.product.center.converter.ProductSkuConverter;
+import com.lc.product.center.converter.SkuPricingConverter;
 import com.lc.product.center.domain.bo.ProductSkuBO;
 import com.lc.product.center.domain.dto.ProductSkuDTO;
 import com.lc.product.center.domain.entity.ProductSkuDO;
+import com.lc.product.center.domain.vo.ProductSkuDetailsVO;
 import com.lc.product.center.domain.vo.ProductSkuVO;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -20,8 +25,15 @@ import java.util.stream.Collectors;
  * @author lucheng
  * @since 2026-01-31
  */
+@AllArgsConstructor
 @Service("productSkuConverter")
 public class ProductSkuConverterImpl implements ProductSkuConverter {
+
+    private final ProductInfoConverter productInfoConverter;
+
+    private final SkuPricingConverter skuPricingConverter;
+
+    private final PricingStrategyConverter pricingStrategyConverter;
 
     // ==================== 简单转换实现 ====================
 
@@ -55,13 +67,14 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
             return null;
         }
 
-        ProductSkuVO vo = ProductSkuVO.builder()
+        return ProductSkuVO.builder()
                 .id(entity.getId())
                 .tenantId(entity.getTenantId())
                 .skuCode(entity.getSkuCode())
                 .skuName(entity.getSkuName())
                 .revision(entity.getRevision())
                 .skuType(entity.getSkuType())
+                .skuTypeDesc(SkuConstants.SkuTypeEnum.getDescByCode(entity.getSkuType()))
                 .baseUnitPrice(entity.getBaseUnitPrice())
                 .currency(entity.getCurrency())
                 .saleable(entity.getSaleable())
@@ -71,16 +84,40 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
                 .effectiveTime(entity.getEffectiveTime())
                 .expiryTime(entity.getExpiryTime())
                 .status(entity.getStatus())
+                .statusDesc(ProductStatusEnum.getDescByCode(entity.getStatus()))
+                .publishTime(entity.getPublishTime())
+                .build();
+    }
+
+    @Override
+    public ProductSkuDetailsVO convertDO2DetailsVO(ProductSkuDO entity) {
+        if (entity == null) {
+            return null;
+        }
+        return ProductSkuDetailsVO.builder()
+                .id(entity.getId())
+                .tenantId(entity.getTenantId())
+                .skuCode(entity.getSkuCode())
+                .skuName(entity.getSkuName())
+                .revision(entity.getRevision())
+                .skuType(entity.getSkuType())
+                .skuTypeDesc(SkuConstants.SkuTypeEnum.getDescByCode(entity.getSkuType()))
+                .baseUnitPrice(entity.getBaseUnitPrice())
+                .currency(entity.getCurrency())
+                .saleable(entity.getSaleable())
+                .visible(entity.getVisible())
+                .quotaLimit(entity.getQuotaLimit())
+                .isCurrent(entity.getIsCurrent())
+                .effectiveTime(entity.getEffectiveTime())
+                .expiryTime(entity.getExpiryTime())
+                .status(entity.getStatus())
+                .statusDesc(ProductStatusEnum.getDescByCode(entity.getStatus()))
                 .publishTime(entity.getPublishTime())
                 .createdBy(entity.getCreatedBy())
                 .dtCreated(entity.getDtCreated())
                 .modifiedBy(entity.getModifiedBy())
                 .dtModified(entity.getDtModified())
                 .build();
-
-        vo.setSkuTypeDesc(getSkuTypeDesc(entity.getSkuType()));
-        vo.setStatusDesc(ProductStatusEnum.getDescByCode(entity.getStatus()));
-        return vo;
     }
 
     @Override
@@ -111,113 +148,24 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
     // ==================== 复杂转换实现（经过BO） ====================
 
     @Override
-    public ProductSkuBO convertDO2BO(ProductSkuDO entity) {
-        if (entity == null) {
-            return null;
-        }
-        return ProductSkuBO.builder()
-                .id(entity.getId())
-                .tenantId(entity.getTenantId())
-                .skuCode(entity.getSkuCode())
-                .skuName(entity.getSkuName())
-                .revision(entity.getRevision())
-                .skuType(entity.getSkuType())
-                .baseUnitPrice(entity.getBaseUnitPrice())
-                .currency(entity.getCurrency())
-                .saleable(entity.getSaleable())
-                .visible(entity.getVisible())
-                .quotaLimit(entity.getQuotaLimit())
-                .isCurrent(entity.getIsCurrent())
-                .effectiveTime(entity.getEffectiveTime())
-                .expiryTime(entity.getExpiryTime())
-                .status(entity.getStatus())
-                .publishTime(entity.getPublishTime())
-                .createdBy(entity.getCreatedBy())
-                .dtCreated(entity.getDtCreated())
-                .modifiedBy(entity.getModifiedBy())
-                .dtModified(entity.getDtModified())
-                .deleted(entity.getDeleted())
-                .build();
-    }
+    public ProductSkuDetailsVO convertBO2DetailsVO(ProductSkuBO bo) {
+        ProductSkuDetailsVO vo = this.convertDO2DetailsVO(bo.getProductSkuDO());
 
-    @Override
-    public ProductSkuVO convertBO2VO(ProductSkuBO bo) {
-        if (bo == null) {
-            return null;
+        // 转换关联的计费项列表
+        if (!CollectionUtils.isEmpty(bo.getBillingItems())) {
+            vo.setBillingItems(productInfoConverter.convertDO2VO(bo.getBillingItems()));
         }
 
-        ProductSkuVO vo = ProductSkuVO.builder()
-                .id(bo.getId())
-                .tenantId(bo.getTenantId())
-                .skuCode(bo.getSkuCode())
-                .skuName(bo.getSkuName())
-                .revision(bo.getRevision())
-                .skuType(bo.getSkuType())
-                .baseUnitPrice(bo.getBaseUnitPrice())
-                .currency(bo.getCurrency())
-                .productCode(bo.getProductCode())
-                .productName(bo.getProductName())
-                .subProductCode(bo.getSubProductCode())
-                .subProductName(bo.getSubProductName())
-                .saleable(bo.getSaleable())
-                .visible(bo.getVisible())
-                .quotaLimit(bo.getQuotaLimit())
-                .isCurrent(bo.getIsCurrent())
-                .effectiveTime(bo.getEffectiveTime())
-                .expiryTime(bo.getExpiryTime())
-                .status(bo.getStatus())
-                .publishTime(bo.getPublishTime())
-                .hourlyPrice(bo.getHourlyPrice())
-                .monthlyPrice(bo.getMonthlyPrice())
-                .yearlyPrice(bo.getYearlyPrice())
-                .createdBy(bo.getCreatedBy())
-                .dtCreated(bo.getDtCreated())
-                .modifiedBy(bo.getModifiedBy())
-                .dtModified(bo.getDtModified())
-                .build();
+        // 转换关联的定价模板列表
+        if (!CollectionUtils.isEmpty(bo.getPricingTemplates())) {
+            vo.setPricingTemplates(skuPricingConverter.convertDO2VO(bo.getPricingTemplates()));
+        }
 
-        // 设置类型描述
-        vo.setSkuTypeDesc(getSkuTypeDesc(bo.getSkuType()));
-
-        // 设置状态描述
-        vo.setStatusDesc(ProductStatusEnum.getDescByCode(bo.getStatus()));
+        // 转换关联的定价策略列表
+        if (!CollectionUtils.isEmpty(bo.getPricingStrategies())) {
+            vo.setPricingStrategies(pricingStrategyConverter.convertDO2VOList(bo.getPricingStrategies()));
+        }
 
         return vo;
-    }
-
-    @Override
-    public List<ProductSkuBO> convertDO2BO(List<ProductSkuDO> entities) {
-        if (CollectionUtils.isEmpty(entities)) {
-            return Collections.emptyList();
-        }
-        return entities.stream()
-                .map(this::convertDO2BO)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<ProductSkuVO> convertBO2VO(List<ProductSkuBO> bos) {
-        if (CollectionUtils.isEmpty(bos)) {
-            return Collections.emptyList();
-        }
-        return bos.stream()
-                .map(this::convertBO2VO)
-                .collect(Collectors.toList());
-    }
-
-    /**
-     * 获取SKU类型描述
-     */
-    private String getSkuTypeDesc(String skuType) {
-        if (skuType == null) {
-            return null;
-        }
-        return switch (skuType) {
-            case SkuTypeConstants.INSTANCE -> "实例";
-            case SkuTypeConstants.ADDON -> "附加项";
-            case SkuTypeConstants.BUNDLE -> "套餐";
-            case SkuTypeConstants.SUBSCRIPTION -> "订阅";
-            default -> skuType;
-        };
     }
 }

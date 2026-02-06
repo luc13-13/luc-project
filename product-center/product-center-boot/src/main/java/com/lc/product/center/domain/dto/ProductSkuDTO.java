@@ -168,6 +168,9 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
     @Schema(description = "定价策略关联列表")
     private List<SkuPricingStrategyLinkDTO> strategyLinks;
 
+    @Schema(description = "是否删除：1是，0否")
+    private Short deleted;
+
     // ==================== 分页参数 ====================
 
     @Min(value = 1, message = "{page.index}", groups = { Groups.PageGroup.class })

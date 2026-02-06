@@ -102,28 +102,11 @@ public class ProductInfoDO implements Serializable {
     @TableField("spec_unit")
     private String specUnit;
 
-    // ==================== 计费属性 ====================
-
-    /**
-     * 基准单价
-     */
-    @TableField("base_price")
-    private BigDecimal basePrice;
-
-    /**
-     * 价格系数
-     */
-    @TableField("price_factor")
-    private BigDecimal priceFactor;
-
     /**
      * 计量单位（账单展示）: 核·小时, GB·月
      */
     @TableField("metering_unit")
     private String meteringUnit;
-
-    @TableField("revision_id")
-    private String revisionId;
 
     // ==================== 状态与排序 ====================
 
