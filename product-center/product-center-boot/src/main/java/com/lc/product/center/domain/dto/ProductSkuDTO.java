@@ -106,14 +106,14 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
      */
     @Schema(description = "是否可售: 1是 0否")
     @NotNull(message = "是否可售不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
-    private Short saleable;
+    private Boolean saleable;
 
     /**
      * 是否可见
      */
     @Schema(description = "是否可见: 1是 0否")
     @NotNull(message = "是否可见不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
-    private Short visible;
+    private Boolean visible;
 
     /**
      * 配额限制
@@ -127,7 +127,7 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
      * 是否当前主版本
      */
     @Schema(description = "是否当前主版本: 1是 0否")
-    private Short isCurrent;
+    private Boolean isCurrent;
 
     /**
      * 生效时间
@@ -169,7 +169,7 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
     private List<SkuPricingStrategyLinkDTO> strategyLinks;
 
     @Schema(description = "是否删除：1是，0否")
-    private Short deleted;
+    private Boolean deleted;
 
     // ==================== 分页参数 ====================
 

@@ -98,7 +98,7 @@ public class SkuPricingVO implements Serializable {
     private Date expiryTime;
 
     @Schema(description = "是否当前版本")
-    private Short isCurrent;
+    private Boolean isCurrent;
 
     @Schema(description = "优先级")
     private Integer priority;

@@ -93,13 +93,13 @@ public class ProductSkuDetailsVO implements Serializable {
      * 是否可售
      */
     @Schema(description = "是否可售")
-    private Short saleable;
+    private Boolean saleable;
 
     /**
      * 是否可见
      */
     @Schema(description = "是否可见")
-    private Short visible;
+    private Boolean visible;
 
     /**
      * 配额限制
@@ -113,7 +113,7 @@ public class ProductSkuDetailsVO implements Serializable {
      * 是否当前主版本
      */
     @Schema(description = "是否当前主版本")
-    private Short isCurrent;
+    private Boolean isCurrent;
 
     @Schema(description = "历史版本")
     private List<ProductSkuDetailsVO> historicalSkuDetails;

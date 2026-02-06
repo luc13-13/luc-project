@@ -1,6 +1,6 @@
 package com.lc.product.center.converter.impl;
 
-import com.lc.product.center.constants.PricingStrategyConstants;
+import com.lc.product.center.constants.PricingConstants;
 import com.lc.product.center.constants.ProductStatusEnum;
 import com.lc.product.center.converter.PricingStrategyConverter;
 import com.lc.product.center.domain.dto.PricingStrategyDTO;
@@ -61,9 +61,9 @@ public class PricingStrategyConverterImpl implements PricingStrategyConverter {
                 .strategyCode(entity.getStrategyCode())
                 .strategyName(entity.getStrategyName())
                 .strategyType(entity.getStrategyType())
-                .strategyTypeDesc(PricingStrategyConstants.StrategyTypeEnum.getDescByType(entity.getStrategyType()))
+                .strategyTypeDesc(PricingConstants.PricingStrategyTypeEnum.getDescByType(entity.getStrategyType()))
                 .applyScope(entity.getApplyScope())
-                .applyScopeDesc(PricingStrategyConstants.StrategyApplyScopeEnum.getDescByScope(entity.getApplyScope()))
+                .applyScopeDesc(PricingConstants.StrategyApplyScopeEnum.getDescByScope(entity.getApplyScope()))
                 .applyScopeValue(entity.getApplyScopeValue())
                 .calcMethod(entity.getCalcMethod())
                 .priority(entity.getPriority())

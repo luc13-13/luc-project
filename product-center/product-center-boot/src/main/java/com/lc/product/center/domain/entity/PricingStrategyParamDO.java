@@ -3,29 +3,23 @@ package com.lc.product.center.domain.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 定价策略参数细目表(product_center.pricing_strategy_param)实体类
- * 用于存储阶梯定价的区间配置
+ * 定价策略参数表(product_center.pricing_strategy_param)表实体类
  *
  * @author lucheng
- * @since 2026-01-31
+ * @since 2026-02-06
  */
 @Data
-@TableName("pricing_strategy_param")
+@TableName(schema = "product_center", value = "pricing_strategy_param")
 public class PricingStrategyParamDO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     /**
      * 主键ID
      */
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -34,26 +28,20 @@ public class PricingStrategyParamDO implements Serializable {
     @TableField("tenant_id")
     private String tenantId;
 
-    // ==================== 关联策略模板 ====================
-
     /**
      * 关联pricing_strategy.strategy_code
      */
     @TableField("strategy_code")
     private String strategyCode;
 
-    // ==================== 参数类型 ====================
-
     /**
-     * 参数类型: TIER/CAP/FLOOR/THRESHOLD/RATE/FIXED
+     * 参数类型: TIER/CAP/FLOOR/THRESHOLD/RATE/FIXED/QUANTITY_LIMIT
      */
     @TableField("param_type")
     private String paramType;
 
-    // ==================== 阶梯区间 ====================
-
     /**
-     * 区间起始
+     * 区间起始(阶梯/满减门槛)
      */
     @TableField("range_start")
     private BigDecimal rangeStart;
@@ -61,26 +49,20 @@ public class PricingStrategyParamDO implements Serializable {
     /**
      * 区间结束(NULL为无穷大)
      */
-    @TableField("rang_end")
+    @TableField("range_end")
     private BigDecimal rangeEnd;
 
-    // ==================== 参数值 ====================
-
     /**
-     * 通用参数值(阶梯单价/折扣率/固定金额等)
+     * 参数值(折扣率/金额/单价等)
      */
     @TableField("value")
     private BigDecimal value;
 
-    // ==================== 排序 ====================
-
     /**
-     * 排序
+     * 排序(阶梯顺序)
      */
     @TableField("sort_order")
     private Integer sortOrder;
-
-    // ==================== 审计字段 ====================
 
     /**
      * 创建者
@@ -93,4 +75,16 @@ public class PricingStrategyParamDO implements Serializable {
      */
     @TableField(value = "dt_created", fill = FieldFill.INSERT)
     private Date dtCreated;
+
+    /**
+     * 更新者
+     */
+    @TableField(value = "modified_by", fill = FieldFill.UPDATE)
+    private String modifiedBy;
+
+    /**
+     * 更新时间
+     */
+    @TableField(value = "dt_modified", fill = FieldFill.UPDATE)
+    private Date dtModified;
 }

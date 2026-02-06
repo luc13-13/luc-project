@@ -3,31 +3,23 @@ package com.lc.product.center.domain.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import static com.lc.framework.core.constants.StringConstants.STATUS_FALSE;
-
 /**
- * 产品信息表(product_center.product_info)表实体类
- * 四层产品结构 + 计费属性
+ * 产品资源信息主档(四层结构)(product_center.product_info)表实体类
  *
  * @author lucheng
- * @since 2025-08-31
+ * @since 2026-02-06
  */
 @Data
-@TableName("product_info")
+@TableName(schema = "product_center", value = "product_info")
 public class ProductInfoDO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     /**
-     * 主键id
+     * 主键ID
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -35,8 +27,6 @@ public class ProductInfoDO implements Serializable {
      */
     @TableField("tenant_id")
     private String tenantId;
-
-    // ==================== 四层产品结构 ====================
 
     /**
      * 产品编码: CVM/CBS/CLB
@@ -62,8 +52,6 @@ public class ProductInfoDO implements Serializable {
     @TableField("sub_billing_item_code")
     private String subBillingItemCode;
 
-    // ==================== 名称 ====================
-
     /**
      * 产品名称
      */
@@ -88,8 +76,6 @@ public class ProductInfoDO implements Serializable {
     @TableField("sub_billing_item_name")
     private String subBillingItemName;
 
-    // ==================== 规格属性 ====================
-
     /**
      * 规格值: 4, 8, 100
      */
@@ -103,12 +89,10 @@ public class ProductInfoDO implements Serializable {
     private String specUnit;
 
     /**
-     * 计量单位（账单展示）: 核·小时, GB·月
+     * 计量展示单位: 核·小时, GB·月
      */
     @TableField("metering_unit")
     private String meteringUnit;
-
-    // ==================== 状态与排序 ====================
 
     /**
      * 状态: DRAFT/ACTIVE/INACTIVE
@@ -123,13 +107,11 @@ public class ProductInfoDO implements Serializable {
     private Integer sortOrder;
 
     /**
-     * 逻辑删除(0:未删除 1:已删除)
+     * 逻辑删除: 0未删除 1已删除
      */
+    @TableLogic
     @TableField("deleted")
-    @TableLogic(value = STATUS_FALSE)
-    private Short deleted;
-
-    // ==================== 审计字段 ====================
+    private Boolean deleted;
 
     /**
      * 创建者

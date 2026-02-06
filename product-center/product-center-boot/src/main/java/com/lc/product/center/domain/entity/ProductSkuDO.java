@@ -1,35 +1,25 @@
 package com.lc.product.center.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableLogic;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 产品SKU表(product_center.product_sku)表实体类
- * 售卖单元(版本化+基准定价)
+ * 产品SKU表(版本化+基准定价)(product_center.product_sku)表实体类
  *
  * @author lucheng
- * @since 2026-01-31
+ * @since 2026-02-06
  */
 @Data
-@TableName("product_sku")
+@TableName(schema = "product_center", value = "product_sku")
 public class ProductSkuDO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     /**
-     * 主键id
+     * 主键ID
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -37,8 +27,6 @@ public class ProductSkuDO implements Serializable {
      */
     @TableField("tenant_id")
     private String tenantId;
-
-    // ==================== SKU基本信息 ====================
 
     /**
      * SKU编码: CVM-S5-4C8G
@@ -52,23 +40,17 @@ public class ProductSkuDO implements Serializable {
     @TableField("sku_name")
     private String skuName;
 
-    // ==================== 版本控制 ====================
-
     /**
      * SKU版本号: yyyyMMddHHmmss
      */
     @TableField("revision")
     private String revision;
 
-    // ==================== SKU类型 ====================
-
     /**
      * SKU类型: INSTANCE/ADDON/BUNDLE/SUBSCRIPTION
      */
     @TableField("sku_type")
     private String skuType;
-
-    // ==================== 基准定价 ====================
 
     /**
      * 基准单价
@@ -82,33 +64,29 @@ public class ProductSkuDO implements Serializable {
     @TableField("currency")
     private String currency;
 
-    // ==================== 售卖控制 ====================
-
     /**
      * 是否可售: 1是 0否
      */
     @TableField("saleable")
-    private Short saleable;
+    private Boolean saleable;
 
     /**
      * 是否可见: 1是 0否
      */
     @TableField("visible")
-    private Short visible;
+    private Boolean visible;
 
     /**
-     * 配额限制，NULL表示无限制
+     * 默认配额限制
      */
     @TableField("quota_limit")
     private Integer quotaLimit;
-
-    // ==================== 版本状态 ====================
 
     /**
      * 是否当前主版本: 1是 0否
      */
     @TableField("is_current")
-    private Short isCurrent;
+    private Boolean isCurrent;
 
     /**
      * 生效时间
@@ -121,8 +99,6 @@ public class ProductSkuDO implements Serializable {
      */
     @TableField("expiry_time")
     private Date expiryTime;
-
-    // ==================== 状态 ====================
 
     /**
      * 状态: DRAFT/ACTIVE/INACTIVE
@@ -137,13 +113,11 @@ public class ProductSkuDO implements Serializable {
     private Date publishTime;
 
     /**
-     * 逻辑删除(0:未删除 1:已删除)
+     * 逻辑删除
      */
-    @TableField("deleted")
     @TableLogic
-    private Short deleted;
-
-    // ==================== 审计字段 ====================
+    @TableField("deleted")
+    private Boolean deleted;
 
     /**
      * 创建者

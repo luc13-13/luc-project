@@ -68,7 +68,7 @@ public class SkuPricingLinkDTO implements Serializable, PaginationParams {
     private BigDecimal overrideFactor;
 
     @Schema(description = "是否默认收费模式: 1是 0否")
-    private Short isDefault;
+    private Boolean isDefault;
 
     // ==================== 状态 ====================
 

@@ -3,6 +3,7 @@ package com.lc.product.center.web;
 import com.lc.framework.core.mvc.WebResult;
 import com.lc.framework.core.page.PaginationResult;
 import com.lc.framework.core.utils.validator.Groups;
+import com.lc.product.center.domain.bo.QueryFilter;
 import com.lc.product.center.domain.dto.ProductInfoDTO;
 import com.lc.product.center.domain.vo.ProductInfoVO;
 import io.swagger.v3.oas.annotations.Operation;
@@ -46,17 +47,6 @@ public class ProductController {
         return WebResult.success();
     }
 
-    @GetMapping("/by-code")
-    @Operation(summary = "根据四层编码查询产品", description = "根据四层编码查询产品详情")
-    public WebResult<ProductInfoVO> getByCode(
-            @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId,
-            @Parameter(description = "产品编码") @RequestParam String productCode,
-            @Parameter(description = "规格族编码") @RequestParam String subProductCode,
-            @Parameter(description = "计费项编码") @RequestParam String billingItemCode,
-            @Parameter(description = "计费规格编码") @RequestParam String subBillingItemCode) {
-        return WebResult.success();
-    }
-
     @PostMapping("/create")
     @Operation(summary = "创建产品", description = "创建新的产品信息")
     public WebResult<ProductInfoVO> create(
@@ -85,18 +75,18 @@ public class ProductController {
         return WebResult.success();
     }
 
-    // ==================== 级联查询接口 ====================
+    // ==================== 级联查询接口, 为前端提供筛选条件 ====================
 
     @GetMapping("/codes")
     @Operation(summary = "获取产品编码列表", description = "获取所有有效的产品编码")
-    public WebResult<List<String>> getProductCodes(
+    public WebResult<List<QueryFilter>> getProductCodes(
             @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId) {
         return WebResult.success();
     }
 
     @GetMapping("/sub-codes")
     @Operation(summary = "获取规格族编码列表", description = "根据产品编码获取规格族编码列表")
-    public WebResult<List<String>> getSubProductCodes(
+    public WebResult<List<QueryFilter>> getSubProductCodes(
             @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId,
             @Parameter(description = "产品编码") @RequestParam String productCode) {
         return WebResult.success();
@@ -104,7 +94,7 @@ public class ProductController {
 
     @GetMapping("/billing-codes")
     @Operation(summary = "获取计费项编码列表", description = "根据产品编码和规格族编码获取计费项编码列表")
-    public WebResult<List<String>> getBillingItemCodes(
+    public WebResult<List<QueryFilter>> getBillingItemCodes(
             @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId,
             @Parameter(description = "产品编码") @RequestParam String productCode,
             @Parameter(description = "规格族编码") @RequestParam String subProductCode) {

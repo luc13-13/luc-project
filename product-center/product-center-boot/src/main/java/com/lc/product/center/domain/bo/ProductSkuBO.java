@@ -1,6 +1,5 @@
 package com.lc.product.center.domain.bo;
 
-import com.lc.framework.core.constants.NumberConstants;
 import com.lc.product.center.constants.ProductStatusEnum;
 import com.lc.product.center.domain.entity.PricingStrategyDO;
 import com.lc.product.center.domain.entity.ProductInfoDO;
@@ -52,9 +51,9 @@ public class ProductSkuBO implements Serializable {
      */
     public boolean isSaleable() {
         return productSkuDO != null && ProductStatusEnum.ACTIVE.getCode().equals(this.productSkuDO.getStatus())
-                && NumberConstants.STATUS_TRUE.intValue() == this.productSkuDO.getSaleable()
-                && NumberConstants.STATUS_TRUE.intValue() == this.productSkuDO.getVisible()
-                && (this.productSkuDO.getDeleted() == null || this.productSkuDO.getDeleted() == NumberConstants.STATUS_FALSE.intValue());
+                && this.productSkuDO.getSaleable()
+                && this.productSkuDO.getVisible()
+                && (this.productSkuDO.getDeleted() == null || !this.productSkuDO.getDeleted());
     }
 
     /**
@@ -68,7 +67,7 @@ public class ProductSkuBO implements Serializable {
      * 是否当前版本
      */
     public boolean isCurrentVersion() {
-        return productSkuDO != null && this.productSkuDO.getIsCurrent() != null && this.productSkuDO.getIsCurrent() == NumberConstants.STATUS_TRUE.shortValue();
+        return productSkuDO != null && this.productSkuDO.getIsCurrent() != null && this.productSkuDO.getIsCurrent();
     }
 
     /**

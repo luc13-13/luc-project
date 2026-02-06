@@ -45,7 +45,7 @@ public class SkuItemCombinationConverterImpl implements SkuItemCombinationConver
             entity.setQuantity(BigDecimal.ONE);
         }
         if (entity.getPricingIncluded() == null) {
-            entity.setPricingIncluded((short) 1); // 默认计入定价
+            entity.setPricingIncluded(Boolean.TRUE); // 默认计入定价
         }
         return entity;
     }
@@ -59,7 +59,7 @@ public class SkuItemCombinationConverterImpl implements SkuItemCombinationConver
         BeanUtils.copyProperties(entity, vo);
 
         // 设置描述字段
-        vo.setPricingIncludedDesc(entity.getPricingIncluded() != null && entity.getPricingIncluded() == 1 ? "是" : "否");
+        vo.setPricingIncludedDesc(entity.getPricingIncluded() != null && entity.getPricingIncluded()? "是" : "否");
         return vo;
     }
 

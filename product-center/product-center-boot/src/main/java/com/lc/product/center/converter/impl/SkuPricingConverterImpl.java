@@ -1,5 +1,6 @@
 package com.lc.product.center.converter.impl;
 
+import com.lc.product.center.constants.PricingConstants;
 import com.lc.product.center.constants.ProductStatusEnum;
 import com.lc.product.center.converter.SkuPricingConverter;
 import com.lc.product.center.domain.dto.SkuPricingDTO;
@@ -114,10 +115,10 @@ public class SkuPricingConverterImpl implements SkuPricingConverter {
                 .build();
 
         // 设置描述字段
-        vo.setMeteringModeDesc(getMeteringModeDesc(entity.getMeteringMode()));
-        vo.setPaymentModeDesc(getPaymentModeDesc(entity.getPaymentMode()));
-        vo.setBillingCycleDesc(getBillingCycleDesc(entity.getBillingCycle()));
-        vo.setBillingUnitDesc(getBillingUnitDesc(entity.getBillingUnit()));
+        vo.setMeteringModeDesc(PricingConstants.MeteringModeEnum.getDescByScope(entity.getMeteringMode()));
+        vo.setPaymentModeDesc(PricingConstants.PaymentModeEnum.getDescByScope(entity.getPaymentMode()));
+        vo.setBillingCycleDesc(PricingConstants.BillingCycleEnum.getDescByScope(entity.getBillingCycle()));
+        vo.setBillingUnitDesc(PricingConstants.BillingUnitEnum.getDescByScope(entity.getBillingUnit()));
         vo.setStatusDesc(ProductStatusEnum.getDescByCode(entity.getStatus()));
         return vo;
     }
@@ -128,54 +129,5 @@ public class SkuPricingConverterImpl implements SkuPricingConverter {
             return new ArrayList<>();
         }
         return entities.stream().map(this::convertDO2VO).toList();
-    }
-
-    private String getMeteringModeDesc(String meteringMode) {
-        if (meteringMode == null) {
-            return null;
-        }
-        return switch (meteringMode) {
-            case "BY_USAGE" -> "按用量";
-            case "BY_QUOTA" -> "按配额";
-            default -> meteringMode;
-        };
-    }
-
-    private String getPaymentModeDesc(String paymentMode) {
-        if (paymentMode == null) {
-            return null;
-        }
-        return switch (paymentMode) {
-            case "POSTPAID" -> "后付费";
-            case "PREPAID" -> "预付费";
-            case "SUBSCRIPTION" -> "订阅制";
-            default -> paymentMode;
-        };
-    }
-
-    private String getBillingCycleDesc(String billingCycle) {
-        if (billingCycle == null) {
-            return null;
-        }
-        return switch (billingCycle) {
-            case "HOURLY" -> "按小时";
-            case "DAILY" -> "按天";
-            case "MONTHLY" -> "按月";
-            case "QUARTERLY" -> "按季度";
-            case "YEARLY" -> "按年";
-            case "ONCE" -> "一次性";
-            default -> billingCycle;
-        };
-    }
-
-    private String getBillingUnitDesc(String billingUnit) {
-        if (billingUnit == null) {
-            return null;
-        }
-        return switch (billingUnit) {
-            case "PERIOD" -> "按周期";
-            case "QUANTITY" -> "按数量";
-            default -> billingUnit;
-        };
     }
 }

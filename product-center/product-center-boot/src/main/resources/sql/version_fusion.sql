@@ -319,6 +319,8 @@ CREATE TABLE `pricing_strategy_param` (
     -- 审计字段
     `created_by` VARCHAR(64) COMMENT '创建者',
     `dt_created` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `modified_by` VARCHAR(64) COMMENT '更新者',
+    `dt_modified` DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
 
     PRIMARY KEY (`id`),
     KEY `idx_strategy` (`tenant_id`, `strategy_code`),
@@ -481,6 +483,7 @@ CREATE TABLE `pricing_change_log` (
     `operate_time` DATETIME NOT NULL COMMENT '操作时间',
 
     -- 审计字段
+    `created_by` VARCHAR(64) COMMENT '创建者',
     `dt_created` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
 
     PRIMARY KEY (`id`),

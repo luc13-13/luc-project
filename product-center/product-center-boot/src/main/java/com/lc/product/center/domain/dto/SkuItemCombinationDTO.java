@@ -69,7 +69,7 @@ public class SkuItemCombinationDTO implements Serializable, PaginationParams {
     private BigDecimal quantity;
 
     @Schema(description = "是否计入SKU定价: 1是 0否")
-    private Short pricingIncluded;
+    private Boolean pricingIncluded;
 
     // ==================== 分页参数 ====================
 

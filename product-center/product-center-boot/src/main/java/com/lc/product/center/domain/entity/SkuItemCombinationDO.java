@@ -1,12 +1,8 @@
 package com.lc.product.center.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,19 +11,15 @@ import java.util.Date;
  * SKU计费项组合BOM表(product_center.sku_item_combination)表实体类
  *
  * @author lucheng
- * @since 2026-01-31
+ * @since 2026-02-06
  */
 @Data
-@TableName("sku_item_combination")
+@TableName(schema = "product_center", value = "sku_item_combination")
 public class SkuItemCombinationDO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     /**
-     * 主键id
+     * 主键ID
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -47,8 +39,6 @@ public class SkuItemCombinationDO implements Serializable {
      */
     @TableField("sku_revision")
     private String skuRevision;
-
-    // ==================== 四层计费项编码 ====================
 
     /**
      * 产品编码
@@ -74,8 +64,6 @@ public class SkuItemCombinationDO implements Serializable {
     @TableField("sub_billing_item_code")
     private String subBillingItemCode;
 
-    // ==================== 数量与权重 ====================
-
     /**
      * 数量/份数
      */
@@ -86,9 +74,7 @@ public class SkuItemCombinationDO implements Serializable {
      * 是否计入SKU定价: 1是 0否
      */
     @TableField("pricing_included")
-    private Short pricingIncluded;
-
-    // ==================== 审计字段 ====================
+    private Boolean pricingIncluded;
 
     /**
      * 创建者

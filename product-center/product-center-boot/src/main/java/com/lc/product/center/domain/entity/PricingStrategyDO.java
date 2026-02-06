@@ -3,27 +3,22 @@ package com.lc.product.center.domain.entity;
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Date;
 
 /**
- * 定价策略表(product_center.pricing_strategy)实体类
+ * 定价策略表(product_center.pricing_strategy)表实体类
  *
  * @author lucheng
- * @since 2026-01-31
+ * @since 2026-02-06
  */
 @Data
-@TableName("pricing_strategy")
+@TableName(schema = "product_center", value = "pricing_strategy")
 public class PricingStrategyDO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     /**
      * 主键ID
      */
-    @TableId(type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -31,8 +26,6 @@ public class PricingStrategyDO implements Serializable {
      */
     @TableField("tenant_id")
     private String tenantId;
-
-    // ==================== 策略标识 ====================
 
     /**
      * 策略编码: TIERED_CPU_001
@@ -46,8 +39,6 @@ public class PricingStrategyDO implements Serializable {
     @TableField("strategy_name")
     private String strategyName;
 
-    // ==================== 策略类型 ====================
-
     /**
      * 策略类型: LINEAR/TIERED/VOLUME_DISCOUNT/REGION/PROMOTION
      */
@@ -55,12 +46,10 @@ public class PricingStrategyDO implements Serializable {
     private String strategyType;
 
     /**
-     * 计算方法: MULTIPLY(乘法)/SUBTRACT(减法)
+     * 计算方式: MULTIPLY(乘法)/SUBTRACT(减法)
      */
     @TableField("calc_method")
     private String calcMethod;
-
-    // ==================== 应用范围 ====================
 
     /**
      * 应用范围: ALL/SKU/PRODUCT_LINE
@@ -74,15 +63,11 @@ public class PricingStrategyDO implements Serializable {
     @TableField("apply_scope_value")
     private String applyScopeValue;
 
-    // ==================== 优先级 ====================
-
     /**
-     * 优先级
+     * 默认优先级(数值越大越先执行)
      */
     @TableField("priority")
     private Integer priority;
-
-    // ==================== 时间有效性 ====================
 
     /**
      * 生效时间
@@ -96,8 +81,6 @@ public class PricingStrategyDO implements Serializable {
     @TableField("expiry_time")
     private Date expiryTime;
 
-    // ==================== 状态 ====================
-
     /**
      * 状态: ACTIVE/INACTIVE
      */
@@ -109,8 +92,6 @@ public class PricingStrategyDO implements Serializable {
      */
     @TableField("remark")
     private String remark;
-
-    // ==================== 审计字段 ====================
 
     /**
      * 创建者

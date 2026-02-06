@@ -101,7 +101,7 @@ public class SkuPricingDTO implements Serializable, PaginationParams {
     private Date expiryTime;
 
     @Schema(description = "是否当前主版本: 1是 0否")
-    private Short isCurrent;
+    private Boolean isCurrent;
 
     @Schema(description = "优先级(数值越大优先级越高)")
     private Integer priority;

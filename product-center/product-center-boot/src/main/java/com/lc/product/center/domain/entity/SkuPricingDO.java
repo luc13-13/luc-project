@@ -1,34 +1,25 @@
 package com.lc.product.center.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 /**
- * 定价模板表(product_center.sku_pricing)表实体类
- * 可复用的定价模板
+ * 定价模板表(收费模式模板,可复用)(product_center.sku_pricing)表实体类
  *
  * @author lucheng
- * @since 2026-01-31
+ * @since 2026-02-06
  */
 @Data
-@TableName("sku_pricing")
+@TableName(schema = "product_center", value = "sku_pricing")
 public class SkuPricingDO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     /**
-     * 主键id
+     * 主键ID
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -37,10 +28,8 @@ public class SkuPricingDO implements Serializable {
     @TableField("tenant_id")
     private String tenantId;
 
-    // ==================== 业务标识 ====================
-
     /**
-     * 定价编码: POSTPAID-MONTHLY-LINEAR
+     * 定价编码: PAY_AS_GO_HOURLY/PREPAID_MONTHLY
      */
     @TableField("pricing_code")
     private String pricingCode;
@@ -50,8 +39,6 @@ public class SkuPricingDO implements Serializable {
      */
     @TableField("revision")
     private String revision;
-
-    // ==================== 四维度收费模式 ====================
 
     /**
      * 计量方式: BY_USAGE/BY_QUOTA
@@ -78,7 +65,7 @@ public class SkuPricingDO implements Serializable {
     private Integer cycleCount;
 
     /**
-     * 计费单位: PERIOD/QUANTITY
+     * 计费单位类型: PERIOD/QUANTITY
      */
     @TableField("billing_unit")
     private String billingUnit;
@@ -89,7 +76,6 @@ public class SkuPricingDO implements Serializable {
     @TableField("refund_policy")
     private String refundPolicy;
 
-    // ==================== 价格信息 ====================
     /**
      * 折扣率: 0.85表示85折
      */
@@ -102,8 +88,6 @@ public class SkuPricingDO implements Serializable {
     @TableField("currency")
     private String currency;
 
-    // ==================== 计量配置 ====================
-
     /**
      * 计量单位: 核·小时/GB·月/次
      */
@@ -115,8 +99,6 @@ public class SkuPricingDO implements Serializable {
      */
     @TableField("metering_precision")
     private Integer meteringPrecision;
-
-    // ==================== 时间与优先级 ====================
 
     /**
      * 生效时间
@@ -134,15 +116,13 @@ public class SkuPricingDO implements Serializable {
      * 是否当前主版本: 1是 0否
      */
     @TableField("is_current")
-    private Short isCurrent;
+    private Boolean isCurrent;
 
     /**
      * 优先级(数值越大优先级越高)
      */
     @TableField("priority")
     private Integer priority;
-
-    // ==================== 状态与备注 ====================
 
     /**
      * 状态: ACTIVE/INACTIVE
@@ -155,8 +135,6 @@ public class SkuPricingDO implements Serializable {
      */
     @TableField("remark")
     private String remark;
-
-    // ==================== 审计字段 ====================
 
     /**
      * 创建者

@@ -7,7 +7,6 @@ import com.lc.product.center.domain.dto.PricingStrategyDTO;
 import com.lc.product.center.domain.dto.PricingStrategyParamDTO;
 import com.lc.product.center.domain.vo.PricingStrategyVO;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -41,22 +40,6 @@ public class PricingStrategyController {
     @GetMapping("/detail/{id}")
     @Operation(summary = "查询策略详情", description = "包含阶梯参数")
     public WebResult<PricingStrategyVO> detail(@PathVariable Long id) {
-        return WebResult.success();
-    }
-
-    @GetMapping("/by-code")
-    @Operation(summary = "根据策略编码查询")
-    public WebResult<PricingStrategyVO> getByCode(
-            @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId,
-            @Parameter(description = "策略编码") @RequestParam String strategyCode) {
-        return WebResult.success();
-    }
-
-    @GetMapping("/effective")
-    @Operation(summary = "查询有效策略列表")
-    public WebResult<List<PricingStrategyVO>> getEffective(
-            @Parameter(description = "租户ID") @RequestParam(defaultValue = "DEFAULT") String tenantId,
-            @Parameter(description = "策略类型") @RequestParam(required = false) String strategyType) {
         return WebResult.success();
     }
 

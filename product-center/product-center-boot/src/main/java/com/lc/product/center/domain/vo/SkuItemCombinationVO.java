@@ -46,7 +46,7 @@ public class SkuItemCombinationVO implements Serializable {
     private BigDecimal quantity;
 
     @Schema(description = "是否计入SKU定价: 1是 0否")
-    private Short pricingIncluded;
+    private Boolean pricingIncluded;
 
     @Schema(description = "是否计入SKU定价描述")
     private String pricingIncludedDesc;

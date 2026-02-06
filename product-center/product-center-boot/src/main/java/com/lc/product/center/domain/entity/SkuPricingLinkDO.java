@@ -1,12 +1,8 @@
 package com.lc.product.center.domain.entity;
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
@@ -15,19 +11,15 @@ import java.util.Date;
  * SKU与定价关联表(product_center.sku_pricing_link)表实体类
  *
  * @author lucheng
- * @since 2026-01-31
+ * @since 2026-02-06
  */
 @Data
-@TableName("sku_pricing_link")
+@TableName(schema = "product_center", value = "sku_pricing_link")
 public class SkuPricingLinkDO implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     /**
-     * 主键id
+     * 主键ID
      */
-    @TableId("id")
+    @TableId(value = "id", type = IdType.AUTO)
     private Long id;
 
     /**
@@ -35,8 +27,6 @@ public class SkuPricingLinkDO implements Serializable {
      */
     @TableField("tenant_id")
     private String tenantId;
-
-    // ==================== SKU关联 ====================
 
     /**
      * SKU编码
@@ -50,8 +40,6 @@ public class SkuPricingLinkDO implements Serializable {
     @TableField("sku_revision")
     private String skuRevision;
 
-    // ==================== 定价关联 ====================
-
     /**
      * 定价编码
      */
@@ -64,8 +52,6 @@ public class SkuPricingLinkDO implements Serializable {
     @TableField("pricing_revision")
     private String pricingRevision;
 
-    // ==================== 覆盖配置 ====================
-
     /**
      * 覆盖系数(可选)
      */
@@ -76,17 +62,13 @@ public class SkuPricingLinkDO implements Serializable {
      * 是否默认收费模式: 1是 0否
      */
     @TableField("is_default")
-    private Short isDefault;
-
-    // ==================== 状态 ====================
+    private Boolean isDefault;
 
     /**
      * 状态: ACTIVE/INACTIVE
      */
     @TableField("status")
     private String status;
-
-    // ==================== 审计字段 ====================
 
     /**
      * 创建者
@@ -111,4 +93,5 @@ public class SkuPricingLinkDO implements Serializable {
      */
     @TableField(value = "dt_modified", fill = FieldFill.UPDATE)
     private Date dtModified;
+
 }
