@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.product.center.mapper.PricingStrategyMapper">
+
+    <sql id="BASE_COLUMN">
+
+    </sql>
+    <resultMap type="com.lc.product.center.domain.entity.PricingStrategyDO" id="BASE_MAP">
+        <result property="id" column="id" jdbcType="BIGINT"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="strategyCode" column="strategy_code" jdbcType="VARCHAR"/>
+        <result property="strategyName" column="strategy_name" jdbcType="VARCHAR"/>
+        <result property="strategyType" column="strategy_type" jdbcType="VARCHAR"/>
+        <result property="calcMethod" column="calc_method" jdbcType="VARCHAR"/>
+        <result property="applyScope" column="apply_scope" jdbcType="VARCHAR"/>
+        <result property="applyScopeValue" column="apply_scope_value" jdbcType="VARCHAR"/>
+        <result property="priority" column="priority" jdbcType="INTEGER"/>
+        <result property="effectiveTime" column="effective_time" jdbcType="DATE"/>
+        <result property="expiryTime" column="expiry_time" jdbcType="DATE"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="dtCreated" column="dt_created" jdbcType="DATE"/>
+        <result property="modifiedBy" column="modified_by" jdbcType="VARCHAR"/>
+        <result property="dtModified" column="dt_modified" jdbcType="DATE"/>
+    </resultMap>
+    
+    <resultMap type="com.lc.product.center.domain.bo.PricingStrategyBO" id="BASE_BO_MAP">
+        <association property="pricingStrategyDO" resultMap="BASE_MAP"/>
+    </resultMap>
+    
+    <select id="selectListByDTO" resultMap="BASE_BO_MAP">
+
+    </select>
+
+</mapper>
+
