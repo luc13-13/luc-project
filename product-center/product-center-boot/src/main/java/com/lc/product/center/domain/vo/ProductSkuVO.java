@@ -10,7 +10,6 @@ import java.io.Serial;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 产品SKU表(product_center.product_sku)表视图对象
@@ -149,24 +148,6 @@ public class ProductSkuVO implements Serializable {
      */
     @Schema(description = "上架时间")
     private Date publishTime;
-
-    /**
-     * 计费项列表
-     */
-    @Schema(description = "计费项列表")
-    private List<ProductInfoVO> billingItems;
-
-    /**
-     * 关联的定价模板列表
-     */
-    @Schema(description = "关联的定价模板列表")
-    private List<SkuPricingVO> pricingTemplates;
-
-    /**
-     * 关联的定价策略列表
-     */
-    @Schema(description = "关联的定价策略列表")
-    private List<PricingStrategyVO> pricingStrategies;
 
     // ==================== 审计字段 ====================
 

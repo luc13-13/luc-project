@@ -86,6 +86,10 @@ public class ProductSkuConverterImpl implements ProductSkuConverter {
                 .status(entity.getStatus())
                 .statusDesc(ProductStatusEnum.getDescByCode(entity.getStatus()))
                 .publishTime(entity.getPublishTime())
+                .createdBy(entity.getCreatedBy())
+                .dtCreated(entity.getDtCreated())
+                .modifiedBy(entity.getModifiedBy())
+                .dtModified(entity.getDtModified())
                 .build();
     }
 

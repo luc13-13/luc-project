@@ -90,10 +90,6 @@
             <if test="dto.status != null and dto.status != ''">
                 AND status = #{dto.status, jdbcType=VARCHAR}
             </if>
-            <if test="dto.effectiveOnly != null and dto.effectiveOnly == true">
-                AND effective_time &lt;= NOW()
-                AND (expiry_time IS NULL OR expiry_time &gt;= NOW())
-            </if>
         </where>
     </sql>
 
