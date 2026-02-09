@@ -9,4 +9,9 @@ package com.lc.product.center.domain.bo;
  * @version : 1.0
  */
 public record QueryFilter(String code, String desc) {
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof QueryFilter && ((QueryFilter) obj).code().equals(this.code());
+    }
 }

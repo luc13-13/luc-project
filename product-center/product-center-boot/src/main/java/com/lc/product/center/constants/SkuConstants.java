@@ -11,7 +11,7 @@ import lombok.Getter;
 public interface SkuConstants {
 
     @Getter
-    public static enum SkuTypeEnum {
+    enum SkuTypeEnum {
         INSTANCE("INSTANCE", "实例"),
 
 

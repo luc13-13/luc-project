@@ -2,15 +2,15 @@ package com.lc.product.center.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.lc.product.center.domain.dto.PricingStrategyDTO;
-import com.lc.product.center.domain.entity.PricingStrategyDO;
+import com.lc.product.center.domain.dto.SkuPricingDTO;
+import com.lc.product.center.domain.entity.SkuPricingDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
 /**
- * 定价策略表(product_center.pricing_strategy)表数据库访问层
+ * 定价模板表(product_center.sku_pricing)表数据库访问层
  * <p>
  * 采用单一动态查询入口，通过 DTO 参数控制查询条件
  * </p>
@@ -19,15 +19,15 @@ import java.util.List;
  * @since 2026-02-06
  */
 @Mapper
-public interface PricingStrategyMapper extends BaseMapper<PricingStrategyDO> {
+public interface SkuPricingMapper extends BaseMapper<SkuPricingDO> {
 
     /**
      * 动态条件查询（列表查询）
      *
      * @param dto 查询条件
-     * @return 定价策略列表
+     * @return 定价模板列表
      */
-    List<PricingStrategyDO> selectByCondition(@Param("dto") PricingStrategyDTO dto);
+    List<SkuPricingDO> selectByCondition(@Param("dto") SkuPricingDTO dto);
 
     /**
      * 动态条件分页查询（使用 MyBatis-Plus IPage）
@@ -36,5 +36,5 @@ public interface PricingStrategyMapper extends BaseMapper<PricingStrategyDO> {
      * @param dto  查询条件
      * @return 分页结果
      */
-    IPage<PricingStrategyDO> selectPageByCondition(IPage<PricingStrategyDO> page, @Param("dto") PricingStrategyDTO dto);
+    IPage<SkuPricingDO> selectPageByCondition(IPage<SkuPricingDO> page, @Param("dto") SkuPricingDTO dto);
 }

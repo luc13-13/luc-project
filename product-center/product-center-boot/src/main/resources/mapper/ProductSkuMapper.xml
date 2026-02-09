@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.product.center.mapper.ProductSkuMapper">
+
+    <!-- ==================== ResultMap: ProductSkuDO ==================== -->
+    <resultMap id="BaseResultMap" type="com.lc.product.center.domain.entity.ProductSkuDO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="skuCode" column="sku_code" jdbcType="VARCHAR"/>
+        <result property="skuName" column="sku_name" jdbcType="VARCHAR"/>
+        <result property="revision" column="revision" jdbcType="VARCHAR"/>
+        <result property="skuType" column="sku_type" jdbcType="VARCHAR"/>
+        <result property="baseUnitPrice" column="base_unit_price" jdbcType="DECIMAL"/>
+        <result property="currency" column="currency" jdbcType="VARCHAR"/>
+        <result property="saleable" column="saleable" jdbcType="TINYINT"/>
+        <result property="visible" column="visible" jdbcType="TINYINT"/>
+        <result property="quotaLimit" column="quota_limit" jdbcType="INTEGER"/>
+        <result property="isCurrent" column="is_current" jdbcType="TINYINT"/>
+        <result property="effectiveTime" column="effective_time" jdbcType="TIMESTAMP"/>
+        <result property="expiryTime" column="expiry_time" jdbcType="TIMESTAMP"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="publishTime" column="publish_time" jdbcType="TIMESTAMP"/>
+        <result property="deleted" column="deleted" jdbcType="TINYINT"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="dtCreated" column="dt_created" jdbcType="TIMESTAMP"/>
+        <result property="modifiedBy" column="modified_by" jdbcType="VARCHAR"/>
+        <result property="dtModified" column="dt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- ==================== ResultMap: ProductSkuBO (多表聚合) ==================== -->
+    <resultMap id="DetailResultMap" type="com.lc.product.center.domain.bo.ProductSkuBO">
+        <!-- SKU 基本信息 -->
+        <association property="productSkuDO" resultMap="BaseResultMap"/>
+        
+        <!-- 计费项列表（通过 sku_item_combination 关联 product_info） -->
+        <collection property="billingItems" ofType="com.lc.product.center.domain.entity.ProductInfoDO"
+                    select="selectBillingItemsBySkuCode"
+                    column="{tenantId=tenant_id, skuCode=sku_code, skuRevision=revision}"/>
+        
+        <!-- 定价模板列表（通过 sku_pricing_link 关联 sku_pricing） -->
+        <collection property="pricingTemplates" ofType="com.lc.product.center.domain.entity.SkuPricingDO"
+                    select="selectPricingTemplatesBySkuCode"
+                    column="{tenantId=tenant_id, skuCode=sku_code, skuRevision=revision}"/>
+        
+        <!-- 定价策略列表（通过 sku_pricing_strategy_link 关联 pricing_strategy） -->
+        <collection property="pricingStrategies" ofType="com.lc.product.center.domain.entity.PricingStrategyDO"
+                    select="selectPricingStrategiesBySkuCode"
+                    column="{tenantId=tenant_id, skuCode=sku_code, skuRevision=revision}"/>
+    </resultMap>
+
+    <!-- 通用字段列表 -->
+    <sql id="Base_Column_List">
+        id, tenant_id, sku_code, sku_name, revision, sku_type,
+        base_unit_price, currency, saleable, visible, quota_limit,
+        is_current, effective_time, expiry_time, status, publish_time,
+        deleted, created_by, dt_created, modified_by, dt_modified
+    </sql>
+
+    <!-- 动态查询条件片段 -->
+    <sql id="Where_Condition">
+        <where>
+            deleted = 0
+            <if test="dto.tenantId != null and dto.tenantId != ''">
+                AND tenant_id = #{dto.tenantId, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.id != null">
+                AND id = #{dto.id, jdbcType=BIGINT}
+            </if>
+            <if test="dto.skuCode != null and dto.skuCode != ''">
+                AND sku_code = #{dto.skuCode, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.skuName != null and dto.skuName != ''">
+                AND sku_name LIKE CONCAT('%', #{dto.skuName, jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="dto.revision != null and dto.revision != ''">
+                AND revision = #{dto.revision, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.skuType != null and dto.skuType != ''">
+                AND sku_type = #{dto.skuType, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.saleable != null">
+                AND saleable = #{dto.saleable, jdbcType=TINYINT}
+            </if>
+            <if test="dto.visible != null">
+                AND visible = #{dto.visible, jdbcType=TINYINT}
+            </if>
+            <if test="dto.isCurrent != null">
+                AND is_current = #{dto.isCurrent, jdbcType=TINYINT}
+            </if>
+            <if test="dto.status != null and dto.status != ''">
+                AND status = #{dto.status, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.effectiveOnly != null and dto.effectiveOnly == true">
+                AND effective_time &lt;= NOW()
+                AND (expiry_time IS NULL OR expiry_time &gt;= NOW())
+            </if>
+        </where>
+    </sql>
+
+    <!-- ==================== 动态条件查询（列表） ==================== -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_center.product_sku
+        <include refid="Where_Condition"/>
+        ORDER BY dt_created DESC
+    </select>
+
+    <!-- ==================== 动态条件分页查询（MyBatis-Plus IPage） ==================== -->
+    <select id="selectPageByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_center.product_sku
+        <include refid="Where_Condition"/>
+        ORDER BY dt_created DESC
+    </select>
+
+    <!-- ==================== SKU详情查询（多表聚合） ==================== -->
+    <select id="selectDetailBySkuCode" resultMap="DetailResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_center.product_sku
+        WHERE deleted = 0
+          AND tenant_id = #{tenantId, jdbcType=VARCHAR}
+          AND sku_code = #{skuCode, jdbcType=VARCHAR}
+          <if test="skuRevision != null and skuRevision != ''">
+              AND revision = #{skuRevision, jdbcType=VARCHAR}
+          </if>
+          <if test="skuRevision == null or skuRevision == ''">
+              AND is_current = 1
+          </if>
+        LIMIT 1
+    </select>
+
+    <!-- ==================== 嵌套查询：计费项列表 ==================== -->
+    <select id="selectBillingItemsBySkuCode" resultType="com.lc.product.center.domain.entity.ProductInfoDO">
+        SELECT pi.*
+        FROM product_center.product_info pi
+        INNER JOIN product_center.sku_item_combination sic
+            ON pi.tenant_id = sic.tenant_id
+           AND pi.product_code = sic.product_code
+           AND pi.sub_product_code = sic.sub_product_code
+           AND pi.billing_item_code = sic.billing_item_code
+           AND pi.sub_billing_item_code = sic.sub_billing_item_code
+        WHERE sic.tenant_id = #{tenantId, jdbcType=VARCHAR}
+          AND sic.sku_code = #{skuCode, jdbcType=VARCHAR}
+          AND sic.sku_revision = #{skuRevision, jdbcType=VARCHAR}
+          AND pi.deleted = 0
+        ORDER BY pi.sort_order
+    </select>
+
+    <!-- ==================== 嵌套查询：定价模板列表 ==================== -->
+    <select id="selectPricingTemplatesBySkuCode" resultType="com.lc.product.center.domain.entity.SkuPricingDO">
+        SELECT sp.*
+        FROM product_center.sku_pricing sp
+        INNER JOIN product_center.sku_pricing_link spl
+            ON sp.tenant_id = spl.tenant_id
+           AND sp.pricing_code = spl.pricing_code
+           AND sp.revision = spl.pricing_revision
+        WHERE spl.tenant_id = #{tenantId, jdbcType=VARCHAR}
+          AND spl.sku_code = #{skuCode, jdbcType=VARCHAR}
+          AND spl.sku_revision = #{skuRevision, jdbcType=VARCHAR}
+          AND spl.status = 'ACTIVE'
+        ORDER BY sp.priority DESC
+    </select>
+
+    <!-- ==================== 嵌套查询：定价策略列表 ==================== -->
+    <select id="selectPricingStrategiesBySkuCode" resultType="com.lc.product.center.domain.entity.PricingStrategyDO">
+        SELECT ps.*
+        FROM product_center.pricing_strategy ps
+        INNER JOIN product_center.sku_pricing_strategy_link spsl
+            ON ps.tenant_id = spsl.tenant_id
+           AND ps.strategy_code = spsl.strategy_code
+        WHERE spsl.tenant_id = #{tenantId, jdbcType=VARCHAR}
+          AND spsl.sku_code = #{skuCode, jdbcType=VARCHAR}
+          AND spsl.sku_revision = #{skuRevision, jdbcType=VARCHAR}
+          AND spsl.status = 'ACTIVE'
+          AND (spsl.effective_time IS NULL OR spsl.effective_time &lt;= NOW())
+          AND (spsl.expiry_time IS NULL OR spsl.expiry_time &gt;= NOW())
+        ORDER BY COALESCE(spsl.priority, ps.priority) DESC
+    </select>
+
+</mapper>
+

@@ -2,11 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lc.product.center.mapper.PricingStrategyMapper">
 
-    <sql id="BASE_COLUMN">
-
-    </sql>
-    <resultMap type="com.lc.product.center.domain.entity.PricingStrategyDO" id="BASE_MAP">
-        <result property="id" column="id" jdbcType="BIGINT"/>
+    <!-- ==================== ResultMap ==================== -->
+    <resultMap id="BaseResultMap" type="com.lc.product.center.domain.entity.PricingStrategyDO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
         <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
         <result property="strategyCode" column="strategy_code" jdbcType="VARCHAR"/>
         <result property="strategyName" column="strategy_name" jdbcType="VARCHAR"/>
@@ -15,23 +13,66 @@
         <result property="applyScope" column="apply_scope" jdbcType="VARCHAR"/>
         <result property="applyScopeValue" column="apply_scope_value" jdbcType="VARCHAR"/>
         <result property="priority" column="priority" jdbcType="INTEGER"/>
-        <result property="effectiveTime" column="effective_time" jdbcType="DATE"/>
-        <result property="expiryTime" column="expiry_time" jdbcType="DATE"/>
+        <result property="effectiveTime" column="effective_time" jdbcType="TIMESTAMP"/>
+        <result property="expiryTime" column="expiry_time" jdbcType="TIMESTAMP"/>
         <result property="status" column="status" jdbcType="VARCHAR"/>
         <result property="remark" column="remark" jdbcType="VARCHAR"/>
         <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
-        <result property="dtCreated" column="dt_created" jdbcType="DATE"/>
+        <result property="dtCreated" column="dt_created" jdbcType="TIMESTAMP"/>
         <result property="modifiedBy" column="modified_by" jdbcType="VARCHAR"/>
-        <result property="dtModified" column="dt_modified" jdbcType="DATE"/>
+        <result property="dtModified" column="dt_modified" jdbcType="TIMESTAMP"/>
     </resultMap>
-    
-    <resultMap type="com.lc.product.center.domain.bo.PricingStrategyBO" id="BASE_BO_MAP">
-        <association property="pricingStrategyDO" resultMap="BASE_MAP"/>
-    </resultMap>
-    
-    <select id="selectListByDTO" resultMap="BASE_BO_MAP">
 
+    <!-- 通用字段列表 -->
+    <sql id="Base_Column_List">
+        id, tenant_id, strategy_code, strategy_name, strategy_type, calc_method,
+        apply_scope, apply_scope_value, priority, effective_time, expiry_time,
+        status, remark, deleted, created_by, dt_created, modified_by, dt_modified
+    </sql>
+
+    <!-- 动态查询条件片段 -->
+    <sql id="Where_Condition">
+        <where>
+            <if test="dto.tenantId != null and dto.tenantId != ''">
+                AND tenant_id = #{dto.tenantId, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.id != null">
+                AND id = #{dto.id, jdbcType=BIGINT}
+            </if>
+            <if test="dto.strategyCode != null and dto.strategyCode != ''">
+                AND strategy_code = #{dto.strategyCode, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.strategyName != null and dto.strategyName != ''">
+                AND strategy_name LIKE CONCAT('%', #{dto.strategyName, jdbcType=VARCHAR}, '%')
+            </if>
+            <if test="dto.strategyType != null and dto.strategyType != ''">
+                AND strategy_type = #{dto.strategyType, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.applyScope != null and dto.applyScope != ''">
+                AND apply_scope = #{dto.applyScope, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.status != null and dto.status != ''">
+                AND status = #{dto.status, jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <!-- ==================== 动态条件查询（列表） ==================== -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_center.pricing_strategy
+        <include refid="Where_Condition"/>
+        ORDER BY priority DESC, dt_created DESC
+    </select>
+
+    <!-- ==================== 动态条件分页查询（MyBatis-Plus IPage） ==================== -->
+    <select id="selectPageByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_center.pricing_strategy
+        <include refid="Where_Condition"/>
+        ORDER BY priority DESC, dt_created DESC
     </select>
 
 </mapper>
-

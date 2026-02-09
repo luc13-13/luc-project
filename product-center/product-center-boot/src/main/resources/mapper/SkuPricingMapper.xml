@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lc.product.center.mapper.SkuPricingMapper">
+
+    <!-- ==================== ResultMap ==================== -->
+    <resultMap id="BaseResultMap" type="com.lc.product.center.domain.entity.SkuPricingDO">
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="tenantId" column="tenant_id" jdbcType="VARCHAR"/>
+        <result property="pricingCode" column="pricing_code" jdbcType="VARCHAR"/>
+        <result property="revision" column="revision" jdbcType="VARCHAR"/>
+        <result property="meteringMode" column="metering_mode" jdbcType="VARCHAR"/>
+        <result property="paymentMode" column="payment_mode" jdbcType="VARCHAR"/>
+        <result property="billingCycle" column="billing_cycle" jdbcType="VARCHAR"/>
+        <result property="cycleCount" column="cycle_count" jdbcType="INTEGER"/>
+        <result property="billingUnit" column="billing_unit" jdbcType="VARCHAR"/>
+        <result property="refundPolicy" column="refund_policy" jdbcType="VARCHAR"/>
+        <result property="discountRate" column="discount_rate" jdbcType="DECIMAL"/>
+        <result property="currency" column="currency" jdbcType="VARCHAR"/>
+        <result property="meteringUnit" column="metering_unit" jdbcType="VARCHAR"/>
+        <result property="meteringPrecision" column="metering_precision" jdbcType="INTEGER"/>
+        <result property="effectiveTime" column="effective_time" jdbcType="TIMESTAMP"/>
+        <result property="expiryTime" column="expiry_time" jdbcType="TIMESTAMP"/>
+        <result property="isCurrent" column="is_current" jdbcType="TINYINT"/>
+        <result property="priority" column="priority" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="remark" column="remark" jdbcType="VARCHAR"/>
+        <result property="createdBy" column="created_by" jdbcType="VARCHAR"/>
+        <result property="dtCreated" column="dt_created" jdbcType="TIMESTAMP"/>
+        <result property="modifiedBy" column="modified_by" jdbcType="VARCHAR"/>
+        <result property="dtModified" column="dt_modified" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 通用字段列表 -->
+    <sql id="Base_Column_List">
+        id, tenant_id, pricing_code, revision, metering_mode, payment_mode,
+        billing_cycle, cycle_count, billing_unit, refund_policy, discount_rate,
+        currency, metering_unit, metering_precision, effective_time, expiry_time,
+        is_current, priority, status, remark,
+        created_by, dt_created, modified_by, dt_modified
+    </sql>
+
+    <!-- 动态查询条件片段 -->
+    <sql id="Where_Condition">
+        <where>
+            <if test="dto.tenantId != null and dto.tenantId != ''">
+                AND tenant_id = #{dto.tenantId, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.id != null">
+                AND id = #{dto.id, jdbcType=BIGINT}
+            </if>
+            <if test="dto.pricingCode != null and dto.pricingCode != ''">
+                AND pricing_code = #{dto.pricingCode, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.revision != null and dto.revision != ''">
+                AND revision = #{dto.revision, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.meteringMode != null and dto.meteringMode != ''">
+                AND metering_mode = #{dto.meteringMode, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.paymentMode != null and dto.paymentMode != ''">
+                AND payment_mode = #{dto.paymentMode, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.billingCycle != null and dto.billingCycle != ''">
+                AND billing_cycle = #{dto.billingCycle, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.isCurrent != null">
+                AND is_current = #{dto.isCurrent, jdbcType=TINYINT}
+            </if>
+            <if test="dto.status != null and dto.status != ''">
+                AND status = #{dto.status, jdbcType=VARCHAR}
+            </if>
+            <if test="dto.effectiveOnly != null and dto.effectiveOnly == true">
+                AND effective_time &lt;= NOW()
+                AND (expiry_time IS NULL OR expiry_time &gt;= NOW())
+            </if>
+        </where>
+    </sql>
+
+    <!-- ==================== 动态条件查询（列表） ==================== -->
+    <select id="selectByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_center.sku_pricing
+        <include refid="Where_Condition"/>
+        ORDER BY priority DESC, dt_created DESC
+    </select>
+
+    <!-- ==================== 动态条件分页查询（MyBatis-Plus IPage） ==================== -->
+    <select id="selectPageByCondition" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM product_center.sku_pricing
+        <include refid="Where_Condition"/>
+        ORDER BY priority DESC, dt_created DESC
+    </select>
+
+</mapper>

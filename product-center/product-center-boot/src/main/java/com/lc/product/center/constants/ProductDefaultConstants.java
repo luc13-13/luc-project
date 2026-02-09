@@ -17,4 +17,6 @@ public interface ProductDefaultConstants {
      * 默认排序值
      */
     Integer DEFAULT_SORT_ORDER = 0;
+
+    Integer DEFAULT_PRIORITY = 1;
 }

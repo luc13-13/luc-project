@@ -26,21 +26,25 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductSkuBO implements Serializable {
 
+    /**
+     * SKU基本信息
+     */
     private ProductSkuDO productSkuDO;
+
     // ==================== 业务聚合字段 ====================
 
     /**
-     * 计费项列表（业务聚合）
+     * 计费项详情列表（通过 sku_item_combination + product_info 关联查询）
      */
     private List<ProductInfoDO> billingItems;
 
     /**
-     * 关联的定价模板列表（嵌套查询）
+     * 关联的定价模板列表（通过 sku_pricing_link + sku_pricing 嵌套查询）
      */
     private List<SkuPricingDO> pricingTemplates;
 
     /**
-     * 关联的定价策略列表（嵌套查询）
+     * 关联的定价策略列表（通过 sku_pricing_strategy_link + pricing_strategy 嵌套查询）
      */
     private List<PricingStrategyDO> pricingStrategies;
 
@@ -60,7 +64,8 @@ public class ProductSkuBO implements Serializable {
      * 是否已上架
      */
     public boolean isPublished() {
-        return productSkuDO != null && ProductStatusEnum.ACTIVE.getCode().equals(this.productSkuDO.getStatus()) && this.productSkuDO.getPublishTime() != null;
+        return productSkuDO != null && ProductStatusEnum.ACTIVE.getCode().equals(this.productSkuDO.getStatus())
+                && this.productSkuDO.getPublishTime() != null;
     }
 
     /**
@@ -74,6 +79,7 @@ public class ProductSkuBO implements Serializable {
      * 检查配额是否可用
      */
     public boolean isQuotaAvailable(int currentUsage) {
-        return productSkuDO != null && (this.productSkuDO.getQuotaLimit() == null || currentUsage < this.productSkuDO.getQuotaLimit());
+        return productSkuDO != null
+                && (this.productSkuDO.getQuotaLimit() == null || currentUsage < this.productSkuDO.getQuotaLimit());
     }
 }
