@@ -38,4 +38,6 @@ public interface StringConstants {
     String STATUS_TRUE = "1";
 
     String STATUS_FALSE = "0";
+
+    String STRIKE = "-";
 }
