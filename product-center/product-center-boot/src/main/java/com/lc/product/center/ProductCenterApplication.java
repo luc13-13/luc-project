@@ -1,7 +1,9 @@
 package com.lc.product.center;
 
+import com.lc.product.center.properties.ProductProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
@@ -16,6 +18,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableFeignClients
 @EnableDiscoveryClient
+@EnableConfigurationProperties({ProductProperties.class})
 public class ProductCenterApplication {
 
     public static void main(String[] args) { SpringApplication.run(ProductCenterApplication.class, args); }

@@ -2,6 +2,8 @@ package com.lc.product.center.domain.dto;
 
 import com.lc.framework.core.page.PaginationParams;
 import com.lc.framework.core.utils.validator.Groups;
+import com.lc.framework.core.utils.validator.annotation.EnumValue;
+import com.lc.product.center.constants.PricingConstants;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -55,14 +57,17 @@ public class SkuPricingDTO implements Serializable, PaginationParams {
 
     @Schema(description = "计量方式: BY_USAGE/BY_QUOTA")
     @NotBlank(message = "计量方式不能为空", groups = Groups.AddGroup.class)
+    @EnumValue(message = "计量方式有误",key = "sku.metering", enumClass = PricingConstants.MeteringModeEnum.class, groups = {Groups.AddGroup.class, Groups.UpdateGroup.class})
     private String meteringMode;
 
     @Schema(description = "付费方式: POSTPAID/PREPAID/SUBSCRIPTION")
     @NotBlank(message = "付费方式不能为空", groups = Groups.AddGroup.class)
+    @EnumValue(message = "付费方式有误",key = "sku.payment", enumClass = PricingConstants.PaymentModeEnum.class, groups = {Groups.AddGroup.class, Groups.UpdateGroup.class})
     private String paymentMode;
 
     @Schema(description = "计费周期: HOURLY/DAILY/MONTHLY/QUARTERLY/YEARLY/ONCE")
     @NotBlank(message = "计费周期不能为空", groups = Groups.AddGroup.class)
+    @EnumValue(message = "计费周期有误", key = "sku.cycle", enumClass = PricingConstants.BillingCycleEnum.class, groups = {Groups.AddGroup.class, Groups.UpdateGroup.class})
     private String billingCycle;
 
     @Schema(description = "周期数量: 1月/3月/12月")
@@ -70,6 +75,7 @@ public class SkuPricingDTO implements Serializable, PaginationParams {
 
     @Schema(description = "计费单位: PERIOD/QUANTITY")
     @NotBlank(message = "计费单位不能为空", groups = Groups.AddGroup.class)
+    @EnumValue(message = "计费单位有误", key = "sku.unit", enumClass = PricingConstants.BillingUnitEnum.class, groups = {Groups.AddGroup.class, Groups.UpdateGroup.class})
     private String billingUnit;
 
     @Schema(description = "退款政策: PRO_RATA/NON_REFUNDABLE")

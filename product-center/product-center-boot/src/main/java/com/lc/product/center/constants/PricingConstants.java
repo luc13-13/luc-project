@@ -129,8 +129,8 @@ public interface PricingConstants {
      */
     @Getter
     enum BillingCycleEnum {
-        HOURLY("POSTPAID", "按小时"),
-        DAILY("PREPAID", "按天"),
+        HOURLY("HOURLY", "按小时"),
+        DAILY("DAILY", "按天"),
         MONTHLY("MONTHLY", "按月"),
         QUARTERLY("QUARTERLY", "按季度"),
         YEARLY("YEARLY", "按年"),
