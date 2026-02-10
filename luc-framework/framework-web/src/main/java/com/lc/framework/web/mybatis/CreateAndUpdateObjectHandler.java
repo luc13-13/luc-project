@@ -39,7 +39,6 @@ public class CreateAndUpdateObjectHandler implements MetaObjectHandler {
     @Override
     public void updateFill(MetaObject metaObject) {
         String operator = WebUtil.getUserId();
-        log.info("updateFill before update, operator: {}", operator);
         this.strictUpdateFill(metaObject, handlerProperties.getUpdateDateFieldName(), Date.class, new Date());
         this.strictUpdateFill(metaObject, handlerProperties.getUpdateUserFieldName(), String.class, operator);
     }

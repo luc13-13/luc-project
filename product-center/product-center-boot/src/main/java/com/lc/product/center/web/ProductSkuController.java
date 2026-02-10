@@ -73,4 +73,11 @@ public class ProductSkuController {
         Boolean result = productSkuService.deleteSku(id);
         return WebResult.success(result);
     }
+
+
+    @DeleteMapping("/delete/item")
+    @Operation(summary = "删除产品SKU计费项")
+    public WebResult<Boolean> deleteItem() {
+        return WebResult.success();
+    }
 }

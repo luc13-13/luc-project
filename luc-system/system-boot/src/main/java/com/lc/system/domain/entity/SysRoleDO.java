@@ -27,11 +27,11 @@ public class SysRoleDO implements Serializable {
     @TableField("role_id")
     private String roleId;
 
-    /**
-     * 租户ID
-     */
-    @TableField("tenant_id")
-    private String tenantId;
+//    /**
+//     * 租户ID
+//     */
+//    @TableField("tenant_id")
+//    private String tenantId;
 
     /**
      * 角色名称

@@ -3,11 +3,7 @@ package com.lc.product.center.domain.dto;
 import com.lc.framework.core.page.PaginationParams;
 import com.lc.framework.core.utils.validator.Groups;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -154,6 +150,7 @@ public class ProductSkuDTO implements Serializable, PaginationParams {
      * 计费项组合列表（BOM）
      */
     @Schema(description = "计费项组合列表")
+    @NotEmpty(message = "计费项组合不能为空", groups = { Groups.AddGroup.class, Groups.UpdateGroup.class })
     private List<SkuItemCombinationDTO> itemCombinations;
 
     /**
