@@ -34,10 +34,11 @@ public class EnumValueValidator implements ConstraintValidator<EnumValue, String
             // 使用key获取配置的value
             this.enumValues = enumValueManager.getEnumValues(constraintAnnotation.key());
         }
-        else if (CollectionUtils.isEmpty(enumValues) && constraintAnnotation.value() != null && constraintAnnotation.value().length > 0) {
+        if (CollectionUtils.isEmpty(enumValues) && constraintAnnotation.value() != null && constraintAnnotation.value().length > 0) {
             // 使用编码规定的value
             this.enumValues = Arrays.stream(constraintAnnotation.value()).collect(Collectors.toSet());
-        } else {
+        }
+        if (CollectionUtils.isEmpty(enumValues)) {
             // 使用枚举类规定的value
             this.enumValues = Arrays.stream(constraintAnnotation.enumClass().getEnumConstants()).map(Enum::name).collect(Collectors.toSet());
         }

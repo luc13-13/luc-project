@@ -39,16 +39,16 @@ public class ProductEnumValueManager implements EnumValueManager, InitializingBe
     public void afterPropertiesSet() {
         Assert.notNull(productProperties, "productProperties should not be null!");
         if (CollectionUtils.isEmpty(productProperties.getMeteringMode())) {
-            enumValueMap.put("meteringMode", productProperties.getMeteringMode());
+            enumValueMap.put("sku.meteringMode", productProperties.getMeteringMode());
         }
         if (CollectionUtils.isEmpty(productProperties.getPaymentMode())) {
-            enumValueMap.put("paymentMode", productProperties.getPaymentMode());
+            enumValueMap.put("sku.paymentMode", productProperties.getPaymentMode());
         }
         if (CollectionUtils.isEmpty(productProperties.getBillingCycle())) {
-            enumValueMap.put("billingCycle", productProperties.getBillingCycle());
+            enumValueMap.put("sku.billingCycle", productProperties.getBillingCycle());
         }
         if (CollectionUtils.isEmpty(productProperties.getBillingUnit())) {
-            enumValueMap.put("billingUnit", productProperties.getBillingUnit());
+            enumValueMap.put("sku.billingUnit", productProperties.getBillingUnit());
         }
     }
 }

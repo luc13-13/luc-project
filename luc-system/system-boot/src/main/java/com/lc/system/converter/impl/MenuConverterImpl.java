@@ -78,6 +78,7 @@ public class MenuConverterImpl implements MenuConverter {
     @Override
     public MenuDO convertDTO2DO(MenuDTO menuDTO) {
         MenuDO menuDO = new MenuDO();
+        menuDO.setId(menuDTO.getId());
         menuDO.setMenuId(menuDTO.getMenuId());
         menuDO.setParentMenuId(StringUtils.hasText(menuDTO.getParentMenuId()) ? menuDTO.getParentMenuId() : null);
         menuDO.setName(menuDTO.getName());
